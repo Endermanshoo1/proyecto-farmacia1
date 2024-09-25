@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="Dasboard.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="productosdashboard.js"></script>
+</head>
+<body>
+    <div class="menu">
+        <i class='bx bx-menu'></i>
+        <i class='bx bx-x'></i>
+    </div>
+
+    <div class="barra-lateral">
+        <div>
+            <div class="nombre-pagina">
+                <img class="img_logo" id="cloud" src="/img/logo mini white.png" alt="">
+                <a href="/view/dahsboard/index.html">
+                    <img class="img_logo2" id="cloud" src="https://dummyimage.com/180x100/fff/aaa" alt="">
+                </a>
+                <span>Farmacia</span>
+            </div>
+            
+        </div>
+
+        <nav class="navegacion">
+            <ul>
+                <li>
+                    <a id="Farmacia" href="/user/farmacia">
+                        <i class='bx bx-injection icon'></i>
+                        <span>Farmacia</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Belleza" href="/view/productos/belleza.html">
+                        <i class='bx bxs-face icon'></i>
+                        <span>Belleza</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Comestibles" href="/view/productos/comestibles.html">
+                        <i class='bx bx-donate-heart icon'></i>
+                        <span>Comestibles</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Bebes" href="/view/productos/bebes.html">
+                        <i class='bx bxs-baby-carriage icon'></i>
+                        <span>Bebes</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Cuidado-Personal" href="/view/productos/cuidado-personal.html">
+                        <i class='bx bxs-face icon'></i>
+                        <span>Cuidado Personal</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Hogar" href="/view/productos/hogar.html">
+                        <i class='bx bx-home icon'></i>
+                        <span>Hogar</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Carrito" href="/view/carrito/index.html">
+                        <i class='bx bx-cart-add icon'></i>
+                        <span>Carrito</span>
+                        <span id="cuenta-carrito">0</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div>
+            <div class="linea"></div>
+
+            <div class="modo-oscuro">
+                <div class="info">
+                    <ion-icon name="moon-outline"></ion-icon>
+                    <span>Dark Mode</span>
+                </div>
+                <div class="switch">
+                    <div class="base">
+                        <div class="circulo">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="usuario">
+                <img class="usuario_img" src="" alt="">
+                <div class="info-usuario">
+                    <div class="nombre-email">
+                        <span class="nombre">User</span>
+                        <span class="email">User@gmail.com</span>
+                    </div>
+                    <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                </div>
+            </div>
+        </div>
+
+    </div>  
+
+
+    <main>
+        <div class="container-carousel">  
+            <div class="carruseles" id="slider">  
+                <section class="slider-section">  
+                    <img src="https://dummyimage.com/1900x400/fff/aaa" alt="Banner 1" class="w-full">  
+                </section> 
+  
+                <section class="slider-section">  
+                    <img src="https://dummyimage.com/1900x400/fff/aaa" alt="Banner 2" class="w-full">  
+                </section>  
+                
+               
+                <section class="slider-section">  
+                    <img src="https://dummyimage.com/1900x400/fff/aaa" alt="Banner 3" class="w-full">  
+                </section>  
+                
+               
+                <section class="slider-section">  
+                    <img src="https://dummyimage.com/1900x400/fff/aaa" alt="Banner 4" class="w-full">       
+                </section> 
+ 
+                <section class="slider-section">  
+                    <img src="https://dummyimage.com/1900x400/fff/aaa" alt="Banner 5" class="w-full">  
+                </section>  
+
+                <section class="slider-section">     
+                    <img src="https://dummyimage.com/1900x400/fff/aaa" alt="Banner 6" class="w-full">  
+                </section> 
+
+                <section class="slider-section">    
+                    <img src="https://dummyimage.com/1900x400/fff/aaa" alt="Banner 7" class="w-full">  
+                </section>  
+                <section class="slider-section">  
+                    <img src="https://dummyimage.com/1900x400/fff/aaa" alt="Banner 8" class="w-full">  
+                </section>  
+            </div>  
+            
+           
+            <div class="btn-left" id="prev"><i class='bx bx-chevron-left'></i></div>  
+            <div class="btn-right" id="next"><i class='bx bx-chevron-right'></i></div>  
+        
+        </div> 
+
+        <div class="title-cards">  
+            <h2 class="text-h2">Ofertas Del Mes</h2>  
+        </div>  
+        
+        <div class="carousel" id="myCarousel">  
+            <div class="carousel-cards">  
+                <div id="cartas-frex"></div>  
+            </div>  
+            <button class="prev" onclick="moveSlide(-1)">&#10094;</button>  
+            <button class="next" onclick="moveSlide(1)">&#10095;</button>  
+        </div>  
+
+        <div class="scroller" data-speed="fast">
+            <ul class="tag-list scroller__inner">
+              <a href="#"><li>Cuidado de uñas</li></a>
+              <a href="#"><li>Cuidado corporal</li></a>
+              <a href="#"><li>Bebidas</li></a>
+              <a href="#"><li>Snacks</li></a>
+              <a href="#"><li>Cuidado Personal</li></a>
+              <a href="#"><li>Cuidado del Cabello</li></a>
+              <a href="#"><li>Higiene del Bebe</li></a>
+              <a href="#"><li>Alimento y Formulas para Bebe</li></a>
+              <a href="#"><li>Higiene de Hogar</li></a>
+              <a href="#"><li>Material Escolar</li></a>
+              <a href="#"><li>Material de Oficina</li></a>
+            </ul>
+          </div>
+            
+        <div class="contain-total">
+            <div class="contain">
+              <i class='bx bx-car'></i>
+                <div class="contain-text">
+                  <h3>ENVÍO GRATIS</h3>
+                  <h4>Con compras a partir de $7</h4>
+                </div>
+            </div>
+          
+            <div class="contain">
+              <i class='bx bx-purchase-tag-alt'></i>
+                <div class="contain-text">
+                  <h3>OFERTAS PARA TU BIENESTAR</h3>
+                  <h4>Precios más bajos en tus pedidos</h4>
+                </div>
+            </div>
+          
+            <div class="contain">
+              <i class='bx bx-capsule'></i>
+                <div class="contain-text">
+                  <h3>VARIEDAD DE PRODUCTOS</h3>
+                  <h4>Todo lo que necesitas en un solo lugar</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="title-cards">  
+            <h2 id="Farmacia" class="text-h2">Farmacia</h2>  
+        </div> 
+
+        <div class="vermas">
+            <a href="/views/productos/farmacia.html">
+                <span> ver mas 
+                <i class='bx bx-chevron-right'></i></span>  
+            </a>
+        </div>
+        <div id="cartas-frex2"></div>
+            
+        <div class="title-cards">  
+            <h2 class="text-h2">Belleza</h2>  
+        </div> 
+
+        <div class="vermas">
+            <a href="/views/productos/belleza.html">
+                <span> ver mas 
+                <i class='bx bx-chevron-right'></i></span>  
+            </a>
+        </div>
+        <div id="cartas-frex3"></div>  
+     
+
+        <div class="title-cards">  
+            <h2 class="text-h2">Comestibles</h2>  
+        </div> 
+  
+        <div class="vermas">
+            <a href="/views/productos/comestibles.html">
+                <span> ver mas 
+                <i class='bx bx-chevron-right'></i></span>  
+            </a>
+        </div>
+        <div id="cartas-frex4"></div>  
+
+        <div class="title-cards">  
+            <h2 class="text-h2">Bebes</h2>  
+        </div> 
+ 
+        <div class="vermas">
+            <a href="/views/productos/bebes.html">
+                <span> ver mas 
+                <i class='bx bx-chevron-right'></i></span>  
+            </a>
+        </div>
+        <div id="cartas-frex5"></div>  
+
+        <div class="title-cards">  
+            <h2 class="text-h2">Cuidado Personal</h2>  
+        </div> 
+  
+        <div class="vermas">
+            <a href="/views/productos/cuidado-personal.html">
+                <span> ver mas 
+                <i class='bx bx-chevron-right'></i></span>  
+            </a>
+        </div>
+        <div id="cartas-frex6"></div>  
+            
+
+        <div class="title-cards">  
+            <h2 class="text-h2">Hogar</h2>  
+        </div> 
+
+        <div class="vermas">
+            <a href="/views/productos/hogar.html">
+                <span> ver mas 
+                <i class='bx bx-chevron-right'></i></span>  
+            </a>
+        </div>
+        <div id="cartas-frex7"></div>  
+
+    </main>
+
+    <footer class="footer">  
+        <div class="container">  
+            <div class="row">  
+                <div class="footer-col">  
+                    <h4>Empresa</h4>  
+                    <ul>  
+                        <li><a href="#">Acerca de Nosotros</a></li>  
+                        <li><a href="#">Nuestros Servicios</a></li>  
+                        <li><a href="#">Política de Privacidad</a></li>  
+                    </ul>  
+                </div>  
+                <div class="footer-col">  
+                    <h4>Obtener Ayuda</h4>  
+                    <ul>  
+                        <li><a href="#">Preguntas Frecuentes (FAQ)</a></li>  
+                        <li><a href="#">Envío</a></li>  
+                        <li><a href="#">Devoluciones</a></li>  
+                        <li><a href="#">Opciones de pago</a></li>  
+                    </ul>  
+                </div>  
+                <div class="footer-col">  
+                    <h4>Síguenos En</h4>  
+                    <div class="social-links">  
+                        <a href="#"><i class='bx bxl-facebook'></i></a>  
+                        <a href="#"><i class='bx bxl-instagram-alt'></i></a>  
+                        <a href="#"><i class='bx bxl-twitter'></i></a>  
+                        <a href="#"><i class='bx bxl-whatsapp'></i></a>  
+                    </div>  
+                </div>  
+            </div>  
+        </div>  
+    </footer>  
+
+    <script src="Dasboard.js" ></script>
+    <script src="cartService.js" ></script>
+   
+</body>
+</html>

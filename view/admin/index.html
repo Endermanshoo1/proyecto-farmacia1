@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador</title>
+    <link rel="stylesheet" href="Admin.css">
+    
+</head>
+<body>
+
+    <div class="menu">
+        <i class='bx bx-menu'></i>
+        <i class='bx bx-x'></i>
+    </div>
+
+    <div class="barra-lateral">
+        <div>
+            <div class="nombre-pagina">
+                <img class="img_logo" id="cloud" src="/img/logo mini white.png" alt="">
+                <a href="/views/dashboard/index.html">
+                    <img class="img_logo2" id="cloud" src="https://dummyimage.com/180x100/fff/aaa" alt="">
+                </a>
+                <span>Farmacia</span>
+            </div>
+            
+        </div>
+
+        <nav class="navegacion">
+            <ul>
+                <li>
+                    <a id="Farmacia" href="/views/productos/farmacia.html">
+                        <i class='bx bx-injection icon'></i>
+                        <span>Agregar Productos</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Belleza" href="/views/productos/belleza.html">
+                        <i class='bx bxs-face icon'></i>
+                        <span>Editar Productos</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Comestibles" href="/views/productos/comestibles.html">
+                        <i class='bx bx-donate-heart icon'></i>
+                        <span>Reportes de Ventas</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Bebes" href="/views/productos/bebes.html">
+                        <i class='bx bxs-baby-carriage icon'></i>
+                        <span>Control de Inventario</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Cuidado-Personal" href="/views/productos/cuidado-personal.html">
+                        <i class='bx bxs-face icon'></i>
+                        <span>Proveedores</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Hogar" href="/views/productos/hogar.html">
+                        <i class='bx bx-home icon'></i>
+                        <span>Gestion de clientes</span>
+                    </a>
+                </li>
+                
+            </ul>
+        </nav>
+
+        <div>
+            <div class="linea"></div>
+
+            <div class="modo-oscuro">
+                <div class="info">
+                    <ion-icon name="moon-outline"></ion-icon>
+                    <span>Drak Mode</span>
+                </div>
+                <div class="switch">
+                    <div class="base">
+                        <div class="circulo">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="usuario">
+                <img class="usuario_img" src="" alt="">
+                <div class="info-usuario">
+                    <div class="nombre-email">
+                        <span class="nombre">User</span>
+                        <span class="email">User@gmail.com</span>
+                    </div>
+                    <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <main>
+
+         <div id="productos-container"></div>
+
+    </main>
+    
+    <script src="admin.JS" ></script>
+</body>
+</html>
