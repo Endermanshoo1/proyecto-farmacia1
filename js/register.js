@@ -1,14 +1,14 @@
-const signUpButton = document.getElementById('signUp');
-const signInButton = document.getElementById('signIn');
-const container = document.getElementById('container');
+const signUpButton = document.getElementById('signUp');  
+const signInButton = document.getElementById('signIn');  
+const container = document.getElementById('container');  
 
-signUpButton.addEventListener('click', () => {
-	container.classList.add("right-panel-active");
-});
+signUpButton.addEventListener('click', () => {  
+    container.classList.add("right-panel-active");  
+});  
 
-signInButton.addEventListener('click', () => {
-	container.classList.remove("right-panel-active");
-});
+signInButton.addEventListener('click', () => {  
+    container.classList.remove("right-panel-active");  
+});  
 
 document.addEventListener("DOMContentLoaded", () => {  
     const registerForm = document.getElementById('register-form');  
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: {  
                     'Content-Type': 'application/json',  
                 },  
-                body: JSON.stringify({ username, email, password }), // Solo se incluye username, email y password  
+                body: JSON.stringify({ username, email, password }),  
             });  
 
             if (!response.ok) {  
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: {  
                     'Content-Type': 'application/json',  
                 },  
-                body: JSON.stringify({ email: email.toLowerCase(), password }), // Cambié aquí para hacer insensible a mayúsculas  
+                body: JSON.stringify({ email: email.toLowerCase(), password }),  
             });  
 
             if (!response.ok) {  
@@ -89,13 +89,19 @@ document.addEventListener("DOMContentLoaded", () => {
             }  
 
             const data = await response.json();  
-            // Redirigir según el rol  
-            if (data.role === 'admin') {  
-                window.location.href = '/admin';  
-            } else {  
-                window.location.href = 'view/dahsboard/index.html';  
-            }  
 
+            // Redirigir según el rol del usuario  
+            if (data.user && data.user.role) {  
+                if (data.user.role === 'admin') {  
+                    window.location.href = '/admin';  // Redirige a la página de administrador  
+                } else {  
+                    window.location.href = '/user';   // Redirige a la página de usuario  
+                }  
+            } else {  
+                console.error('El usuario o su rol no están definidos en la respuesta.');  
+                document.querySelector('.error').classList.remove('escondido');  
+                document.querySelector('.error').textContent = 'Error al recibir la información del usuario. Intenta de nuevo.';  
+            }  
         } catch (error) {  
             console.error('Error en la solicitud de inicio de sesión:', error);  
             document.querySelector('.error').classList.remove('escondido');  

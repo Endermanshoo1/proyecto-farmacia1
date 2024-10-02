@@ -84,8 +84,10 @@ body{
     font-size: 18px;
     text-align: left;
     opacity: 1;
+    margin-left: 10px;
     transition: opacity 0.5s ease,width 0.5s ease;
 }
+
 .barra-lateral span.oculto{
     opacity: 0;
     width: 0;
@@ -280,9 +282,8 @@ body{
 .barra-lateral .usuario ion-icon{
     font-size: 20px;
 }
-.usuario_img{
-    background-color: #49e3ba;
-}
+
+
 
 
 /*-------------main*/
@@ -329,3 +330,135 @@ main.min-main{
     
 }
 
+#Mostrarcontenido {  
+    transition: opacity 0.5s ease;  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}  
+
+.cargando {  
+    font-size: 30px;  
+    color: var(--text-color);  
+}  
+
+.tituloDahs{
+    color: var(--text-color);
+    font-size: 40px;
+}
+
+.subtituloDahs{
+    color: var(--text-color);
+    font-size: 25px;
+}
+
+#formAgregarAdmin,
+#formAgregarProducto{
+    margin: 30px;
+    background-color: var(--sidebar-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 50px;
+    height: 350px;
+    width: 450px;
+    text-align: center;
+    border-radius: 20px;
+}   
+
+#formAgregarProducto .input{
+    background-color: var(--toggle-color);
+    border: none;
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 100%;
+    color: var(--text-color);
+}
+
+
+#formAgregarAdmin input{
+    background-color: var(--toggle-color);
+    border: none;
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 100%;
+}
+
+.Adminbutton{
+    border: 1px solid var(--primary-color);
+    background-color:var(--primary-color);
+    color: var(--sidebar-color);
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    width: 350px;
+    margin: 10px;
+}
+
+/*tabla de usuarios*/
+#usuariosContainer{
+    background: var(--sidebar-color);
+    border-radius: 20px;
+    width: 750px;
+    height: 670px;
+}
+
+.table-container {  
+    margin: 20px;  
+    padding: 20px;  
+    background-color: #000000;  
+    border-radius: 5px;  
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  
+}  
+
+table {  
+    width: 100%;  
+    border-collapse: collapse;  
+}  
+
+th, td {  
+    width: 250px;
+    padding: 14px;  
+    text-align: left;  
+    border-bottom: 1px solid var(--text-color);  
+    color: var(--text-color);
+}  
+
+th {    
+    color: var(--text-color);  
+}  
+
+.paginacion {  
+    padding: 20px;
+    display: flex;
+    justify-content: space-evenly; 
+}  
+
+.paginacion button {  
+    margin: 0 5px;  
+    padding: 10px 15px;  
+    border: none;  
+    border-radius: 3px;  
+    background-color: var(--primary-color);  
+    color: var(--iconcolor);  
+    cursor: pointer;  
+}  
+
+.numpag{
+    color: var(--text-color);
+} 
+
+.editarUsuario,
+.eliminarUsuario{
+    width: 100px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    background: var(--text-color);
+    color: var(--sidebar-color);
+}

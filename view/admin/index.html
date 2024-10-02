@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administrador</title>
-    <link rel="stylesheet" href="Admin.css">
+    <link rel="stylesheet" href="/public/Admin.css">
     
 </head>
 <body>
@@ -29,39 +29,28 @@
         <nav class="navegacion">
             <ul>
                 <li>
-                    <a id="Farmacia" href="/views/productos/farmacia.html">
-                        <i class='bx bx-injection icon'></i>
-                        <span>Agregar Productos</span>
+                    <a id="GestionProductos" href="#">
+                        <span>Productos</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Belleza" href="/views/productos/belleza.html">
-                        <i class='bx bxs-face icon'></i>
-                        <span>Editar Productos</span>
-                    </a>
-                </li>
-                <li>
-                    <a id="Comestibles" href="/views/productos/comestibles.html">
-                        <i class='bx bx-donate-heart icon'></i>
+                    <a id="ReportesVentas" href="#">
                         <span>Reportes de Ventas</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Bebes" href="/views/productos/bebes.html">
-                        <i class='bx bxs-baby-carriage icon'></i>
+                    <a id="Inventario" href="#">
                         <span>Control de Inventario</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Cuidado-Personal" href="/views/productos/cuidado-personal.html">
-                        <i class='bx bxs-face icon'></i>
-                        <span>Proveedores</span>
+                    <a id="GestionClientes" href="#">
+                        <span>Gestion de Usuarios</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Hogar" href="/views/productos/hogar.html">
-                        <i class='bx bx-home icon'></i>
-                        <span>Gestion de clientes</span>
+                    <a id="GestionAdmin" href="#">
+                        <span>Añadir Administradores</span>
                     </a>
                 </li>
                 
@@ -85,16 +74,6 @@
                 </div>
             </div>
     
-            <div class="usuario">
-                <img class="usuario_img" src="" alt="">
-                <div class="info-usuario">
-                    <div class="nombre-email">
-                        <span class="nombre">User</span>
-                        <span class="email">User@gmail.com</span>
-                    </div>
-                    <ion-icon name="ellipsis-vertical-outline"></ion-icon>
-                </div>
-            </div>
         </div>
 
     </div>
@@ -102,10 +81,10 @@
 
     <main>
 
-         <div id="productos-container"></div>
+        <div id="Mostrarcontenido"></div>
 
     </main>
     
-    <script src="admin.JS" ></script>
+    <script src="/public/Admin.JS" ></script>
 </body>
 </html>
