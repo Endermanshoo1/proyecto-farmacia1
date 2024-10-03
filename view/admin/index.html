@@ -83,6 +83,32 @@
 
         <div id="Mostrarcontenido"></div>
 
+        <!-- Modal de edición -->  
+        <div id="modalEditar" class="modal">  
+            <div class="modal-content">  
+                <span class="close" id="closeEditar">&times;</span>  
+                <h2>Editar Usuario</h2>  
+                <form id="formEditarUsuario">  
+                    <label for="nuevoNombre">Nuevo Nombre:</label>  
+                    <input type="text" id="nuevoNombre" required>  
+                    <label for="nuevoEmail">Nuevo Email:</label>  
+                    <input type="email" id="nuevoEmail" required>  
+                    <button class="Cambios" type="submit">Guardar Cambios</button>  
+                </form>  
+            </div>  
+        </div>  
+
+        <!-- Modal de confirmación de eliminación -->  
+        <div id="modalEliminar" class="modal">  
+            <div class="modal-content">  
+                <span class="close" id="closeEliminar">&times;</span>  
+                <h2>Eliminar Usuario</h2>  
+                <p>¿Estás seguro de que deseas eliminar este usuario?</p>  
+                <button id="confirmarEliminar">Eliminar</button>  
+                <button id="cancelarEliminar">Cancelar</button>  
+            </div>  
+        </div>  
+
     </main>
     
     <script src="/public/Admin.JS" ></script>

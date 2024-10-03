@@ -142,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (id === 'GestionClientes') {  
                     mostrarUsuarios();  
                 }  else if(id === 'GestionProductos') {
+                    
                     const formAgregarProducto = document.getElementById('formAgregarProducto');  
                     formAgregarProducto.addEventListener('submit', async (e) => {  
                         e.preventDefault();  
@@ -417,56 +418,108 @@ document.addEventListener('DOMContentLoaded', () => {
         });  
     };  
 
-    const editarUsuario = async (event) => {  
-        const row = event.target.closest('tr');  
-        const userId = row.getAttribute('data-id');  
-        const newUsername = prompt('Ingrese nuevo nombre:', row.children[0].textContent);  
-        const newEmail = prompt('Ingrese nuevo email:', row.children[1].textContent);  
-
-        if (newUsername && newEmail) {  
-            try {  
-                const response = await fetch(`/api/users/${userId}`, {  
-                    method: 'PUT',  
-                    headers: {  
-                        'Content-Type': 'application/json',  
-                    },  
-                    body: JSON.stringify({ username: newUsername, email: newEmail })  
-                });  
-                if (response.ok) {  
-                    alert('Usuario actualizado exitosamente');  
-                    mostrarUsuarios();  
-                } else {  
-                    alert('Error al actualizar el usuario.');  
-                }  
-            } catch (error) {  
-                console.error('Error al actualizar el usuario:', error);  
-            }  
-        }  
-    };  
-
-    const eliminarUsuario = async (event) => {  
-        const row = event.target.closest('tr');  
-        const userId = row.getAttribute('data-id');  
-
-        if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {  
-            try {  
-                const response = await fetch(`/api/users/${userId}`, {  
-                    method: 'DELETE',  
-                });  
-                if (response.ok) {  
-                    alert('Usuario eliminado exitosamente');  
-                    mostrarUsuarios();  
-                } else {  
-                    alert('Error al eliminar el usuario.');  
-                }  
-            } catch (error) {  
-                console.error('Error al eliminar el usuario:', error);  
-            }  
-        }  
-    };  
-
+    let userIdToEdit = null;  
+    let userIdToDelete = null;  
     
-  
+    // Función para abrir la ventana de edición  
+    const editarUsuario = (event) => {  
+        const row = event.target.closest('tr');  
+        userIdToEdit = row.getAttribute('data-id');  
+    
+        // Rellenar los campos del formulario  
+        document.getElementById('nuevoNombre').value = row.children[0].textContent;  
+        document.getElementById('nuevoEmail').value = row.children[1].textContent;  
+    
+        // Mostrar la modal de Edición  
+        document.getElementById('modalEditar').style.display = 'block';  
+    };  
+    
+    // Función para manejar el envío del formulario de edición  
+    document.getElementById('formEditarUsuario').addEventListener('submit', async (event) => {  
+        event.preventDefault();  
+        
+        const newUsername = document.getElementById('nuevoNombre').value;  
+        const newEmail = document.getElementById('nuevoEmail').value;  
+    
+        try {  
+            const response = await fetch(`/api/users/${userIdToEdit}`, {  
+                method: 'PUT',  
+                headers: {  
+                    'Content-Type': 'application/json',  
+                },  
+                body: JSON.stringify({ username: newUsername, email: newEmail })  
+            });  
+            
+            if (response.ok) {  
+                alert('Usuario actualizado exitosamente');  
+                mostrarUsuarios(); // Asumiendo que esta función actualiza la lista de usuarios  
+            } else {  
+                alert('Error al actualizar el usuario.');  
+            }  
+    
+            // Cerrar la modal  
+            document.getElementById('modalEditar').style.display = 'none';  
+        } catch (error) {  
+            console.error('Error al actualizar el usuario:', error);  
+        }  
+    });  
+    
+    // Función para abrir la ventana de eliminación  
+    const eliminarUsuario = (event) => {  
+        const row = event.target.closest('tr');  
+        userIdToDelete = row.getAttribute('data-id');  
+    
+        // Mostrar la modal de eliminación  
+        document.getElementById('modalEliminar').style.display = 'block';  
+    };  
+    
+    // Confirmar eliminación  
+    document.getElementById('confirmarEliminar').addEventListener('click', async () => {  
+        try {  
+            const response = await fetch(`/api/users/${userIdToDelete}`, {  
+                method: 'DELETE',  
+            });  
+            
+            if (response.ok) {  
+                alert('Usuario eliminado exitosamente');  
+                mostrarUsuarios(); // Asumiendo que esta función actualiza la lista de usuarios  
+            } else {  
+                alert('Error al eliminar el usuario.');  
+            }  
+    
+            // Cerrar la modal  
+            document.getElementById('modalEliminar').style.display = 'none';  
+        } catch (error) {  
+            console.error('Error al eliminar el usuario:', error);  
+        }  
+    });  
+    
+    // Añadir manejadores de eventos para cerrar las modales  
+    document.getElementById('closeEditar').onclick = () => {  
+        document.getElementById('modalEditar').style.display = 'none';  
+    };  
+    
+    document.getElementById('closeEliminar').onclick = () => {  
+        document.getElementById('modalEliminar').style.display = 'none';  
+    };  
+    
+    // Cerrar modales al hacer clic fuera de ellas  
+    window.onclick = (event) => {  
+        const modalEditar = document.getElementById('modalEditar');  
+        const modalEliminar = document.getElementById('modalEliminar');  
+    
+        if (event.target === modalEditar) {  
+            modalEditar.style.display = 'none';  
+        }  
+        if (event.target === modalEliminar) {  
+            modalEliminar.style.display = 'none';    
+        }  
+    };  
+    
+    // Cancelar eliminación  
+    document.getElementById('cancelarEliminar').addEventListener('click', () => {  
+        document.getElementById('modalEliminar').style.display = 'none';  
+    });  
 
     function fadeIn(element) {  
         element.style.opacity = 0;  
