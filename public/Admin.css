@@ -368,6 +368,11 @@ main.min-main{
     border-radius: 20px;
 }   
 
+#productosContainer{
+    background: var(--sidebar-color);
+    border-radius: 20px;
+}
+
 #formAgregarProducto .input{
     background-color: var(--toggle-color);
     border: none;

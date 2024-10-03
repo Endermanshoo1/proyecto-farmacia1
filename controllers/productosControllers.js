@@ -3,12 +3,12 @@ const Producto = require('../models/Producto');
 // Crear un nuevo producto  
 exports.crearProducto = async (req, res) => {  
     const { nombre, precio, categoria } = req.body;  
-    const imagen = req.file; // Obtener la imagen  
+    const imagen = req.file; 
 
     try {  
         if (!imagen) {  
             return res.status(400).json({ mensaje: 'Se requiere una imagen' });  
-        }  
+        }   
 
         const nuevoProducto = new Producto({   
             nombre,   

@@ -20,7 +20,7 @@ const ofertasDeMes = [
     img:"/img/carvedilol.png",
     nombre:"Carvedilol 25 MG X 14 CAP CALOX",
     precio:"bs. 12,00",
-    categoria:"ofertasDeMes"
+    categoria:"ofertasDeMes" 
    },
    
    {
@@ -357,3 +357,4 @@ const hogar = [
    
 ]
 
+ 

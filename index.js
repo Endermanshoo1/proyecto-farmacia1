@@ -19,7 +19,7 @@ app.listen(PORT, () => {
 // Configurar Multer para guardar imágenes en una carpeta  
 const storage = multer.diskStorage({  
     destination: (req, file, cb) => {  
-      cb(null, 'uploads/');  
+      cb(null, './uploads/');  
     },  
     filename: (req, file, cb) => {  
       cb(null, Date.now() + path.extname(file.originalname));  
@@ -27,21 +27,6 @@ const storage = multer.diskStorage({
 });  
 
 const upload = multer({ storage: storage });  
-
-  
-// Ruta para subir imágenes
-app.post('/upload', upload.single('imagen'), (req, res) => {
-    const nuevaImagen = new Imagen({
-      nombre: req.file.filename
-    });
-  
-    nuevaImagen.save((err) => {
-      if (err) {
-        return res.status(500).send('Error al guardar la imagen en la base de datos.');
-      }
-      res.send('Imagen subida y guardada correctamente.');
-    });
-  });
 
 // Middleware  
 app.use(express.json());  

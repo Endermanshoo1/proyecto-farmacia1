@@ -55,15 +55,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="file" class="input" name="imagen" id="imagen" required> 
                 <input class="input" type="number" id="precioProducto" placeholder="Precio" required min="0">  
                 <select class="input" id="categoriaProducto" required>  
-                    <option value="" disabled selected>Seleccione una categoría</option>  
+                    <option value="" disabled selected>Seleccione una categoría</option>
+                    <option value="ofertas-del-mes">Ofertas del Mes</option>  
                     <option value="farmacia">Farmacia</option>  
                     <option value="hogar">Hogar</option>  
-                    <option value="bebes">Bebés</option>  
-                    <option value="cuidado personal">Cuidado Personal</option>  
+                    <option value="bebes">Bebés</option> 
+                    <option value="comestibles">Comestibles</option> 
+                    <option value="cuidado personal">Cuidado Personal</option>    
                     <option value="belleza">Belleza</option>  
                 </select>  
                 <button class="Adminbutton" type="submit">Agregar Producto</button>  
             </form>  
+            <div id="productosContainer"></div>
         `,  
         ReportesVentas: `  
             <h2 class="tituloDahs">Reportes de Ventas</h2>  
@@ -182,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (response.ok) {  
                                 alert('Producto agregado exitosamente');  
                                 formAgregarProducto.reset();  
-                                mostrarProductos();  
+                                await mostrarProductos(); // Llama a mostrarProductos para actualizar la lista  
                             } else {  
                                 const errorData = await response.json();  
                                 alert(`Error: ${errorData.mensaje || 'Error al agregar el producto.'}`);  
@@ -192,11 +195,123 @@ document.addEventListener('DOMContentLoaded', () => {
                             alert('Error desconocido al intentar agregar el producto.');  
                         }  
                     });  
+
+                    // Función para mostrar productos  
+                    const mostrarProductos = async () => {  
+                        const productosContainer = document.getElementById('productosContainer');  
+                        productosContainer.innerHTML = ''; // Limpiar el contenedor  
+                    
+                        try {  
+                            const response = await fetch('/api/productos'); // Asegúrate de que esta URL sea correcta  
+                            const productos = await response.json();  
+                            
+                            // Verificar si hay productos  
+                            if (!Array.isArray(productos) || productos.length === 0) {  
+                                productosContainer.innerHTML = '<p>No hay productos disponibles.</p>';  
+                                return;  
+                            }  
+                    
+                            const table = document.createElement('table');  
+                            const thead = document.createElement('thead');  
+                            const tbody = document.createElement('tbody');  
+                    
+                            // Crear la fila de encabezados  
+                            const headerRow = document.createElement('tr');  
+                            headerRow.innerHTML = `  
+                                <th>Nombre</th>  
+                                <th>Precio</th>  
+                                <th>Categoría</th>    
+                                <th>Acciones</th>  
+                            `;  
+                            thead.appendChild(headerRow);  
+                            table.appendChild(thead);  
+                    
+                            productos.forEach(producto => {  
+                                const row = document.createElement('tr');  
+                                row.setAttribute('data-id', producto.id);  
+                                row.innerHTML = `  
+                                    <td>${producto.nombre}</td>  
+                                    <td>${producto.precio}</td>  
+                                    <td>${producto.categoria}</td>    
+                                    <td>  
+                                        <button class="editarUsuario">Editar</button>  
+                                        <button class="eliminarUsuario">Eliminar</button>  
+                                    </td>  
+                                `;  
+                                tbody.appendChild(row);  
+                            });  
+                    
+                            table.appendChild(tbody);  
+                            productosContainer.appendChild(table);  
+                    
+                            agregarEventosAProductos(); // Asegúrate de tener esta función definida  
+                        } catch (error) {  
+                            console.error('Error al obtener los productos:', error);  
+                            productosContainer.innerHTML = '<p>Error al cargar productos. Intenta nuevamente más tarde.</p>';  
+                        }  
+                    };  
+
+                    // Función para agregar eventos a los botones de editar y eliminar  
+                    const agregarEventosAProductos = () => {  
+                        document.querySelectorAll('.editarProducto').forEach(button => {  
+                            button.addEventListener('click', async (event) => {  
+                                const row = event.target.closest('tr');  
+                                const productId = row.getAttribute('data-id');  
+                                const newNombre = prompt('Ingrese nuevo nombre:', row.children[0].textContent);  
+                                const newPrecio = prompt('Ingrese nuevo precio:', row.children[1].textContent);  
+                                const newCategoria = prompt('Ingrese nueva categoría:', row.children[2].textContent);  
+
+                                if (newNombre && newPrecio && newCategoria) {  
+                                    try {  
+                                        const response = await fetch(`/api/productos/${productId}`, {  
+                                            method: 'PUT',  
+                                            headers: {  
+                                                'Content-Type': 'application/json',  
+                                            },  
+                                            body: JSON.stringify({ nombre: newNombre, precio: newPrecio, categoria: newCategoria })  
+                                        });  
+                                        if (response.ok) {  
+                                            alert('Producto actualizado exitosamente');  
+                                            await mostrarProductos(); // Actualizar la lista de productos  
+                                        } else {  
+                                            alert('Error al actualizar el producto.');  
+                                        }  
+                                    } catch (error) {  
+                                        console.error('Error al actualizar el producto:', error);  
+                                    }  
+                                }  
+                            });  
+                        });  
+
+                        document.querySelectorAll('.eliminarProducto').forEach(button => {  
+                            button.addEventListener('click', async (event) => {  
+                                const row = event.target.closest('tr');  
+                                const productId = row.getAttribute('data-id');  
+
+                                if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {  
+                                    try {  
+                                        const response = await fetch(`/api/productos/${productId}`, {  
+                                            method: 'DELETE',  
+                                        });  
+                                        if (response.ok) {  
+                                            alert('Producto eliminado exitosamente');  
+                                            await mostrarProductos(); // Actualizar la lista de productos  
+                                        } else {  
+                                            alert('Error al eliminar el producto.');  
+                                        }  
+                                    } catch (error) {  
+                                        console.error('Error al eliminar el producto:', error);  
+                                    }  
+                                }  
+                            });  
+                        });  
+                    };    
+                    document.addEventListener('DOMContentLoaded', mostrarProductos);  
                 }
 
             }, 1000);  
         });  
-    });  
+    });     
 
     const mostrarUsuarios = async () => {  
         try {  
