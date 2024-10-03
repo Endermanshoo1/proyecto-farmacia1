@@ -1,9 +1,9 @@
 const Producto = require('../models/Producto');  
 
-// Crear un nuevo producto  
+// Crear un nuevo producto   
 exports.crearProducto = async (req, res) => {  
-    const { nombre, precio, categoria } = req.body;  
-    const imagen = req.file; 
+    const { nombre, precio, categoria, stock } = req.body; // Ahora incluye stock  
+    const imagen = req.file;   
 
     try {  
         if (!imagen) {  
@@ -14,7 +14,8 @@ exports.crearProducto = async (req, res) => {
             nombre,   
             precio,   
             categoria,   
-            imagen: imagen.path // Asegúrate de almacenar la ruta de la imagen  
+            imagen: imagen.path,   
+            stock  
         });  
         await nuevoProducto.save();  
         res.status(201).json(nuevoProducto);  
@@ -22,7 +23,7 @@ exports.crearProducto = async (req, res) => {
         console.error('Error al crear el producto:', error);  
         res.status(500).json({ mensaje: 'Error al crear el producto', error });  
     }  
-};    
+};  
 
 // Obtener todos los productos  
 exports.obtenerProductos = async (req, res) => {  
@@ -53,10 +54,18 @@ exports.obtenerProductoPorId = async (req, res) => {
 // Actualizar un producto  
 exports.actualizarProducto = async (req, res) => {  
     const { id } = req.params;  
-    const { nombre, precio, categoria, imagen } = req.body;  
+    const { nombre, precio, categoria, imagen, stock } = req.body;  
+
+    // Preparar el objeto de actualización  
+    const actualizarDatos = {};  
+    if (nombre) actualizarDatos.nombre = nombre;  
+    if (precio) actualizarDatos.precio = precio;  
+    if (categoria) actualizarDatos.categoria = categoria;  
+    if (imagen) actualizarDatos.imagen = imagen;  
+    if (stock !== undefined) actualizarDatos.stock = stock; // Permitir que el stock sea 0  
 
     try {  
-        const productoActualizado = await Producto.findByIdAndUpdate(id, { nombre, precio, categoria, imagen }, { new: true });  
+        const productoActualizado = await Producto.findByIdAndUpdate(id, actualizarDatos, { new: true });  
         if (!productoActualizado) {  
             return res.status(404).json({ mensaje: 'Producto no encontrado' });  
         }  
@@ -71,7 +80,7 @@ exports.actualizarProducto = async (req, res) => {
 exports.eliminarProducto = async (req, res) => {  
     const { id } = req.params;  
     try {  
-        const productoEliminado = await Producto.findByIdAndRemove(id);  
+        const productoEliminado = await Producto.findByIdAndDelete(id); // Cambiado a findByIdAndDelete  
         if (!productoEliminado) {  
             return res.status(404).json({ mensaje: 'Producto no encontrado' });  
         }  
@@ -80,4 +89,20 @@ exports.eliminarProducto = async (req, res) => {
         console.error('Error al eliminar el producto:', error);  
         res.status(500).json({ mensaje: 'Error al eliminar el producto', error });  
     }  
-};
+};  
+
+// Obtener productos por categoría  
+exports.obtenerProductosPorCategoria = async (req, res) => {  
+    const { categoria } = req.params; // Obteniendo la categoría desde los parámetros de la ruta  
+
+    try {  
+        const productosPorCategoria = await Producto.find({ categoria }); // Buscando productos por categoría  
+        if (!productosPorCategoria.length) {  
+            return res.status(404).json({ mensaje: 'No se encontraron productos en esta categoría' });  
+        }  
+        res.status(200).json(productosPorCategoria); // Retornando los productos encontrados  
+    } catch (error) {  
+        console.error('Error al obtener productos por categoría:', error);  
+        res.status(500).json({ mensaje: 'Error al obtener productos por categoría', error });  
+    }  
+};  

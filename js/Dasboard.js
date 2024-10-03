@@ -102,89 +102,52 @@ function moveSlide(direction) {
 
 //cartas
 
-const contenedorTarjetasOfertas = document.getElementById("cartas-frex")
+const contenedorTarjetasOfertas = document.getElementById("cartas-frex");  
 
-function crearTarjetasProductosOfertas(ofertasDeMes){
-    ofertasDeMes.forEach(ofertasDeMes =>{
-        const nuevoProducto = document.createElement('div')
-        nuevoProducto.classList = "card"
-        nuevoProducto.innerHTML =
-        `
-        <div class= "imgBx">
-                <img src="${ofertasDeMes.img}">
-        </div>
-        <div class=content>
-            <div class="details">
-            <h2 class="details">${ofertasDeMes.nombre}</h2>
-            <p class="details">${ofertasDeMes.precio}</p>
-            </div>
-            <div class="botones">
-                <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
-            </div>
-        </div>
-        `
-        contenedorTarjetasOfertas.appendChild(nuevoProducto)
-        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(ofertasDeMes))
-    })
-}
+async function obtenerOfertasDelMes() {  
+    try {  
+        const response = await fetch('/api/ofertas-del-mes'); // Endpoint que debería devolver las ofertas del mes con su categoría  
+        if (!response.ok) {  
+            throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
+        }  
+        const ofertasDeMes = await response.json(); // Se asume que tu API devuelve un array de objetos  
+        crearTarjetasProductosOfertas(ofertasDeMes); // Llama a la función que crea las tarjetas de producto  
+    } catch (error) {  
+        console.error("Error al obtener ofertas del mes:", error);  
+        contenedorTarjetasOfertas.innerHTML = '<p>Error al cargar las ofertas.</p>';  
+    }  
+}  
 
-crearTarjetasProductosOfertas(ofertasDeMes)
+function crearTarjetasProductosOfertas(ofertasDeMes) {  
+    contenedorTarjetasOfertas.innerHTML = ''; // Limpiar contenido previo  
 
-//barra
-/*const categoria = document.querySelector('#categoria')
-document.addEventListener('DOMContentLoaded',mostrarMenu)
-async function mostrarMenu(menu) {
-    const menu = document.createElement('ul')
-    menu.innerHTML += `
-    <li>
-                    <a id="Farmacia" href="/view/secciones/farmacia.html">
-                        <i class='bx bx-injection icon'></i>
-                        <span>Farmacia</span>
-                    </a>
-                </li>
-                <li>
-                    <a id="Belleza" href="/view/secciones/belleza.html">
-                        <i class='bx bxs-face icon'></i>
-                        <span>Belleza</span>
-                    </a>
-                </li>
-                <li>
-                    <a id="Comestibles" href="/view/secciones/comestibles.html">
-                        <i class='bx bx-donate-heart icon'></i>
-                        <span>Comestibles</span>
-                    </a>
-                </li>
-                <li>
-                    <a id="Bebes" href="/view/secciones/bebes.html">
-                        <i class='bx bxs-baby-carriage icon'></i>
-                        <span>Bebes</span>
-                    </a>
-                </li>
-                <li>
-                    <a id="Cuidado-Personal" href="/view/secciones/cuidado-personal.html">
-                        <i class='bx bxs-face icon'></i>
-                        <span>Cuidado Personal</span>
-                    </a>
-                </li>
-                <li>
-                    <a id="Hogar" href="/view/secciones/hogar.html">
-                        <i class='bx bx-home icon'></i>
-                        <span>Hogar</span>
-                    </a>
-                </li>
-                <li>
-                    <a id="Carrito" href="/view/carrito/index.html">
-                        <i class='bx bx-cart-add icon'></i>
-                        <span>Carrito</span>
-                        <span id="cuenta-carrito">0</span>
-                    </a>
-                </li>
-    `
-    categoria.appendChild(menu)
-}*/
+    ofertasDeMes.forEach(oferta => {  
+        const nuevoProducto = document.createElement('div');  
+        nuevoProducto.classList = "card";  
+        nuevoProducto.innerHTML = `  
+            <div class="imgBx">  
+                <img src="${oferta.img}" alt="${oferta.nombre}">  
+            </div>  
+            <div class="content">  
+                <div class="details">  
+                    <h2 class="details">${oferta.nombre}</h2>  
+                    <p class="details">${oferta.precio}</p>  
+                </div>  
+                <div class="botones">  
+                    <span class="like"><i class='bx bx-like'></i></span>  
+                    <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
+                </div>  
+            </div>  
+        `;  
+        contenedorTarjetasOfertas.appendChild(nuevoProducto);  
+        // Agregar listener al botón de carrito  
+        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(oferta));  
+    });  
+}  
 
-//scroller
+// Llamar a la función obtenerOfertasDelMes cuando se carga la página  
+document.addEventListener('DOMContentLoaded', obtenerOfertasDelMes);
+
 
 //scroller productos 
 

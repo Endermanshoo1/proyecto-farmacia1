@@ -73,8 +73,18 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="subtituloDahs">Aquí podrás ver los reportes de ventas.</p>  
         `,  
         Inventario: `  
-            <h2 class="tituloDahs">Control de Inventario</h2>  
+             <h2 class="tituloDahs">Control de Inventario</h2>  
             <p class="subtituloDahs">Aquí puedes gestionar el inventario de productos.</p>  
+            <table id="tablaInventario" class="tabla">  
+                <thead>  
+                    <tr>  
+                        <th>Nombre del Producto</th>  
+                        <th>Cantidad en Stock</th>  
+                        <th>Acciones</th>  
+                    </tr>  
+                </thead>  
+                <tbody id="productosBody"></tbody>  
+            </table>    
         `,  
         GestionClientes: `  
             <h2 class="tituloDahs">Gestión de Usuarios</h2>  
@@ -142,6 +152,61 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (id === 'GestionClientes') {  
                     mostrarUsuarios();  
                 }  else if(id === 'GestionProductos') {
+
+                    // Función para mostrar productos  
+                    const mostrarProductos = async () => {  
+                        const productosContainer = document.getElementById('productosContainer');  
+                        productosContainer.innerHTML = ''; // Limpiar el contenedor  
+                    
+                        try {  
+                            const response = await fetch('/api/productos'); // Asegúrate de que esta URL sea correcta  
+                            const productos = await response.json();  
+                            
+                            // Verificar si hay productos  
+                            if (!Array.isArray(productos) || productos.length === 0) {  
+                                productosContainer.innerHTML = '<p>No hay productos disponibles.</p>';  
+                                return;  
+                            }  
+                    
+                            const table = document.createElement('table');  
+                            const thead = document.createElement('thead');  
+                            const tbody = document.createElement('tbody');  
+                    
+                            // Crear la fila de encabezados  
+                            const headerRow = document.createElement('tr');  
+                            headerRow.innerHTML = `  
+                                <th>Nombre</th>  
+                                <th>Precio</th>  
+                                <th>Categoría</th>    
+                                <th>Acciones</th>  
+                            `;  
+                            thead.appendChild(headerRow);  
+                            table.appendChild(thead);  
+                    
+                            productos.forEach(producto => {  
+                                const row = document.createElement('tr');  
+                                row.setAttribute('data-id', producto._id);  
+                                row.innerHTML = `  
+                                    <td>${producto.nombre}</td>  
+                                    <td>${producto.precio}</td>  
+                                    <td>${producto.categoria}</td>    
+                                    <td>  
+                                        <button id="editarProducto" class="editarUsuario">Editar</button>  
+                                        <button id="eliminarProducto" class="eliminarUsuario">Eliminar</button>  
+                                    </td>  
+                                `;  
+                                tbody.appendChild(row);  
+                            });  
+                    
+                            table.appendChild(tbody);  
+                            productosContainer.appendChild(table);  
+                    
+                            agregarEventosAProductos(); // Asegúrate de tener esta función definida  
+                        } catch (error) {  
+                            console.error('Error al obtener los productos:', error);  
+                            productosContainer.innerHTML = '<p>Error al cargar productos. Intenta nuevamente más tarde.</p>';  
+                        }  
+                    }; mostrarProductos()
                     
                     const formAgregarProducto = document.getElementById('formAgregarProducto');  
                     formAgregarProducto.addEventListener('submit', async (e) => {  
@@ -197,117 +262,187 @@ document.addEventListener('DOMContentLoaded', () => {
                         }  
                     });  
 
-                    // Función para mostrar productos  
-                    const mostrarProductos = async () => {  
-                        const productosContainer = document.getElementById('productosContainer');  
-                        productosContainer.innerHTML = ''; // Limpiar el contenedor  
+                    let productIdToEdit; // Variable para almacenar el ID del producto que será editado  
+                    let productIdToDelete; // Variable para almacenar el ID del producto que será eliminado  
+
+                    const agregarEventosAProductos = () => {  
+                        // Agregar eventos a los botones de editar  
+                        document.querySelectorAll('#editarProducto').forEach(button => {  
+                            button.addEventListener('click', (event) => {  
+                                const row = event.target.closest('tr');  
+                                productIdToEdit = row.getAttribute('data-id');   
+                                document.getElementById('editarNombre').value = row.children[0].textContent;  
+                                document.getElementById('editarPrecio').value = row.children[1].textContent;  
+                                document.getElementById('editarCategoria').value = row.children[2].textContent;  
+                                document.getElementById('modalEditarProducto').style.display = 'block'; // Abre el modal de editar  
+                            });  
+                        });   
+
+                        // Agregar eventos a los botones de eliminar  
+                        document.querySelectorAll('#eliminarProducto').forEach(button => {  
+                            button.addEventListener('click', (event) => {  
+                                const row = event.target.closest('tr');  
+                                productIdToDelete = row.getAttribute('data-id');  
+                                document.getElementById('modalEliminarProducto').style.display = 'block'; // Abre el modal de eliminar  
+                            });  
+                        });  
+                    };  
+
+                    // Guardar cambios en el producto  
+                    document.getElementById('formEditarProducto').addEventListener('submit', async (event) => {  
+                        event.preventDefault(); // Prevenir el envío por defecto del formulario  
+
+                        const newNombre = document.getElementById('editarNombre').value;  
+                        const newPrecio = document.getElementById('editarPrecio').value;  
+                        const newCategoria = document.getElementById('editarCategoria').value;  
+
+                        try {  
+                            const response = await fetch(`/api/productos/${productIdToEdit}`, {  
+                                method: 'PUT',  
+                                headers: {  
+                                    'Content-Type': 'application/json',  
+                                },  
+                                body: JSON.stringify({ nombre: newNombre, precio: newPrecio, categoria: newCategoria })  
+                            });  
+
+                            if (response.ok) {  
+                                alert('Producto actualizado exitosamente');  
+                                await mostrarProductos(); // Actualizar la lista de productos  
+                            } else {  
+                                alert('Error al actualizar el producto.');  
+                            }  
+                        } catch (error) {  
+                            console.error('Error al actualizar el producto:', error);  
+                        } finally {  
+                            document.getElementById('modalEditarProducto').style.display = 'none'; // Cerrar modal  
+                        }  
+                    });  
+
+                    // Confirmar eliminación del producto  
+                    document.getElementById('confirmarEliminarProducto').addEventListener('click', async () => {  
+                        try {  
+                            const response = await fetch(`/api/productos/${productIdToDelete}`, {  
+                                method: 'DELETE',  
+                            });  
+
+                            if (response.ok) {  
+                                alert('Producto eliminado exitosamente');  
+                                await mostrarProductos(); // Actualizar la lista de productos  
+                            } else {  
+                                alert('Error al eliminar el producto.');  
+                            }  
+                        } catch (error) {  
+                            console.error('Error al eliminar el producto:', error);  
+                        } finally {  
+                            document.getElementById('modalEliminarProducto').style.display = 'none'; // Cerrar modal  
+                        }  
+                    });  
+
+                    // Cerrar modales  
+                    document.querySelectorAll('.close').forEach(el => {  
+                        el.addEventListener('click', () => {  
+                            el.closest('.modal').style.display = 'none';  
+                        });  
+                    });  
+
+                    // Cerrar la modal al hacer clic fuera de ella  
+                    window.addEventListener('click', (event) => {  
+                        if (event.target.classList.contains('modal')) {  
+                            event.target.style.display = 'none';  
+                        }  
+                    });  
+
+                    // Cancelar eliminación  
+                    document.getElementById('cancelarEliminarProducto').addEventListener('click', () => {  
+                        document.getElementById('modalEliminarProducto').style.display = 'none';  
+                    });       
+                    document.addEventListener('DOMContentLoaded', mostrarProductos);  
+                }  else if(id === 'Inventario') {
+                    cargarProductos()
+                    async function cargarProductos() {  
+                        const productosBody = document.getElementById('productosBody');  
+                        productosBody.innerHTML = ''; // Limpiamos el contenido previo  
                     
                         try {  
-                            const response = await fetch('/api/productos'); // Asegúrate de que esta URL sea correcta  
-                            const productos = await response.json();  
+                            const response = await fetch('/api/productos');  
                             
-                            // Verificar si hay productos  
+                            // Verifica si la respuesta es exitosa  
+                            if (!response.ok) {  
+                                throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
+                            }  
+                    
+                            const productos = await response.json();  
+                    
+                            // Verifica si hay productos en el response  
                             if (!Array.isArray(productos) || productos.length === 0) {  
-                                productosContainer.innerHTML = '<p>No hay productos disponibles.</p>';  
+                                productosBody.innerHTML = '<tr><td colspan="3">No hay productos disponibles.</td></tr>';  
                                 return;  
                             }  
                     
-                            const table = document.createElement('table');  
-                            const thead = document.createElement('thead');  
-                            const tbody = document.createElement('tbody');  
-                    
-                            // Crear la fila de encabezados  
-                            const headerRow = document.createElement('tr');  
-                            headerRow.innerHTML = `  
-                                <th>Nombre</th>  
-                                <th>Precio</th>  
-                                <th>Categoría</th>    
-                                <th>Acciones</th>  
-                            `;  
-                            thead.appendChild(headerRow);  
-                            table.appendChild(thead);  
-                    
                             productos.forEach(producto => {  
-                                const row = document.createElement('tr');  
-                                row.setAttribute('data-id', producto.id);  
-                                row.innerHTML = `  
-                                    <td>${producto.nombre}</td>  
-                                    <td>${producto.precio}</td>  
-                                    <td>${producto.categoria}</td>    
-                                    <td>  
-                                        <button class="editarUsuario">Editar</button>  
-                                        <button class="eliminarUsuario">Eliminar</button>  
-                                    </td>  
-                                `;  
-                                tbody.appendChild(row);  
+                                const fila = document.createElement('tr');  
+                    
+                                // Columna para el nombre del producto  
+                                const celdaNombre = document.createElement('td');  
+                                celdaNombre.textContent = producto.nombre;  
+                                fila.appendChild(celdaNombre);  
+                    
+                                // Columna para la cantidad en stock  
+                                const celdaStock = document.createElement('td');  
+                                celdaStock.textContent = producto.stock;  
+                                fila.appendChild(celdaStock);  
+                    
+                                // Columna para las acciones (botón para editar)  
+                                const celdaAcciones = document.createElement('td');  
+                                const botonEditar = document.createElement('button');  
+                                botonEditar.textContent = 'Editar Cantidad';  
+                                botonEditar.className = 'editarCantidad'
+                                botonEditar.onclick = () => editarCantidad(producto._id); // Llama a la función para editar  
+                                celdaAcciones.appendChild(botonEditar);  
+                                fila.appendChild(celdaAcciones);  
+                    
+                                productosBody.appendChild(fila);  
                             });  
-                    
-                            table.appendChild(tbody);  
-                            productosContainer.appendChild(table);  
-                    
-                            agregarEventosAProductos(); // Asegúrate de tener esta función definida  
                         } catch (error) {  
-                            console.error('Error al obtener los productos:', error);  
-                            productosContainer.innerHTML = '<p>Error al cargar productos. Intenta nuevamente más tarde.</p>';  
+                            console.error('Error al cargar productos:', error);  
+                            productosBody.innerHTML = '<tr><td colspan="3">Error al cargar productos.</td></tr>'; // Mensaje de error  
                         }  
-                    };  
-
-                    // Función para agregar eventos a los botones de editar y eliminar  
-                    const agregarEventosAProductos = () => {  
-                        document.querySelectorAll('.editarProducto').forEach(button => {  
-                            button.addEventListener('click', async (event) => {  
-                                const row = event.target.closest('tr');  
-                                const productId = row.getAttribute('data-id');  
-                                const newNombre = prompt('Ingrese nuevo nombre:', row.children[0].textContent);  
-                                const newPrecio = prompt('Ingrese nuevo precio:', row.children[1].textContent);  
-                                const newCategoria = prompt('Ingrese nueva categoría:', row.children[2].textContent);  
-
-                                if (newNombre && newPrecio && newCategoria) {  
-                                    try {  
-                                        const response = await fetch(`/api/productos/${productId}`, {  
-                                            method: 'PUT',  
-                                            headers: {  
-                                                'Content-Type': 'application/json',  
-                                            },  
-                                            body: JSON.stringify({ nombre: newNombre, precio: newPrecio, categoria: newCategoria })  
-                                        });  
-                                        if (response.ok) {  
-                                            alert('Producto actualizado exitosamente');  
-                                            await mostrarProductos(); // Actualizar la lista de productos  
-                                        } else {  
-                                            alert('Error al actualizar el producto.');  
-                                        }  
-                                    } catch (error) {  
-                                        console.error('Error al actualizar el producto:', error);  
-                                    }  
-                                }  
+                    }  
+                    
+                    // Función para editar la cantidad de un producto  
+                    function editarCantidad(id) {  
+                        const nuevaCantidad = prompt("Ingrese la nueva cantidad:");  
+                    
+                        // Comprueba que la entrada no sea nula y que sea un número válido  
+                        if (nuevaCantidad !== null && !isNaN(nuevaCantidad) && nuevaCantidad >= 0) {  
+                            actualizarCantidadEnBD(id, Number(nuevaCantidad)); // Convertir a número para enviar al servidor  
+                        } else {  
+                            alert("Por favor, ingrese un número válido.");  
+                        }  
+                    }  
+                    
+                    // Función para actualizar la cantidad en la base de datos  
+                    async function actualizarCantidadEnBD(id, nuevaCantidad) {  
+                        try {  
+                            const response = await fetch(`/api/productos/${id}`, {  
+                                method: 'PUT',  
+                                headers: { 'Content-Type': 'application/json' },  
+                                body: JSON.stringify({ stock: nuevaCantidad }) // Enviamos el nuevo stock  
                             });  
-                        });  
-
-                        document.querySelectorAll('.eliminarProducto').forEach(button => {  
-                            button.addEventListener('click', async (event) => {  
-                                const row = event.target.closest('tr');  
-                                const productId = row.getAttribute('data-id');  
-
-                                if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {  
-                                    try {  
-                                        const response = await fetch(`/api/productos/${productId}`, {  
-                                            method: 'DELETE',  
-                                        });  
-                                        if (response.ok) {  
-                                            alert('Producto eliminado exitosamente');  
-                                            await mostrarProductos(); // Actualizar la lista de productos  
-                                        } else {  
-                                            alert('Error al eliminar el producto.');  
-                                        }  
-                                    } catch (error) {  
-                                        console.error('Error al eliminar el producto:', error);  
-                                    }  
-                                }  
-                            });  
-                        });  
-                    };    
-                    document.addEventListener('DOMContentLoaded', mostrarProductos);  
+                    
+                            if (response.ok) {  
+                                alert("Cantidad actualizada con éxito.");  
+                                cargarProductos(); // Recargar la lista de productos  
+                            } else {  
+                                alert("Error al actualizar la cantidad.");  
+                            }  
+                        } catch (error) {  
+                            console.error('Error al actualizar la cantidad:', error);  
+                        }  
+                    }  
+                    
+                    // Llamar a la función para cargar productos cuando se cargue la página  
+                    document.addEventListener('DOMContentLoaded', cargarProductos); 
                 }
 
             }, 1000);  
@@ -350,7 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         usuariosAMostrar.forEach(usuario => {  
             const row = document.createElement('tr');  
-            row.setAttribute('data-id', usuario.id);  
+            row.setAttribute('data-id', usuario._id);  
             row.innerHTML = `  
                 <td>${usuario.username}</td>  
                 <td>${usuario.email}</td>  

@@ -57,7 +57,7 @@ app.post('/api/admins', adminController.addAdmin);
 // Rutas de usuario  
 app.get('/api/users', userController.getAllUsers);  
 app.get('/api/users/:id', userController.getUser);  
-app.put('/api/users/:id', userController.updateUser);  
+app.put('/api/users/:id', userController.updateUser);   
 app.delete('/api/users/:id', userController.deleteUser);    
 
 // Rutas de administrador  
@@ -102,6 +102,9 @@ app.get('/user/hogar', (req, res) => {
 });   
 app.get('/admin', (req, res) => {  
     res.sendFile(__dirname + '/view/admin/index.html');   
+});  
+app.get('/carrito', (req, res) => {  
+    res.sendFile(__dirname + '/view/carrito/index.html');   
 });  
 
 // Rutas de css y js   

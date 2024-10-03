@@ -18,7 +18,7 @@
         <div>
             <div class="nombre-pagina">
                 <img class="img_logo" id="cloud" src="/img/logo mini white.png" alt="">
-                <a href="/views/dashboard/index.html">
+                <a href="">
                     <img class="img_logo2" id="cloud" src="https://dummyimage.com/180x100/fff/aaa" alt="">
                 </a>
                 <span>Farmacia</span>
@@ -83,7 +83,7 @@
 
         <div id="Mostrarcontenido"></div>
 
-        <!-- Modal de edición -->  
+        <!-- Modal de edición para usuarios-->  
         <div id="modalEditar" class="modal">  
             <div class="modal-content">  
                 <span class="close" id="closeEditar">&times;</span>  
@@ -98,7 +98,7 @@
             </div>  
         </div>  
 
-        <!-- Modal de confirmación de eliminación -->  
+        <!-- Modal de confirmación de eliminación de usuarios -->  
         <div id="modalEliminar" class="modal">  
             <div class="modal-content">  
                 <span class="close" id="closeEliminar">&times;</span>  
@@ -108,6 +108,34 @@
                 <button id="cancelarEliminar">Cancelar</button>  
             </div>  
         </div>  
+
+       <!-- Modal para editar producto -->  
+        <div id="modalEditarProducto" class="modal">  
+            <div class="modal-content">  
+                <span class="close" id="closeEditarProducto">&times;</span>  
+                <h2>Editar Producto</h2>  
+                <form id="formEditarProducto">  
+                    <label for="editarNombre">Nombre:</label>  
+                    <input type="text" id="editarNombre" required>  
+                    <label for="editarPrecio">Precio:</label>  
+                    <input type="number" id="editarPrecio" required>  
+                    <label for="editarCategoria">Categoría:</label>  
+                    <input type="text" id="editarCategoria" required>  
+                    <button class="Cambios" type="submit">Guardar Cambios</button>  
+                </form>  
+            </div>  
+        </div>  
+
+        <!-- Modal para eliminar producto -->  
+        <div id="modalEliminarProducto" class="modal">  
+            <div class="modal-content">  
+                <span class="close" id="closeEliminarProducto">&times;</span>  
+                <h2>Eliminar Producto</h2>  
+                <p>¿Estás seguro de que deseas eliminar este producto?</p>  
+                <button id="confirmarEliminarProducto">Eliminar</button>  
+                <button id="cancelarEliminarProducto">Cancelar</button>  
+            </div>  
+        </div>      
 
     </main>
     

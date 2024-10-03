@@ -353,6 +353,16 @@ main.min-main{
     font-size: 25px;
 }
 
+/*tabla inventario*/
+
+#tablaInventario{
+    background: var(--sidebar-color);
+    border-radius: 20px;
+    margin-top: 10px;
+}
+
+/*formularios*/
+
 #formAgregarAdmin,
 #formAgregarProducto{
     margin: 30px;
@@ -411,6 +421,7 @@ main.min-main{
     border-radius: 20px;
     width: 750px;
     height: 710px;
+    margin-top: 10px;
 }
 
 .table-container {  
@@ -486,6 +497,7 @@ th {
     padding: 20px;  
     border: 1px solid var(--text-color);  
     width: 60%;   
+    border: none;
 }  
 
 .modal-content form input{
@@ -531,10 +543,54 @@ th {
     height: 40px;
     margin-top: 12px;
     margin-left: 75px;
+    border: none;
+    cursor: pointer;
+    background-color: var(--text-color);
+    color: var(--sidebar-color);
 }
 
-#cancelarEliminar{
-    
+#cancelarEliminar{ 
     width: 40%;
     height: 40px;
+    border: none;
+    cursor: pointer;
+    background-color: var(--text-color);
+    color: var(--sidebar-color);
+}
+
+#confirmarEliminarProducto{
+    width: 40%;
+    height: 40px;
+    margin-top: 12px;
+    margin-left: 75px;
+    border: none;
+    cursor: pointer;
+    background-color: var(--text-color);
+    color: var(--sidebar-color);
+}
+
+#cancelarEliminarProducto{
+    width: 40%;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    background-color: var(--text-color);
+    color: var(--sidebar-color);
+}
+
+p{
+    color: var(--text-color);
+}
+
+label{
+    color: var(--text-color);
+}
+
+.editarCantidad{
+    width: 220px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    background: var(--text-color);
+    color: var(--sidebar-color);
 }
