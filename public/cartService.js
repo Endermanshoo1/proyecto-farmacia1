@@ -1,88 +1,78 @@
-async function agregarAlCarrito(producto) {  
-    try {  
-        const response = await fetch('/api/carrito', {  
-            method: 'POST',  
-            headers: {  
-                'Content-Type': 'application/json',  
-            },  
-            body: JSON.stringify({   
-                productoId: producto.id, // Asegúrate que tu backend maneje esto  
-                cantidad: 1 // Asumiendo que siempre se agrega 1 al carrito  
-            }),  
-        });  
+function agregarAlCarrito(producto) {  
+    console.log('Agregando al carrito:', producto);  
+    
+    // Obtener el carrito actual del localStorage  
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];  
+    
+    // Verificar si el producto ya está en el carrito  
+    const index = carrito.findIndex(item => item._id === producto._id);  
+    
+    if (index !== -1) {  
+        // Si el producto ya existe en el carrito, incrementar la cantidad  
+        carrito[index].cantidad += 1;  
+    } else {  
+        // Si el producto no existe en el carrito, agregarlo  
+        carrito.push({ ...producto, cantidad: 1 });  
+    }  
+    
+    // Guardar el carrito actualizado en el localStorage  
+    localStorage.setItem('carrito', JSON.stringify(carrito));  
+    
+    // Actualizar el número de productos en el carrito  
+    actualizarNumeroCarrito();  
+    
+    console.log("Carrito actualizado:", carrito);  
+}   
 
-        if (!response.ok) {  
-            throw new Error('Error al agregar el producto al carrito');  
-        }  
+/* Toma un producto, le agrega cantidad 1 y lo devuelve */  
+function getNuevoProductoParaMemoria(producto) {  
+    const nuevoProducto = { ...producto }; // Crear una copia superficial del objeto  
+    nuevoProducto.cantidad = 1; // Inicializa la cantidad en 1  
+    return nuevoProducto;  
+}  
 
-        // Actualiza el número del carrito después de agregar  
-        actualizarNumeroCarrito();  
-    } catch (error) {  
-        console.error(error);  
+/** Actualiza el número del carrito en el header */  
+function actualizarNumeroCarrito() {  
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];  
+    const totalProductos = carrito.reduce((acc, item) => acc + item.cantidad, 0);  
+    
+    // Supongamos que tienes un elemento HTML donde deseas mostrar   
+    // el número total de productos en el carrito  
+    const elementoNumeroCarrito = document.getElementById('numeroCarrito');  
+    elementoNumeroCarrito.textContent = totalProductos;  
+
+    console.log('Número total en el carrito:', totalProductos);  
+}  
+
+// Función para eliminar un producto del carrito  
+function eliminarDelCarrito(productoId) {  
+    const memoria = JSON.parse(localStorage.getItem("nuevoProducto"));  
+    if (memoria) {  
+        const nuevaMemoria = memoria.filter(producto => producto.id !== productoId);  
+        localStorage.setItem("nuevoProducto", JSON.stringify(nuevaMemoria));  
+        actualizarNumeroCarrito(); // Actualiza el número del carrito  
     }  
 }  
 
-// Eliminar un producto del carrito  
-async function eliminarDelCarrito(productoId) {  
-    try {  
-        const response = await fetch(`/api/carrito/${productoId}`, {  
-            method: 'DELETE',  
-        });  
-
-        if (!response.ok) {  
-            throw new Error('Error al eliminar el producto del carrito');  
+// Función para reducir la cantidad de un producto  
+function reducirCantidad(productoId) {  
+    const memoria = JSON.parse(localStorage.getItem("nuevoProducto"));  
+    if (memoria) {  
+        const indiceProducto = memoria.findIndex(producto => producto.id === productoId);  
+        if (indiceProducto !== -1) {  
+            if (memoria[indiceProducto].cantidad > 1) {  
+                memoria[indiceProducto].cantidad--; // Reduce la cantidad  
+            } else {  
+                // Si la cantidad es 1, elimina el producto  
+                memoria.splice(indiceProducto, 1);  
+            }  
+            localStorage.setItem("nuevoProducto", JSON.stringify(memoria)); // Actualiza el carrito  
+            actualizarNumeroCarrito(); // Actualiza el número del carrito  
         }  
-
-        // Actualiza el número del carrito después de eliminar  
-        actualizarNumeroCarrito();  
-    } catch (error) {  
-        console.error(error);  
-    }  
-}  
-
-// Reducir la cantidad de un producto  
-async function reducirCantidad(productoId) {  
-    try {  
-        const response = await fetch(`/api/carrito/${productoId}`, {  
-            method: 'PUT',  
-            headers: {  
-                'Content-Type': 'application/json',  
-            },  
-            body: JSON.stringify({ cantidad: -1 }), // Reducir cantidad en 1  
-        });  
-
-        if (!response.ok) {  
-            throw new Error('Error al reducir la cantidad del producto');  
-        }  
-
-        // Actualiza el número del carrito después de reducir la cantidad  
-        actualizarNumeroCarrito();  
-    } catch (error) {  
-        console.error(error);  
-    }  
-}  
-
-// Actualizar el número del carrito desde la base de datos  
-async function actualizarNumeroCarrito() {  
-    try {  
-        const response = await fetch('/api/carrito'); // Obtener todos los items del carrito  
-        if (!response.ok) {  
-            throw new Error('Error al obtener el carrito');  
-        }  
-
-        const carrito = await response.json();  
-        const cuentaCarritoElement = document.getElementById("cuenta-carrito");  
-
-        if (cuentaCarritoElement) {  
-            const cuenta = carrito.reduce((acum, current) => acum + current.cantidad, 0);  
-            cuentaCarritoElement.innerText = cuenta;  
-        }  
-    } catch (error) {  
-        console.error(error);  
     }  
 }  
 
 // Asegúrate de que el código se ejecute después de que el DOM esté cargado  
 document.addEventListener("DOMContentLoaded", function() {  
-    actualizarNumeroCarrito();  
+    actualizarNumeroCarrito(); // Inicializa el número del carrito al cargar la página  
 });  

@@ -319,7 +319,7 @@ main.min-main{
         display: none;
     }
     main{
-        margin-left: 0;
+        margin-left: 25px;
     }
     main.min-main{
         margin-left: 0;
@@ -481,3 +481,90 @@ transition: var(--tran-05);
     border: none;
     margin-top: 20px;
 }
+
+/*
+@media (max-width: 600px) {  
+    .barra-lateral {  
+        position: fixed;  
+        left: -250px;  
+    }  
+    .max-barra-lateral {  
+        left: 0; 
+    }  
+    .menu {  
+        display: flex;  
+    }  
+    .menu ion-icon:nth-child(2) {  
+        display: none; 
+    }  
+    main {  
+        margin-left: 25px;   
+    }  
+    main.min-main {  
+        margin-left: 0; 
+    }  
+
+    .modal {  
+        position: fixed;
+        top: 25%;
+        left: 50%;
+        transform: translate(-48%, -50%);
+        width: 90%;
+        max-width: 400px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: none;  
+    }  
+
+    .modal.active {  
+        display: block; 
+    }  
+
+    .modal-header {  
+        padding: 10px;  
+        border-bottom: 1px solid #e0e0e0;  
+    }  
+
+    .modal-body {  
+        padding: 20px;  
+    }  
+
+    .modal-footer {  
+        padding: 10px;  
+        border-top: 1px solid #e0e0e0;   
+        display: flex;  
+        justify-content: flex-end;   
+    }  
+
+    .modal-close {  
+        background: #d9534f;   
+        color: white;   
+        border: none;  
+        padding: 10px; 
+        border-radius: 4px;   
+        cursor: pointer;  
+        transition: 0.3s;   
+    }  
+
+    .modal-close:hover {  
+        background: #c9302c;  
+    }  
+}  
+
+  
+@media (min-width: 601px) and (max-width: 800px) {  
+    .modal {  
+        width: 80%;   
+        max-width: 600px;    
+    }  
+}  
+
+@media (min-width: 801px) {  
+    .modal {  
+        width: 50%;   
+        max-width: 800px;  
+    }  
+}  
+*/

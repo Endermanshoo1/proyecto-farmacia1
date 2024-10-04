@@ -45,14 +45,14 @@ cloud.addEventListener("click",()=>{
 
 const contenedorTarjetasHogar = document.getElementById("hogar")
 
-function crearTarjetashogar(hogar){
+function crearTarjetasHogar(hogar){
     hogar.forEach(hogar =>{
-        const nuevoProducto = document.createElement('div')
-        nuevoProducto.classList = "card"
-        nuevoProducto.innerHTML =
+        const nuevoProducto2 = document.createElement('div')
+        nuevoProducto2.classList = "card"
+        nuevoProducto2.innerHTML =
         `
         <div class= "imgBx">
-                <img src="${hogar.img}">
+                <img src="/${hogar.imagen}">
         </div>
         <div class=content>
             <div class="details">
@@ -65,10 +65,22 @@ function crearTarjetashogar(hogar){
             </div>
         </div>
         `
-        contenedorTarjetasHogar.appendChild(nuevoProducto)
-        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(hogar))
+        contenedorTarjetasHogar.appendChild(nuevoProducto2)
+        nuevoProducto2.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(hogar))
     })
 }
-
-crearTarjetashogar(hogar)
-
+async function obtenerProductosPorCategoria(categoria) {    
+    try {  
+        const response = await fetch(`/api/productos/categoria/${categoria}`);   
+        if (!response.ok) {  
+            throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
+        }  
+        const productos = await response.json();  
+        
+        crearTarjetasHogar(productos)
+    } catch (error) {  
+        console.error(`Error al obtener productos de la categoría ${categoria}:`, error);  
+        contenedor.innerHTML = '<p>Error al cargar los productos de esta categoría.</p>';  
+    }  
+}  
+obtenerProductosPorCategoria('hogar');   

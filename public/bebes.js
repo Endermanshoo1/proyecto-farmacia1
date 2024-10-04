@@ -43,17 +43,16 @@ cloud.addEventListener("click",()=>{
 
 
 //tarjetas bebes
-
 const contenedorTarjetasBebes = document.getElementById("bebes")
 
 function crearTarjetaBebes(bebes){
     bebes.forEach(bebes =>{
-        const nuevoProducto5 = document.createElement('div')
-        nuevoProducto5.classList = "card"
-        nuevoProducto5.innerHTML =
+        const nuevoProducto2 = document.createElement('div')
+        nuevoProducto2.classList = "card"
+        nuevoProducto2.innerHTML =
         `
         <div class= "imgBx">
-                <img src="${bebes.img}">
+                <img src="/${bebes.imagen}">
         </div>
         <div class=content>
             <div class="details">
@@ -66,9 +65,22 @@ function crearTarjetaBebes(bebes){
             </div>
         </div>
         `
-        contenedorTarjetasBebes.appendChild(nuevoProducto5)
-        nuevoProducto5.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(bebes))
+        contenedorTarjetasBebes.appendChild(nuevoProducto2)
+        nuevoProducto2.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(bebes))
     })
 }
-
-crearTarjetaBebes(bebes)
+async function obtenerProductosPorCategoria(categoria) {    
+    try {  
+        const response = await fetch(`/api/productos/categoria/${categoria}`);   
+        if (!response.ok) {  
+            throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
+        }  
+        const productos = await response.json();  
+        
+        crearTarjetaBebes(productos)
+    } catch (error) {  
+        console.error(`Error al obtener productos de la categoría ${categoria}:`, error);  
+        contenedor.innerHTML = '<p>Error al cargar los productos de esta categoría.</p>';  
+    }  
+}  
+obtenerProductosPorCategoria('bebes');        

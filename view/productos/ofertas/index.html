@@ -7,7 +7,6 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'> 
     <link rel="stylesheet" href="/css/productos.css">
     <link rel="shortcut icon" href="/public/img/logo mini white.png" type="image/x-icon">
-    <script src="productos.js"></script>
 </head>
 <body>
     <div class="menu">
@@ -33,6 +32,12 @@
                     <a id="Farmacia" href="/user/farmacia">
                         <i class='bx bx-injection icon'></i>
                         <span>Farmacia</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Farmacia" href="/user/Ofertas">
+                        <i class='bx bxs-offer icon'></i>
+                        <span>Ofertas</span>
                     </a>
                 </li>
                 <li>
@@ -100,29 +105,11 @@
             </div>
         </div>
 
-    </div>  
+    </div> 
 
 
     <main>
-
-        <div class="cabezera">
-            <h3>Filtrar por</h3>
-            <i class='bx bx-down-arrow-alt'></i>
-        </div>
-     
-        <div class="filtros">  
-            <button class="filter-btn" onclick="filterProducts('all')">Todos</button>  
-            <button class="filter-btn" onclick="filterProducts('farmacia')">Farmacia</button>  
-            <button class="filter-btn" onclick="filterProducts('belleza')">Belleza</button>  
-            <button class="filter-btn" onclick="filterProducts('comestibles')">Comestibles</button>  
-            <button class="filter-btn" onclick="filterProducts('bebes')">Bebés</button>  
-            <button class="filter-btn" onclick="filterProducts('cuidado-personal')">Cuidado Personal</button>  
-            <button class="filter-btn" onclick="filterProducts('hogar')">Hogar</button>  
-        </div>  
-        
-        <div class="productos" id="farmacia"></div>
-         
-
+        <div class="productos" id="ofertas"></div>
     </main>
 
     <footer class="footer">  
@@ -158,6 +145,7 @@
         </div>  
     </footer>  
 
+    <script src="/public/ofertas.js"></script>
     <script src="/public/cartService.js" type="text/javascript"></script>
 
 

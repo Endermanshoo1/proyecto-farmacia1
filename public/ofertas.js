@@ -43,21 +43,21 @@ cloud.addEventListener("click",()=>{
 
 //cartas farmacia
 
-const contenedorTarjetasFarmacia = document.getElementById("farmacia")
+const contenedorTarjetasOfertas = document.getElementById("ofertas")
 
-function crearTarjetasfarmacia(farmacia){
-    farmacia.forEach(farmacia =>{
+function crearTarjetasOferta(ofertasdelmes){
+    ofertasdelmes.forEach(ofertasdelmes =>{
         const nuevoProducto2 = document.createElement('div')
         nuevoProducto2.classList = "card"
         nuevoProducto2.innerHTML =
         `
         <div class= "imgBx">
-                <img src="/${farmacia.imagen}">
+                <img src="/${ofertasdelmes.imagen}">
         </div>
         <div class=content>
             <div class="details">
-            <h2 class="details">${farmacia.nombre}</h2>
-            <p class="details">${farmacia.precio}</p>
+            <h2 class="details">${ofertasdelmes.nombre}</h2>
+            <p class="details">${ofertasdelmes.precio}</p>
             </div>
             <div class="botones">
                 <span class="like"><i class='bx bx-like'></i></span>  
@@ -65,8 +65,8 @@ function crearTarjetasfarmacia(farmacia){
             </div>
         </div>
         `
-        contenedorTarjetasFarmacia.appendChild(nuevoProducto2)
-        nuevoProducto2.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(farmacia))
+        contenedorTarjetasOfertas.appendChild(nuevoProducto2)
+        nuevoProducto2.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(ofertasdelmes))
     })
 }
 async function obtenerProductosPorCategoria(categoria) {    
@@ -77,10 +77,10 @@ async function obtenerProductosPorCategoria(categoria) {
         }  
         const productos = await response.json();  
         
-        crearTarjetasfarmacia(productos)
+        crearTarjetasOferta(productos)
     } catch (error) {  
         console.error(`Error al obtener productos de la categoría ${categoria}:`, error);  
         contenedor.innerHTML = '<p>Error al cargar los productos de esta categoría.</p>';  
     }  
 }  
-obtenerProductosPorCategoria('farmacia');   
+obtenerProductosPorCategoria('ofertasdelmes');   

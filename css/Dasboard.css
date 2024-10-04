@@ -508,6 +508,7 @@ main.min-main{
   }  
   .botones button {  
     background: var(--toggle-color);  
+    width: 170px        ;
     color: white;  
     border: none;  
     padding: 5px 10px;  
@@ -773,7 +774,7 @@ main.min-main{
         display: none;
     }
     main{
-        margin-left: 0;
+        margin-left: 25px;
     }
     main.min-main{
         margin-left: 0;

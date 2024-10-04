@@ -42,17 +42,15 @@ cloud.addEventListener("click",()=>{
 
 
 //cartas comestible
-
 const contenedorTarjetasComestibles = document.getElementById("comestible")
-
 function crearTarjetasComestibles(comestibles){
     comestibles.forEach(comestibles =>{
-        const nuevoProducto = document.createElement('div')
-        nuevoProducto.classList = "card"
-        nuevoProducto.innerHTML =
+        const nuevoProducto2 = document.createElement('div')
+        nuevoProducto2.classList = "card"
+        nuevoProducto2.innerHTML =
         `
         <div class= "imgBx">
-                <img src="${comestibles.img}">
+                <img src="/${comestibles.imagen}">
         </div>
         <div class=content>
             <div class="details">
@@ -65,10 +63,22 @@ function crearTarjetasComestibles(comestibles){
             </div>
         </div>
         `
-        contenedorTarjetasComestibles.appendChild(nuevoProducto)
-        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(comestibles))
+        contenedorTarjetasComestibles.appendChild(nuevoProducto2)
+        nuevoProducto2.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(comestible))
     })
 }
-
-crearTarjetasComestibles(comestibles)
-
+async function obtenerProductosPorCategoria(categoria) {    
+    try {  
+        const response = await fetch(`/api/productos/categoria/${categoria}`);   
+        if (!response.ok) {  
+            throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
+        }  
+        const productos = await response.json();  
+        
+        crearTarjetasComestibles(productos)
+    } catch (error) {  
+        console.error(`Error al obtener productos de la categoría ${categoria}:`, error);  
+        contenedor.innerHTML = '<p>Error al cargar los productos de esta categoría.</p>';  
+    }  
+}  
+obtenerProductosPorCategoria('comestibles');    

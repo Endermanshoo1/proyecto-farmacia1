@@ -139,7 +139,8 @@ async function obtenerProductosPorCategoria(categoria, contenedorId) {
             throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
         }  
         const productos = await response.json();  
-        
+        console.log(`Productos de ${categoria}:`, productos); // Ver los productos  
+
         // Limitar solo a los primeros 5 productos  
         const productosLimitados = productos.slice(0, 5);  
         
@@ -165,16 +166,18 @@ function crearTarjetasProductos(productos, contenedor) {
                     <h2 class="details">${producto.nombre}</h2>  
                     <p class="details">Bs.${producto.precio}</p>   
                 </div>  
-                <div class="botones">  
-                    <span class="like"><i class='bx bx-like'></i></span>  
-                    <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
+                <div class="botones">   
+                    <button class="carrito"><i class="bx bxs-cart-add"></i> Agregar al carrito</button>  
                 </div>  
             </div>  
         `;  
         contenedor.appendChild(nuevoProducto);  
-        
+
         // Agregar listener al botón de carrito  
-        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(producto));  
+        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click", () => {  
+            console.log(`Botón clickeado para ${producto.nombre}`); // Diagnóstico  
+            agregarAlCarrito(producto);  
+        });  
     });  
 }  
 
@@ -197,8 +200,7 @@ function crearTarjetasfarmacia(farmacia) {
                 <h2 class="details">${item.nombre}</h2>  
                 <p class="details">Bs.${item.precio}</p>  
             </div>  
-            <div class="botones">  
-                <span class="like"><i class='bx bx-like'></i></span>  
+            <div class="botones">    
                 <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
             </div>  
         </div>  
@@ -227,8 +229,7 @@ function crearTarjetasBelleza(belleza) {
                 <h2 class="details">${belleza.nombre}</h2>  
                 <p class="details">Bs.${belleza.precio}</p>  
             </div>  
-            <div class="botones">  
-                <span class="like"><i class='bx bx-like'></i></span>  
+            <div class="botones">   
                 <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
             </div>  
         </div>  
@@ -256,8 +257,7 @@ function crearTarjetaComestible(comestibles) {
                 <h2 class="details">${comestibles.nombre}</h2>  
                 <p class="details">Bs.${comestibles.precio}</p>  
             </div>  
-            <div class="botones">  
-                <span class="like"><i class='bx bx-like'></i></span>  
+            <div class="botones">    
                 <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
             </div>  
         </div>  
@@ -286,7 +286,6 @@ function crearTarjetaBebes(bebes) {
                 <p class="details">Bs.${bebes.precio}</p>  
             </div>  
             <div class="botones">  
-                <span class="like"><i class='bx bx-like'></i></span>  
                 <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
             </div>  
         </div>  
@@ -314,8 +313,7 @@ function crearTarjetaCuidadoPersonal(cuidadopersonal) {
                 <h2 class="details">${cuidadopersonal.nombre}</h2>  
                 <p class="details">Bs.${cuidadopersonal.precio}</p>  
             </div>  
-            <div class="botones">  
-                <span class="like"><i class='bx bx-like'></i></span>  
+            <div class="botones">    
                 <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
             </div>  
         </div>  
@@ -341,10 +339,9 @@ function crearTarjetaHogar(hogar) {
         <div class="content">  
             <div class="details">  
                 <h2 class="details">${hogar.nombre}</h2>  
-                <p class="details">Bs.${hogar.precio}</p>  
+                <p class="details">Bs.${hogar.precio}</p>   
             </div>  
-            <div class="botones">  
-                <span class="like"><i class='bx bx-like'></i></span>  
+            <div class="botones">   
                 <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
             </div>  
         </div>  

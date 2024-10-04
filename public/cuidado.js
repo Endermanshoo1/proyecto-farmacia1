@@ -42,22 +42,21 @@ cloud.addEventListener("click",()=>{
 
 
 //cartas farmacia
-
 const contenedorTarjetasCuidadoPersonal = document.getElementById("cuidado-personal")
 
-function crearTarjetasCuidadoPersonal(cuidadoPersonal){
-    cuidadoPersonal.forEach(cuidadoPersonal =>{
+function crearTarjetaCuidadoPersonal(cuidadopersonal){
+    cuidadopersonal.forEach(cuidadopersonal =>{
         const nuevoProducto2 = document.createElement('div')
         nuevoProducto2.classList = "card"
         nuevoProducto2.innerHTML =
         `
         <div class= "imgBx">
-                <img src="${cuidadoPersonal.img}">
+                <img src="/${cuidadopersonal.imagen}">
         </div>
         <div class=content>
             <div class="details">
-            <h2 class="details">${cuidadoPersonal.nombre}</h2>
-            <p class="details">${cuidadoPersonal.precio}</p>
+            <h2 class="details">${cuidadopersonal.nombre}</h2>
+            <p class="details">${cuidadopersonal.precio}</p>
             </div>
             <div class="botones">
                 <span class="like"><i class='bx bx-like'></i></span>  
@@ -66,9 +65,23 @@ function crearTarjetasCuidadoPersonal(cuidadoPersonal){
         </div>
         `
         contenedorTarjetasCuidadoPersonal.appendChild(nuevoProducto2)
-        nuevoProducto2.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(cuidadoPersonal))
+        nuevoProducto2.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(cuidadopersonal))
     })
 }
+async function obtenerProductosPorCategoria(categoria) {    
+    try {  
+        const response = await fetch(`/api/productos/categoria/${categoria}`);   
+        if (!response.ok) {  
+            throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
+        }  
+        const productos = await response.json();  
+        
+        crearTarjetaCuidadoPersonal(productos)
+    } catch (error) {  
+        console.error(`Error al obtener productos de la categoría ${categoria}:`, error);  
+        contenedor.innerHTML = '<p>Error al cargar los productos de esta categoría.</p>';  
+    }  
+}  
+obtenerProductosPorCategoria('cuidadopersonal');        
 
-crearTarjetasCuidadoPersonal(cuidadoPersonal)
 
