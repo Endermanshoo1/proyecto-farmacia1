@@ -109,7 +109,7 @@ body{
 }
 .barra-lateral .nombre-pagina span{
     margin-left: 5px;
-    font-size: 25px;
+    font-size: 23px;
 }
 
 
@@ -141,7 +141,6 @@ body{
     border-radius: 6px;
     background: var(--primary-color-light);
 }
-
 
 
 /*--------------> Menu Navegación*/
@@ -182,6 +181,43 @@ body{
 
 .barra-lateral .navegacion a .icon{
     margin-left: 10px;
+}
+
+#cuenta-carrito{
+    border-radius: 100%;
+    display: inline-block;
+    width: 20px;
+    line-height: 20px;
+    aspect-ratio: 1;
+    text-align: center;
+    margin-left: 10px;
+    color: var(--text-color);
+}
+
+.barra-lateral .navegacion button{
+    width: 98%;
+    gap: 20px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 10px;
+    border: none;
+    background: var(--sidebar-color);
+    cursor: pointer;
+    color: var(--text-color);
+    transition: var(--tran-05);
+}
+
+.barra-lateral .navegacion button:hover{
+    background-color: var(--primary-color);
+    color: var(--body-color);
+}
+
+.barra-lateral .navegacion button .icon{
+    margin-left: 10px;
+    font-size: 17px;
+    
 }
 
 /*-----------------> Linea*/
@@ -560,6 +596,10 @@ ul {
     .footer {  
         padding: 30px 15px; /* Ajusta el padding para pantallas pequeñas */  
     }  
+
+    .row{
+        margin-left: 70px;
+    }
 }  
 
 @media (max-width: 480px) {  
@@ -575,4 +615,8 @@ ul {
         height: 35px; /* Ajusta el tamaño de los iconos */  
         width: 35px; /* Ajusta el tamaño de los iconos */  
     }  
-}
+
+    .row{
+        display: flex;
+    }
+}   

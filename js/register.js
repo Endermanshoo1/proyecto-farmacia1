@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelector('.error').classList.remove('escondido');  
                 document.querySelector('.error').textContent = errorData.message || 'Error al iniciar sesión';  
                 return;  
-            }  
+            } 
 
             const data = await response.json();  
 

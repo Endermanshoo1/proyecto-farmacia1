@@ -40,15 +40,17 @@ cloud.addEventListener("click",()=>{
     });
 });
 
+
+
 //tarjetas bebes
 
 const contenedorTarjetasBebes = document.getElementById("bebes")
 
 function crearTarjetaBebes(bebes){
     bebes.forEach(bebes =>{
-        const nuevoProducto3 = document.createElement('div')
-        nuevoProducto3.classList = "card"
-        nuevoProducto3.innerHTML =
+        const nuevoProducto5 = document.createElement('div')
+        nuevoProducto5.classList = "card"
+        nuevoProducto5.innerHTML =
         `
         <div class= "imgBx">
                 <img src="${bebes.img}">
@@ -64,8 +66,8 @@ function crearTarjetaBebes(bebes){
             </div>
         </div>
         `
-        contenedorTarjetasBebes.appendChild(nuevoProducto3)
-        nuevoProducto3.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(bebes))
+        contenedorTarjetasBebes.appendChild(nuevoProducto5)
+        nuevoProducto5.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(bebes))
     })
 }
 

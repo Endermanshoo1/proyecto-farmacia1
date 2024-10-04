@@ -56,12 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input class="input" type="number" id="precioProducto" placeholder="Precio" required min="0">  
                 <select class="input" id="categoriaProducto" required>  
                     <option value="" disabled selected>Seleccione una categoría</option>
-                    <option value="ofertas-del-mes">Ofertas del Mes</option>  
+                    <option value="ofertasdelmes">Ofertas del Mes</option>  
                     <option value="farmacia">Farmacia</option>  
                     <option value="hogar">Hogar</option>  
                     <option value="bebes">Bebés</option> 
                     <option value="comestibles">Comestibles</option> 
-                    <option value="cuidado personal">Cuidado Personal</option>    
+                    <option value="cuidadopersonal">Cuidado Personal</option>    
                     <option value="belleza">Belleza</option>  
                 </select>  
                 <button class="Adminbutton" type="submit">Agregar Producto</button>  

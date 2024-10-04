@@ -7,6 +7,7 @@ const path = require('path');
 const jwt = require('jsonwebtoken');   
 const multer = require('multer');
 
+
 require('dotenv').config();  
     
 const app = express();  
@@ -71,6 +72,7 @@ app.get('/api/productos', productoController.obtenerProductos);
 app.get('/api/productos/:id', productoController.obtenerProductoPorId);  
 app.put('/api/productos/:id', productoController.actualizarProducto);  
 app.delete('/api/productos/:id', productoController.eliminarProducto);  
+app.get('/api/productos/categoria/:categoria', productoController.obtenerProductosPorCategoria); 
 
  
 // Rutas de frontend  

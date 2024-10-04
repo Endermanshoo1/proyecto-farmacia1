@@ -102,36 +102,60 @@ function moveSlide(direction) {
 
 //cartas
 
-const contenedorTarjetasOfertas = document.getElementById("cartas-frex");  
+document.addEventListener('DOMContentLoaded', async () => {  
+    await obtenerOfertasDelMes();   
+    await obtenerProductosPorCategoria('farmacia', 'cartas-frex2');    
+    await obtenerProductosPorCategoria('belleza', 'cartas-frex3');  
+    await obtenerProductosPorCategoria('comestibles', 'cartas-frex4');  
+    await obtenerProductosPorCategoria('bebes', 'cartas-frex5');   
+    await obtenerProductosPorCategoria('cuidado-personal', 'cartas-frex6');   
+    await obtenerProductosPorCategoria('hogar', 'cartas-frex7');      
+});  
 
 async function obtenerOfertasDelMes() {  
+    const contenedor = document.getElementById('cartas-frex');  
     try {  
-        const response = await fetch('/api/ofertas-del-mes'); // Endpoint que debería devolver las ofertas del mes con su categoría  
+        const response = await fetch('/api/productos/categoria/:categoria');  
         if (!response.ok) {  
             throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
         }  
-        const ofertasDeMes = await response.json(); // Se asume que tu API devuelve un array de objetos  
-        crearTarjetasProductosOfertas(ofertasDeMes); // Llama a la función que crea las tarjetas de producto  
+        const ofertasDeMes = await response.json();  
+        crearTarjetasProductos(ofertasDeMes, contenedor);  
     } catch (error) {  
         console.error("Error al obtener ofertas del mes:", error);  
-        contenedorTarjetasOfertas.innerHTML = '<p>Error al cargar las ofertas.</p>';  
+        contenedor.innerHTML = '<p>Error al cargar las ofertas.</p>';  
     }  
 }  
 
-function crearTarjetasProductosOfertas(ofertasDeMes) {  
-    contenedorTarjetasOfertas.innerHTML = ''; // Limpiar contenido previo  
+async function obtenerProductosPorCategoria(categoria, contenedorId) {  
+    const contenedor = document.getElementById(contenedorId);  
+    try {  
+        const response = await fetch(`/api/productos/categoria/${categoria}`);   
+        if (!response.ok) {  
+            throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
+        }  
+        const productos = await response.json();  
+        crearTarjetasProductos(productos, contenedor);  
+    } catch (error) {  
+        console.error(`Error al obtener productos de la categoría ${categoria}:`, error);  
+        contenedor.innerHTML = '<p>Error al cargar los productos de esta categoría.</p>';  
+    }  
+}  
 
-    ofertasDeMes.forEach(oferta => {  
+function crearTarjetasProductos(productos, contenedor) {  
+    contenedor.innerHTML = ''; // Limpiar contenido previo  
+
+    productos.forEach(producto => {  
         const nuevoProducto = document.createElement('div');  
         nuevoProducto.classList = "card";  
         nuevoProducto.innerHTML = `  
             <div class="imgBx">  
-                <img src="${oferta.img}" alt="${oferta.nombre}">  
+                <img src="${producto.imagen}" alt="${producto.nombre}">  
             </div>  
             <div class="content">  
                 <div class="details">  
-                    <h2 class="details">${oferta.nombre}</h2>  
-                    <p class="details">${oferta.precio}</p>  
+                    <h2 class="details">${producto.nombre}</h2>  
+                    <p class="details">${producto.precio}</p>  
                 </div>  
                 <div class="botones">  
                     <span class="like"><i class='bx bx-like'></i></span>  
@@ -139,18 +163,15 @@ function crearTarjetasProductosOfertas(ofertasDeMes) {
                 </div>  
             </div>  
         `;  
-        contenedorTarjetasOfertas.appendChild(nuevoProducto);  
+        contenedor.appendChild(nuevoProducto);  
+        
         // Agregar listener al botón de carrito  
-        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(oferta));  
+        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(producto));  
     });  
 }  
 
-// Llamar a la función obtenerOfertasDelMes cuando se carga la página  
-document.addEventListener('DOMContentLoaded', obtenerOfertasDelMes);
-
-
-//scroller productos 
-
+//scroller productos  
+ 
 const scrollers = document.querySelectorAll(".scroller");
 addAnimation();
 
@@ -303,19 +324,19 @@ crearTarjetaBebes(bebes)
 
 const contenedorTarjetasCuidadoPersonal = document.getElementById("cartas-frex6")
 
-function crearTarjetaCuidadoPersonal(cuidadoPersonal){
-    cuidadoPersonal.forEach(cuidadoPersonal =>{
+function crearTarjetaCuidadoPersonal(cuidadopersonal){
+    cuidadopersonal.forEach(cuidadopersonal =>{
         const nuevoProducto6 = document.createElement('div')
         nuevoProducto6.classList = "card"
         nuevoProducto6.innerHTML =
         `
         <div class= "imgBx">
-                <img src="${cuidadoPersonal.img}">
+                <img src="${cuidadopersonal.img}">
         </div>
         <div class=content>
             <div class="details">
-            <h2 class="details">${cuidadoPersonal.nombre}</h2>
-            <p class="details">${cuidadoPersonal.precio}</p>
+            <h2 class="details">${cuidadopersonal.nombre}</h2>
+            <p class="details">${cuidadopersonal.precio}</p>
             </div>
             <div class="botones">
                 <span class="like"><i class='bx bx-like'></i></span>  
@@ -324,11 +345,11 @@ function crearTarjetaCuidadoPersonal(cuidadoPersonal){
         </div>
         `
         contenedorTarjetasCuidadoPersonal.appendChild(nuevoProducto6)
-        nuevoProducto6.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(cuidadoPersonal))
+        nuevoProducto6.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(cuidadopersonal))
     })
 }
 
-crearTarjetaCuidadoPersonal(cuidadoPersonal)
+crearTarjetaCuidadoPersonal(cuidadopersonal)
 
 //cartas hogar
 

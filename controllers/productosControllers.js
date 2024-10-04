@@ -13,7 +13,7 @@ exports.crearProducto = async (req, res) => {
         const nuevoProducto = new Producto({   
             nombre,   
             precio,   
-            categoria,   
+            categoria,    
             imagen: imagen.path,   
             stock  
         });  
@@ -60,7 +60,7 @@ exports.actualizarProducto = async (req, res) => {
     const actualizarDatos = {};  
     if (nombre) actualizarDatos.nombre = nombre;  
     if (precio) actualizarDatos.precio = precio;  
-    if (categoria) actualizarDatos.categoria = categoria;  
+    if (categoria) actualizarDatos.categoria = categoria;   
     if (imagen) actualizarDatos.imagen = imagen;  
     if (stock !== undefined) actualizarDatos.stock = stock; // Permitir que el stock sea 0  
 

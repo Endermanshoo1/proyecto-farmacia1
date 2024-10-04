@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hogar</title>
-    <link rel="stylesheet" href="/view/productos/style/productos.css">
+    <link rel="stylesheet" href="/css/productos.css">
+    <link rel="shortcut icon" href="/public/img/logo mini white.png" type="image/x-icon">
     <script src="/view/productos/js/hogar.js" defer></script>
     <script src="/view/dahsboard/DasboardJS/cartService.js" defer></script>
     <script src="/view/productos/js/productos.js"></script>
@@ -20,63 +21,66 @@
         <div>
             <div class="nombre-pagina">
                 <img class="img_logo" id="cloud" src="/img/logo mini white.png" alt="">
-                <a href="/view/dahsboard/index.html">
-                    <img class="img_logo2" id="cloud" src="https://dummyimage.com/180x100/fff/aaa" alt="">
+                <a href="/user">
+                    <img class="img_logo2" id="cloud" src="/public/img/logo mini white.png" alt="">
                 </a>
-                <span>Farmacia</span>
+                <span>FarmaEscobar</span>
             </div>
-            <li class="search-box">
-                  <i class="bx bx-search icon"></i>
-                  <input class="barra_nav" id="search-input" type="search" placeholder="Search...." onkeyup="search()"/>
-                </li>
-            </li>
+            
         </div>
 
         <nav class="navegacion">
             <ul>
                 <li>
-                    <a id="Farmacia" href="/view/productos/farmacia.html">
+                    <a id="Farmacia" href="/user/farmacia">
                         <i class='bx bx-injection icon'></i>
                         <span>Farmacia</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Belleza" href="/view/productos/belleza.html">
+                    <a id="Belleza" href="/user/belleza">
                         <i class='bx bxs-face icon'></i>
                         <span>Belleza</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Comestibles" href="/view/productos/comestibles.html">
+                    <a id="Comestibles" href="/user/comestibles">
                         <i class='bx bx-donate-heart icon'></i>
                         <span>Comestibles</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Bebes" href="/view/productos/bebes.html">
+                    <a id="Bebes" href="/user/bebes">
                         <i class='bx bxs-baby-carriage icon'></i>
                         <span>Bebes</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Cuidado-Personal" href="/view/productos/cuidado-personal.html">
+                    <a id="Cuidado-Personal" href="/user/cuidado-personal">
                         <i class='bx bxs-face icon'></i>
                         <span>Cuidado Personal</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Hogar" href="/view/productos/hogar.html">
+                    <a id="Hogar" href="/user/hogar">
                         <i class='bx bx-home icon'></i>
                         <span>Hogar</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Carrito" href="/view/carrito/index.html">
+                    <a id="Carrito" href="/carrito">
                         <i class='bx bx-cart-add icon'></i>
                         <span>Carrito</span>
                         <span id="cuenta-carrito">0</span>
                     </a>
                 </li>
+                <li>
+                    <button id="cerrarsesion">
+                        <i class='bx bx-power-off icon'></i>
+                        <span>Cerrar Sesion</span>
+                    </button>
+                </li>
+                
             </ul>
         </nav>
 
@@ -94,17 +98,6 @@
                             
                         </div>
                     </div>
-                </div>
-            </div>
-    
-            <div class="usuario">
-                <img class="usuario_img" src="" alt="">
-                <div class="info-usuario">
-                    <div class="nombre-email">
-                        <span class="nombre">User</span>
-                        <span class="email">User@gmail.com</span>
-                    </div>
-                    <ion-icon name="ellipsis-vertical-outline"></ion-icon>
                 </div>
             </div>
         </div>
