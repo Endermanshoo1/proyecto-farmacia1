@@ -481,7 +481,7 @@ main.min-main{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
     margin: 7px;  
     overflow: hidden;  
-    width: 218px; 
+    width: 188px; 
     height: 298px; 
     transition: transform 0.3s;
      
@@ -623,6 +623,7 @@ main.min-main{
         margin-bottom: 16px;
     }
 
+    #cartas-frex,
     #cartas-frex2,
     #cartas-frex3,
     #cartas-frex4,
@@ -852,22 +853,20 @@ ul {
 }  
 
 .footer-col .social-links a {  
-    display: inline-block;  
-    height: 40px;  
-    width: 40px;  
-    background-color: var(--primary-color);  
-    margin: 0 10px 10px 0;  
-    text-align: center;  
-    line-height: 40px;  
-    border-radius: 50%;  
-    color: #ffffff;  
-    transition: all 0.5s ease;  
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    margin: 0 10px 10px 0;
+    align-content: center;
+    line-height: 40px;
+    border-radius: 50%;
+    color: var(--text-color);
+    transition: all 0.5s ease;
+    text-decoration: none; 
+    font-size: 30px;
 }  
 
-.footer-col .social-links a:hover {  
-    color: #24262b;  
-    background-color: #ffffff;  
-}  
+
 
 .bxl-facebook,  
 .bxl-instagram-alt,  

@@ -450,20 +450,34 @@ transition: var(--tran-05);
 }  
 
 /* Estilo adicional para los inputs */  
-input {  
-    width: 100%;  
-    padding: 10px;  
-    margin: 5px 0 15px;  
-    border: 2px solid #49e3ba;  
-    border-radius: 5px;  
-    color: var(--text-color);
-    background-color: var(--sidebar-color);
-}  
 
-.entrega input{
-    
+#botonesPago{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
 }
 
-#direccionSection {  
-    margin-top: 15px;  
-} 
+#botonesPago button{
+    width: 170px;
+    cursor: pointer;
+    border: none;
+    background: var(--primary-color);
+    color: var(--text-color);
+}
+
+#seccionPagoMovil label{
+    display: flex;
+}
+
+#btnConfirmarPagoMovil{
+    display: flex;
+    width: 100%;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    background: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    margin-top: 20px;
+}

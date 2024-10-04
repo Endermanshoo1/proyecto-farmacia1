@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito de Compras</title>
-    <link rel="stylesheet" href="/view/carrito/CarritoCSS/Carrito.css">
-    <script src="/view/carrito/CarritoJS/Carrito.js" defer></script>
-    <script src="/view/dahsboard/DasboardJS/cartService.js" defer></script>
-    <script src="/views/productos/js/productos.js"></script>
+    <link rel="stylesheet" href="/public//Carrito.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- Incluye Leaflet CSS y JS -->  
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />  
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>  
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />  
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>  
  
 </head>
 <body>
@@ -24,58 +21,60 @@
         <div>
             <div class="nombre-pagina">
                 <img class="img_logo" id="cloud" src="/img/logo mini white.png" alt="">
-                <a href="/view/dahsboard/index.html">
-                    <img class="img_logo2" id="cloud" src="https://dummyimage.com/180x100/fff/aaa" alt="">
+                <a href="/user">
+                    <img class="img_logo2" id="cloud" src="/public/img/logo mini white.png" alt="">
                 </a>
-                <span>Farmacia</span>
+                <span>FarmaEscobar</span>
             </div>
-            <li class="search-box">
-                  <i class="bx bx-search icon"></i>
-                  <input class="barra_nav" id="search-input" type="search" placeholder="Search...." onkeyup="search()"/>
-                </li>
-            </li>
+            
         </div>
 
         <nav class="navegacion">
             <ul>
                 <li>
-                    <a id="Farmacia" href="/view/productos/farmacia.html">
+                    <a id="Farmacia" href="/user/farmacia">
                         <i class='bx bx-injection icon'></i>
                         <span>Farmacia</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Belleza" href="/view/productos/belleza.html">
+                    <a id="Farmacia" href="/user/Ofertas">
+                        <i class='bx bxs-offer icon'></i>
+                        <span>Ofertas</span>
+                    </a>
+                </li>
+                <li>
+                    <a id="Belleza" href="/user/belleza">
                         <i class='bx bxs-face icon'></i>
                         <span>Belleza</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Comestibles" href="/view/productos/comestibles.html">
+                    <a id="Comestibles" href="/user/comestibles">
                         <i class='bx bx-donate-heart icon'></i>
                         <span>Comestibles</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Bebes" href="/view/productos/bebes.html">
+                    <a id="Bebes" href="/user/bebes">
                         <i class='bx bxs-baby-carriage icon'></i>
                         <span>Bebes</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Cuidado-Personal" href="/view/productos/cuidado-personal.html">
+                    <a id="Cuidado-Personal" href="/user/cuidado-personal">
                         <i class='bx bxs-face icon'></i>
                         <span>Cuidado Personal</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Hogar" href="/view/productos/hogar.html">
+                    <a id="Hogar" href="/user/hogar">
                         <i class='bx bx-home icon'></i>
                         <span>Hogar</span>
                     </a>
                 </li>
                 <li>
-                    <a id="Carrito" href="/view/carrito/index.html">
+                    <a id="Carrito" href="/carrito">
                         <i class='bx bx-cart-add icon'></i>
                         <span>Carrito</span>
                         <span id="cuenta-carrito">0</span>
@@ -100,17 +99,6 @@
                     </div>
                 </div>
             </div>
-    
-            <div class="usuario">
-                <img class="usuario_img" src="" alt="">
-                <div class="info-usuario">
-                    <div class="nombre-email">
-                        <span class="nombre">User</span>
-                        <span class="email">User@gmail.com</span>
-                    </div>
-                    <ion-icon name="ellipsis-vertical-outline"></ion-icon>
-                </div>
-            </div>
         </div>
 
     </div>
@@ -124,76 +112,47 @@
         </button>  
         
        <!-- Modal -->  
-        <div id="modalPago" class="modal">  
-            <div class="modal-content">  
-                <span class="close" id="cerrarModal">&times;</span>  
-                <h2>Pasarela de Pago</h2>  
-                <form id="formPago">  
-                    <label for="nombre">Nombre:</label>  
-                    <input type="text" id="nombre" name="nombre" required>  
-        
-                    <label for="tarjeta">Número de tarjeta:</label>  
-                    <input type="text" id="tarjeta" name="tarjeta" required>  
-        
-                    <label for="fecha">Fecha de expiración:</label>  
-                    <input type="text" id="fecha" name="fecha" placeholder="MM/AA" required>  
-        
-                    <label for="cvv">CVV:</label>  
-                    <input type="text" id="cvv" name="cvv" required>  
-        
-                    <h3>Opciones de Entrega</h3>  
-                    <input type="radio" id="pickup" name="entrega" value="pickup" checked>  
-                    <label for="pickup">Pickup</label>  
-        
-                    <input type="radio" id="delivery" name="entrega" value="delivery">  
-                    <label for="delivery">Delivery</label>  
-        
-                    <div id="direccionSection" style="display: none;">  
-                        <label for="direccion">Dirección:</label>  
-                        <input type="text" id="direccion" name="direccion" readonly>  
-                        <button type="button" id="btn-mapa">Seleccionar Ubicación en el Mapa</button>  
-                        <div id="map" style="width: 100%; height: 300px; display: none;"></div> <!-- Mapa -->  
-                    </div>  
-        
-                    <button type="submit" class="botonpago">Confirmar Pago</button>  
-                </form>  
+       <div id="modalPago" class="modal">  
+        <div class="modal-content">  
+            <span class="close" id="cerrarModal">&times;</span>  
+            <h2>Pasarela de Pago</h2>  
+            
+            <!-- Botones para seleccionar el modo de pago -->  
+            <div id="botonesPago">  
+                <button id="btnPagoMovil">Pago Móvil</button>  
+                <button id="btnPaypal">PayPal</button>  
             </div>  
+    
+            <!-- Sección para Pago Móvil -->  
+            <div id="seccionPagoMovil" style="display: none;">   
+                <p>Telefono</p>
+                <span>0414-2558608</span>
+                
+                <p>Cedula de identidad</p>
+                <span>V-29661874</span> 
+                
+                <p>Banco</p>
+                <span>Banesco</span>  
+                
+                <label for="referencia">Referencia Bancaria:</label>  
+                <input type="text" id="referencia" name="referencia" required>  
+                
+                <div id="mostrarmonto"></div>  
+    
+                <button id="btnConfirmarPagoMovil">Confirmar Pago Móvil</button>  
+            </div>  
+    
+            <!-- Sección para PayPal -->  
+            <div id="seccionPaypal" style="display: none;">   
+                <p>Redirigiendo a PayPal... (simulado)</p>  
+                <button id="btnIrAPaypal">Ir a PayPal</button>  
+            </div>  
+    
         </div>  
+    </div>    
     </main>
 
-    <footer class="footer">  
-        <div class="container">  
-            <div class="row">  
-                <div class="footer-col">  
-                    <h4>Empresa</h4>  
-                    <ul>  
-                        <li><a href="#">Acerca de Nosotros</a></li>  
-                        <li><a href="#">Nuestros Servicios</a></li>  
-                        <li><a href="#">Política de Privacidad</a></li>  
-                    </ul>  
-                </div>  
-                <div class="footer-col">  
-                    <h4>Obtener Ayuda</h4>  
-                    <ul>  
-                        <li><a href="#">Preguntas Frecuentes (FAQ)</a></li>  
-                        <li><a href="#">Envío</a></li>  
-                        <li><a href="#">Devoluciones</a></li>  
-                        <li><a href="#">Opciones de pago</a></li>  
-                    </ul>  
-                </div>  
-                <div class="footer-col">  
-                    <h4>Síguenos En</h4>  
-                    <div class="social-links">  
-                        <a href="#"><i class='bx bxl-facebook'></i></a>  
-                        <a href="#"><i class='bx bxl-instagram-alt'></i></a>  
-                        <a href="#"><i class='bx bxl-twitter'></i></a>  
-                        <a href="#"><i class='bx bxl-whatsapp'></i></a>  
-                    </div>  
-                </div>  
-            </div>  
-        </div>  
-    </footer>  
-
-
+    <script src="/public/Carrito.js"></script>
+    <script src="/public/cartService.js"></script>
 </body>
 </html>

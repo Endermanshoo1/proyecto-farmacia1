@@ -132,111 +132,75 @@ function actualizarCuentaCarrito() {
 document.addEventListener("DOMContentLoaded", crearTarjetasFarmacia);
 
 
-//ventana modal
 document.addEventListener('DOMContentLoaded', () => {  
     const modal = document.getElementById("modalPago");  
     const btnPago = document.getElementById("btn-pago");  
     const cerrarModal = document.getElementById("cerrarModal");  
-    const formPago = document.getElementById("formPago");  
-    const direccionSection = document.getElementById("direccionSection");  
-    const deliveryOption = document.getElementById("delivery");  
-    const pickupOption = document.getElementById("pickup");  
-    const btnMapa = document.getElementById("btn-mapa");  
-    const direccionInput = document.getElementById("direccion");  
-    const mapDiv = document.getElementById("map");  
-
-    let map;  
-    let marker;  
+    const seccionPagoMovil = document.getElementById("seccionPagoMovil");  
+    const seccionPaypal = document.getElementById("seccionPaypal");  
+    const btnPagoMovil = document.getElementById("btnPagoMovil");  
+    const btnPaypal = document.getElementById("btnPaypal");  
+    const btnConfirmarPagoMovil = document.getElementById("btnConfirmarPagoMovil");  
 
     // Abrir la modal al hacer clic en el botón de pagar  
     btnPago.onclick = function() {  
         modal.style.display = "block";  
-    }  
+    };  
 
     // Cerrar la modal  
     cerrarModal.onclick = function() {  
         modal.style.display = "none";  
+        resetModal(); // Resetear el modal al cerrarlo  
+    };  
+
+    // Selecciona el pago móvil  
+    btnPagoMovil.onclick = function() {  
+        seccionPagoMovil.style.display = "block";  
+        seccionPaypal.style.display = "none";  
+    };  
+
+    // Selecciona el pago con PayPal  
+    btnPaypal.onclick = function() {  
+        seccionPaypal.style.display = "block";  
+        seccionPagoMovil.style.display = "none";  
+    };  
+
+    // Manejar el envío del formulario de Pago Móvil  
+    btnConfirmarPagoMovil.onclick = function() {  
+        const telefono = document.getElementById("telefono").value;  
+        const cedula = document.getElementById("cedula").value;  
+        const banco = document.getElementById("banco").value;  
+        const referencia = document.getElementById("referencia").value;  
+        const monto = document.getElementById("monto").value;  
+
+        alert(`Pago Móvil procesado correctamente.\n  
+               Teléfono: ${telefono}\n  
+               Cédula: ${cedula}\n  
+               Banco: ${banco}\n  
+               Referencia: ${referencia}\n  
+               Monto: ${monto}`);  
+
+        // Cierra la modal y resetea el formulario  
+        modal.style.display = "none";  
+        resetModal(); // Resetear el modal  
+    };  
+
+    // Función para resetear el modal al cerrarlo  
+    function resetModal() {  
+        seccionPagoMovil.style.display = "none";  
+        seccionPaypal.style.display = "none";  
+        document.getElementById("telefono").value = '';  
+        document.getElementById("cedula").value = '';  
+        document.getElementById("banco").value = '';  
+        document.getElementById("referencia").value = '';  
+        document.getElementById("monto").value = '';  
     }  
 
-    // Mostrar u ocultar la sección de dirección  
-deliveryOption.onchange = function() {  
-    direccionSection.style.display = "block";  
-    initializeMap(); // Inicializa el mapa al seleccionar delivery  
-};  
-
-pickupOption.onchange = function() {  
-    direccionSection.style.display = "none";  
-    if (map) {  
-        map.remove(); // Limpia el mapa si está activo  
-        mapDiv.innerHTML = ""; // Limpia el contenedor del mapa  
-    }  
-};  
-
-// Configuración del mapa y marcador  
-function initializeMap() {  
-    // Mostrar el div del mapa  
-    mapDiv.style.display = "block";  
-
-    // Inicializa el mapa  
-    map = L.map('map').setView([37.7749, -122.4194], 13); // Cambia las coordenadas a la ubicación deseada  
-
-    // Capa de OpenStreetMap  
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {  
-        maxZoom: 19,  
-    }).addTo(map);  
-
-    // Evento de clic en el mapa  
-    map.on('click', function(e) {  
-        if (marker) {  
-            map.removeLayer(marker); // Remueve el marcador anterior  
-        }  
-        // Añade un nuevo marcador  
-        marker = L.marker(e.latlng).addTo(map);  
-        getAddress(e.latlng); // Llama a la función para obtener la dirección  
-    });  
-}  
-
-// Función para obtener la dirección usando geocodificación  
-function getAddress(latlng) {  
-    const lat = latlng.lat;  
-    const lng = latlng.lng;  
-
-    // Llama a la API de Nominatim para obtener la dirección  
-    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)  
-        .then(response => response.json())  
-        .then(data => {  
-            if (data && data.display_name) {  
-                direccionInput.value = data.display_name; // Obtener la dirección y ponerla en el input  
-            } else {  
-                direccionInput.value = "Dirección no encontrada";  
-            }  
-        })  
-        .catch(error => {  
-            console.error('Error al obtener la dirección:', error);  
-            direccionInput.value = "Error al obtener la dirección";  
-        });  
-}  
     // Cerrar la modal si se hace clic fuera de ella  
     window.onclick = function(event) {  
         if (event.target === modal) {  
             modal.style.display = "none";  
+            resetModal(); // Resetear el modal al cerrarlo  
         }  
-    }  
-
-    // Manejar el envío del formulario  
-    formPago.onsubmit = function(e) {  
-        e.preventDefault(); // Evita que la página se recargue  
-        const entregaSeleccionada = deliveryOption.checked ? "Delivery" : "Pickup";  
-        const direccion = deliveryOption.checked ? direccionInput.value : "";  
-
-        alert(`Pago procesado exitosamente.\n   Opción de entrega: ${entregaSeleccionada}${direccion ? `\nDirección: ${direccion}` : ""}`);  
-        modal.style.display = "none"; // Cierra la modal tras el envío  
-        formPago.reset(); // Resetea el formulario  
-        
-        // Limpiar el mapa si estaba abierto  
-        if (map) {  
-            map.remove();  
-            mapDiv.innerHTML = "";  
-        }  
-    }  
+    };  
 });

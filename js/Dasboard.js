@@ -100,76 +100,6 @@ function moveSlide(direction) {
     document.querySelector('.carousel-cards').style.transform = `translateX(${offset}%)`;  
 } 
 
-//cartas
-
-document.addEventListener('DOMContentLoaded', async () => {  
-    await obtenerOfertasDelMes();   
-    await obtenerProductosPorCategoria('farmacia', 'cartas-frex2');    
-    await obtenerProductosPorCategoria('belleza', 'cartas-frex3');  
-    await obtenerProductosPorCategoria('comestibles', 'cartas-frex4');  
-    await obtenerProductosPorCategoria('bebes', 'cartas-frex5');   
-    await obtenerProductosPorCategoria('cuidado-personal', 'cartas-frex6');   
-    await obtenerProductosPorCategoria('hogar', 'cartas-frex7');      
-});  
-
-async function obtenerOfertasDelMes() {  
-    const contenedor = document.getElementById('cartas-frex');  
-    try {  
-        const response = await fetch('/api/productos/categoria/:categoria');  
-        if (!response.ok) {  
-            throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
-        }  
-        const ofertasDeMes = await response.json();  
-        crearTarjetasProductos(ofertasDeMes, contenedor);  
-    } catch (error) {  
-        console.error("Error al obtener ofertas del mes:", error);  
-        contenedor.innerHTML = '<p>Error al cargar las ofertas.</p>';  
-    }  
-}  
-
-async function obtenerProductosPorCategoria(categoria, contenedorId) {  
-    const contenedor = document.getElementById(contenedorId);  
-    try {  
-        const response = await fetch(`/api/productos/categoria/${categoria}`);   
-        if (!response.ok) {  
-            throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
-        }  
-        const productos = await response.json();  
-        crearTarjetasProductos(productos, contenedor);  
-    } catch (error) {  
-        console.error(`Error al obtener productos de la categoría ${categoria}:`, error);  
-        contenedor.innerHTML = '<p>Error al cargar los productos de esta categoría.</p>';  
-    }  
-}  
-
-function crearTarjetasProductos(productos, contenedor) {  
-    contenedor.innerHTML = ''; // Limpiar contenido previo  
-
-    productos.forEach(producto => {  
-        const nuevoProducto = document.createElement('div');  
-        nuevoProducto.classList = "card";  
-        nuevoProducto.innerHTML = `  
-            <div class="imgBx">  
-                <img src="${producto.imagen}" alt="${producto.nombre}">  
-            </div>  
-            <div class="content">  
-                <div class="details">  
-                    <h2 class="details">${producto.nombre}</h2>  
-                    <p class="details">${producto.precio}</p>  
-                </div>  
-                <div class="botones">  
-                    <span class="like"><i class='bx bx-like'></i></span>  
-                    <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
-                </div>  
-            </div>  
-        `;  
-        contenedor.appendChild(nuevoProducto);  
-        
-        // Agregar listener al botón de carrito  
-        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(producto));  
-    });  
-}  
-
 //scroller productos  
  
 const scrollers = document.querySelectorAll(".scroller");
@@ -189,196 +119,239 @@ function addAnimation() {
     });
 }
 
-//busqueda 
 
-const search = () =>{
-    const searchBox = document.getElementById("search-item").value.toUpperCase();
-    const storeItems = document.getElementById("")
-}
+//cartas
+document.addEventListener('DOMContentLoaded', async () => {  
+    await obtenerProductosPorCategoria('ofertasdelmes', 'cartas-frex');   
+    await obtenerProductosPorCategoria('farmacia', 'cartas-frex2');    
+    await obtenerProductosPorCategoria('belleza', 'cartas-frex3');  
+    await obtenerProductosPorCategoria('comestibles', 'cartas-frex4');  
+    await obtenerProductosPorCategoria('bebes', 'cartas-frex5');   
+    await obtenerProductosPorCategoria('cuidadopersonal', 'cartas-frex6');   
+    await obtenerProductosPorCategoria('hogar', 'cartas-frex7');          
+});  
 
-//cartas farmacia
+async function obtenerProductosPorCategoria(categoria, contenedorId) {  
+    const contenedor = document.getElementById(contenedorId);  
+    try {  
+        const response = await fetch(`/api/productos/categoria/${categoria}`);   
+        if (!response.ok) {  
+            throw new Error(`Error en la respuesta: ${response.status} - ${response.statusText}`);  
+        }  
+        const productos = await response.json();  
+        
+        // Limitar solo a los primeros 5 productos  
+        const productosLimitados = productos.slice(0, 5);  
+        
+        crearTarjetasProductos(productosLimitados, contenedor);  
+    } catch (error) {  
+        console.error(`Error al obtener productos de la categoría ${categoria}:`, error);  
+        contenedor.innerHTML = '<p>Error al cargar los productos de esta categoría.</p>';  
+    }  
+}  
 
-const contenedorTarjetasFarmacia = document.getElementById("cartas-frex2")
+function crearTarjetasProductos(productos, contenedor) {  
+    contenedor.innerHTML = ''; // Limpiar contenido previo  
 
-function crearTarjetasfarmacia(farmacia){
-    farmacia.forEach(farmacia =>{
-        const nuevoProducto2 = document.createElement('div')
-        nuevoProducto2.classList = "card"
-        nuevoProducto2.innerHTML =
-        `
-        <div class= "imgBx">
-                <img src="${farmacia.img}">
-        </div>
-        <div class=content>
-            <div class="details">
-            <h2 class="details">${farmacia.nombre}</h2>
-            <p class="details">${farmacia.precio}</p>
-            </div>
-            <div class="botones">
+    productos.forEach(producto => {  
+        const nuevoProducto = document.createElement('div');  
+        nuevoProducto.classList = "card";  
+        nuevoProducto.innerHTML = `  
+            <div class="imgBx">  
+                <img src="${producto.imagen}" alt="${producto.nombre}">  
+            </div>  
+            <div class="content">  
+                <div class="details">  
+                    <h2 class="details">${producto.nombre}</h2>  
+                    <p class="details">Bs.${producto.precio}</p>   
+                </div>  
+                <div class="botones">  
+                    <span class="like"><i class='bx bx-like'></i></span>  
+                    <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
+                </div>  
+            </div>  
+        `;  
+        contenedor.appendChild(nuevoProducto);  
+        
+        // Agregar listener al botón de carrito  
+        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(producto));  
+    });  
+}  
+
+const contenedorTarjetasFarmacia = document.getElementById("cartas-frex2");  
+
+function crearTarjetasfarmacia(farmacia) {    
+    // Limitar a las primeras 5 cartas  
+    const primerosCinco = farmacia;  
+    console.log(primerosCinco); // Verificar los elementos seleccionados  
+    
+    primerosCinco.forEach(item => {  
+        const nuevoProducto2 = document.createElement('div');  
+        nuevoProducto2.classList = "card";  
+        nuevoProducto2.innerHTML = `  
+        <div class="imgBx">  
+            <img src="${item.img}">  
+        </div>  
+        <div class="content">  
+            <div class="details">  
+                <h2 class="details">${item.nombre}</h2>  
+                <p class="details">Bs.${item.precio}</p>  
+            </div>  
+            <div class="botones">  
                 <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
-            </div>
-        </div>
-        `
-        contenedorTarjetasFarmacia.appendChild(nuevoProducto2)
-        nuevoProducto2.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(farmacia))
-    })
-}
+                <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
+            </div>  
+        </div>  
+        `;  
+        contenedorTarjetasFarmacia.appendChild(nuevoProducto2);  
+        nuevoProducto2.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(item));  
+    });  
+}   
 
-crearTarjetasfarmacia(farmacia)
+// Llamar a la función  
+crearTarjetasfarmacia(farmacia);  
 
-//cartas belleza
+// Cartas belleza  
+const contenedorTarjetasBelleza = document.getElementById("cartas-frex3");  
 
-const contenedorTarjetasBelleza = document.getElementById("cartas-frex3")
-
-function crearTarjetasBelleza(belleza){
-    belleza.forEach(belleza =>{
-        const nuevoProducto3 = document.createElement('div')
-        nuevoProducto3.classList = "card"
-        nuevoProducto3.innerHTML =
-        `
-        <div class= "imgBx">
-                <img src="${belleza.img}">
-        </div>
-        <div class=content>
-            <div class="details">
-            <h2 class="details">${belleza.nombre}</h2>
-            <p class="details">${belleza.precio}</p>
-            </div>
-            <div class="botones">
+function crearTarjetasBelleza(belleza) {  
+    belleza.slice(0, 5).forEach(belleza => {  
+        const nuevoProducto3 = document.createElement('div');  
+        nuevoProducto3.classList = "card";  
+        nuevoProducto3.innerHTML = `  
+        <div class="imgBx">  
+            <img src="${belleza.img}">  
+        </div>  
+        <div class="content">  
+            <div class="details">  
+                <h2 class="details">${belleza.nombre}</h2>  
+                <p class="details">Bs.${belleza.precio}</p>  
+            </div>  
+            <div class="botones">  
                 <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
-            </div>
-        </div>
-        `
-        contenedorTarjetasBelleza.appendChild(nuevoProducto3)
-        nuevoProducto3.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(belleza))
-    })
-}
+                <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
+            </div>  
+        </div>  
+        `;  
+        contenedorTarjetasBelleza.appendChild(nuevoProducto3);  
+        nuevoProducto3.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(belleza));  
+    });  
+}  
 
-crearTarjetasBelleza(belleza)
+crearTarjetasBelleza(belleza);  
 
-//cartas comestible
+// Cartas comestibles  
+const contenedorTarjetasComestibles = document.getElementById("cartas-frex4");  
 
-const contenedorTarjetasComestibles = document.getElementById("cartas-frex4")
-
-function crearTarjetaComestible(comestibles){
-    comestibles.forEach(comestibles =>{
-        const nuevoProducto4 = document.createElement('div')
-        nuevoProducto4.classList = "card"
-        nuevoProducto4.innerHTML =
-        `
-        <div class= "imgBx">
-                <img src="${comestibles.img}">
-        </div>
-        <div class=content>
-            <div class="details">
-            <h2 class="details">${comestibles.nombre}</h2>
-            <p class="details">${comestibles.precio}</p>
-            </div>
-            <div class="botones">
+function crearTarjetaComestible(comestibles) {  
+    comestibles.slice(0, 5).forEach(comestibles => {  
+        const nuevoProducto4 = document.createElement('div');  
+        nuevoProducto4.classList = "card";  
+        nuevoProducto4.innerHTML = `  
+        <div class="imgBx">  
+            <img src="${comestibles.img}">  
+        </div>  
+        <div class="content">  
+            <div class="details">  
+                <h2 class="details">${comestibles.nombre}</h2>  
+                <p class="details">Bs.${comestibles.precio}</p>  
+            </div>  
+            <div class="botones">  
                 <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
-            </div>
-        </div>
-        `
-        contenedorTarjetasComestibles.appendChild(nuevoProducto4)
-        nuevoProducto4.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(comestibles))
-    })
-}
+                <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
+            </div>  
+        </div>  
+        `;  
+        contenedorTarjetasComestibles.appendChild(nuevoProducto4);  
+        nuevoProducto4.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(comestibles));  
+    });  
+}  
 
-crearTarjetaComestible(comestibles)
+crearTarjetaComestible(comestibles);  
 
-//cartas Bebes
+// Cartas Bebes  
+const contenedorTarjetasBebes = document.getElementById("cartas-frex5");  
 
-const contenedorTarjetasBebes = document.getElementById("cartas-frex5")
-
-function crearTarjetaBebes(bebes){
-    bebes.forEach(bebes =>{
-        const nuevoProducto5 = document.createElement('div')
-        nuevoProducto5.classList = "card"
-        nuevoProducto5.innerHTML =
-        `
-        <div class= "imgBx">
-                <img src="${bebes.img}">
-        </div>
-        <div class=content>
-            <div class="details">
-            <h2 class="details">${bebes.nombre}</h2>
-            <p class="details">${bebes.precio}</p>
-            </div>
-            <div class="botones">
+function crearTarjetaBebes(bebes) {  
+    bebes.slice(0, 5).forEach(bebes => {  
+        const nuevoProducto5 = document.createElement('div');  
+        nuevoProducto5.classList = "card";  
+        nuevoProducto5.innerHTML = `  
+        <div class="imgBx">  
+            <img src="${bebes.img}">  
+        </div>  
+        <div class="content">  
+            <div class="details">  
+                <h2 class="details">${bebes.nombre}</h2>  
+                <p class="details">Bs.${bebes.precio}</p>  
+            </div>  
+            <div class="botones">  
                 <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
-            </div>
-        </div>
-        `
-        contenedorTarjetasBebes.appendChild(nuevoProducto5)
-        nuevoProducto5.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(bebes))
-    })
-}
+                <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
+            </div>  
+        </div>  
+        `;  
+        contenedorTarjetasBebes.appendChild(nuevoProducto5);  
+        nuevoProducto5.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(bebes));  
+    });  
+}  
 
-crearTarjetaBebes(bebes)
+crearTarjetaBebes(bebes);  
 
-//cartas cuidado personal
+// Cartas cuidado personal  
+const contenedorTarjetasCuidadoPersonal = document.getElementById("cartas-frex6");  
 
-const contenedorTarjetasCuidadoPersonal = document.getElementById("cartas-frex6")
-
-function crearTarjetaCuidadoPersonal(cuidadopersonal){
-    cuidadopersonal.forEach(cuidadopersonal =>{
-        const nuevoProducto6 = document.createElement('div')
-        nuevoProducto6.classList = "card"
-        nuevoProducto6.innerHTML =
-        `
-        <div class= "imgBx">
-                <img src="${cuidadopersonal.img}">
-        </div>
-        <div class=content>
-            <div class="details">
-            <h2 class="details">${cuidadopersonal.nombre}</h2>
-            <p class="details">${cuidadopersonal.precio}</p>
-            </div>
-            <div class="botones">
+function crearTarjetaCuidadoPersonal(cuidadopersonal) {  
+    cuidadopersonal.slice(0, 5).forEach(cuidadopersonal => {  
+        const nuevoProducto6 = document.createElement('div');  
+        nuevoProducto6.classList = "card";  
+        nuevoProducto6.innerHTML = `  
+        <div class="imgBx">  
+            <img src="${cuidadopersonal.img}">  
+        </div>  
+        <div class="content">  
+            <div class="details">  
+                <h2 class="details">${cuidadopersonal.nombre}</h2>  
+                <p class="details">Bs.${cuidadopersonal.precio}</p>  
+            </div>  
+            <div class="botones">  
                 <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
-            </div>
-        </div>
-        `
-        contenedorTarjetasCuidadoPersonal.appendChild(nuevoProducto6)
-        nuevoProducto6.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(cuidadopersonal))
-    })
-}
+                <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
+            </div>  
+        </div>  
+        `;  
+        contenedorTarjetasCuidadoPersonal.appendChild(nuevoProducto6);  
+        nuevoProducto6.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(cuidadopersonal));  
+    });  
+}  
 
-crearTarjetaCuidadoPersonal(cuidadopersonal)
+crearTarjetaCuidadoPersonal(cuidadopersonal);  
 
-//cartas hogar
+// Cartas hogar  
+const contenedorTarjetasHogar = document.getElementById("cartas-frex7");  
 
-const contenedorTarjetasHogar = document.getElementById("cartas-frex7")
-
-function crearTarjetaHogar(hogar){
-    hogar.forEach(hogar =>{
-        const nuevoProducto = document.createElement('div')
-        nuevoProducto.classList = "card"
-        nuevoProducto.innerHTML =
-        `
-        <div class= "imgBx">
-                <img src="${hogar.img}">
-        </div>
-        <div class=content>
-            <div class="details">
-            <h2 class="details">${hogar.nombre}</h2>
-            <p class="details">${hogar.precio}</p>
-            </div>
-            <div class="botones">
+function crearTarjetaHogar(hogar) {  
+    hogar.slice(0, 5).forEach(hogar => {  
+        const nuevoProducto = document.createElement('div');  
+        nuevoProducto.classList = "card";  
+        nuevoProducto.innerHTML = `  
+        <div class="imgBx">  
+            <img src="${hogar.img}">  
+        </div>  
+        <div class="content">  
+            <div class="details">  
+                <h2 class="details">${hogar.nombre}</h2>  
+                <p class="details">Bs.${hogar.precio}</p>  
+            </div>  
+            <div class="botones">  
                 <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
-            </div>
-        </div>
-        `
-        contenedorTarjetasHogar.appendChild(nuevoProducto)
-        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click",()=> agregarAlCarrito(hogar))
-    })
-}
-
-crearTarjetaHogar(hogar)
-
+                <button class="carrito"><i class="bx bxs-cart-add"></i></button>  
+            </div>  
+        </div>  
+        `;  
+        contenedorTarjetasHogar.appendChild(nuevoProducto);  
+        nuevoProducto.getElementsByTagName("button")[0].addEventListener("click", () => agregarAlCarrito(hogar));  
+    });  
+}  
+  
+crearTarjetaHogar(hogar); 

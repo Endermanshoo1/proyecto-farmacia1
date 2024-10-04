@@ -25,6 +25,17 @@ exports.crearProducto = async (req, res) => {
     }  
 };  
 
+// Obtener solo los primeros 4 productos  
+exports.obtenerPrimerosProductos = async (req, res) => {  
+    try {  
+        const productos = await Producto.find().limit(4); // Limiting to 4 products  
+        res.status(200).json(productos);  
+    } catch (error) {  
+        console.error('Error al obtener los productos:', error);  
+        res.status(500).json({ mensaje: 'Error al obtener los productos', error });  
+    }  
+};  
+
 // Obtener todos los productos  
 exports.obtenerProductos = async (req, res) => {  
     try {  
