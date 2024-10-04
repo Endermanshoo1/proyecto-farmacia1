@@ -84,10 +84,8 @@ body{
     font-size: 18px;
     text-align: left;
     opacity: 1;
-    margin-left: 10px;
     transition: opacity 0.5s ease,width 0.5s ease;
 }
-
 .barra-lateral span.oculto{
     opacity: 0;
     width: 0;
@@ -111,7 +109,7 @@ body{
 }
 .barra-lateral .nombre-pagina span{
     margin-left: 5px;
-    font-size: 25px;
+    font-size: 23px;
 }
 
 
@@ -145,11 +143,9 @@ body{
 }
 
 
-
 /*--------------> Menu Navegación*/
 .barra-lateral .navegacion{
     height: 100%;
-    margin-top: 30px;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -185,6 +181,43 @@ body{
 
 .barra-lateral .navegacion a .icon{
     margin-left: 10px;
+}
+
+#cuenta-carrito{
+    border-radius: 100%;
+    display: inline-block;
+    width: 20px;
+    line-height: 20px;
+    aspect-ratio: 1;
+    text-align: center;
+    margin-left: 10px;
+    color: var(--text-color);
+}
+
+.barra-lateral .navegacion button{
+    width: 98%;
+    gap: 20px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 10px;
+    border: none;
+    background: var(--sidebar-color);
+    cursor: pointer;
+    color: var(--text-color);
+    transition: var(--tran-05);
+}
+
+.barra-lateral .navegacion button:hover{
+    background-color: var(--primary-color);
+    color: var(--body-color);
+}
+
+.barra-lateral .navegacion button .icon{
+    margin-left: 10px;
+    font-size: 17px;
+    
 }
 
 /*-----------------> Linea*/
@@ -282,7 +315,6 @@ body{
 .barra-lateral .usuario ion-icon{
     font-size: 20px;
 }
-
 
 
 
