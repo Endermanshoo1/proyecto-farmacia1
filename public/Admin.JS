@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 row.setAttribute('data-id', producto._id);  
                                 row.innerHTML = `  
                                     <td>${producto.nombre}</td>  
-                                    <td>${producto.precio}</td>  
+                                    <td>Bs. ${producto.precio}</td>  
                                     <td>${producto.categoria}</td>    
                                     <td>  
                                         <button id="editarProducto" class="editarUsuario">Editar</button>  

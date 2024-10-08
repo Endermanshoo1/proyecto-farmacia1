@@ -626,3 +626,81 @@ label{
     background: var(--text-color);
     color: var(--sidebar-color);
 }
+
+@media (max-width: 1024px) {  
+    #formAgregarAdmin,  
+    #formAgregarProducto {  
+        width: 90%; /* Aumentar el ancho en tabletas */  
+        padding: 0 20px;  
+    }  
+
+    .Adminbutton {  
+        width: 80%; /* Botón más amplio */  
+    }  
+
+    #usuariosContainer {  
+        width: 90%; /* Aumentar el ancho de la tabla de usuarios */  
+    }  
+
+    .Cambios {  
+        width: 90%; /* Ajustar ancho para botones de cambios */  
+    }  
+
+    .editarCantidad {  
+        width: 100%; /* Botón editable al 100% */  
+    }  
+}  
+
+@media (max-width: 768px) {  
+    .tituloDahs {  
+        font-size: 28px; /* Reducir tamaño de fuente */  
+    }  
+
+    .subtituloDahs {  
+        font-size: 18px; 
+        margin-left: 35xp;
+    }  
+
+    #formAgregarAdmin,  
+    #formAgregarProducto {  
+        height: auto; 
+        width: 284px;
+        margin-left: 80px; 
+    }  
+
+    th, td {  
+        padding: 10px; /* Reducir padding en tabla */  
+        font-size: 14px; /* Reducir tamaño de texto en tabla */  
+    }  
+
+    #confirmarEliminar,  
+    #cancelarEliminar,  
+    #confirmarEliminarProducto,  
+    #cancelarEliminarProducto {  
+        width: 90%; /* Ajustar botones al 90% */  
+        margin-left: 0; /* Eliminar margen izquierdo */  
+    }  
+}  
+
+@media (max-width: 480px) {  
+
+    .tituloDahs {  
+        font-size: 24px;  
+        margin-left: 28px;  
+    }  
+
+    .subtituloDahs {  
+        font-size: 16px; /* Reducir aún más el tamaño de la fuente */  
+        margin-left: 35px;
+    }  
+
+    #formAgregarAdmin,  
+    #formAgregarProducto {  
+        padding: 0 10px; /* Reducir padding en pantallas pequeñas */  
+    }  
+
+    .Adminbutton {  
+        padding: 10px; /* Ajustar padding */  
+        font-size: 10px; /* Ajustar tamaño de fuente */  
+    }  
+}  

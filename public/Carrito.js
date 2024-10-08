@@ -41,19 +41,24 @@ cloud.addEventListener("click", () => {
 
 const contenedorTarjetasFarmacia = document.getElementById("productos-container");  
 const cuentaCarrito = document.getElementById("cuenta-carrito");  
-let productos = JSON.parse(localStorage.getItem("nuevoProducto")) || [];  
+let productos =  [];  
 
 function crearTarjetasFarmacia() {  
-    contenedorTarjetasFarmacia.innerHTML = '';  
+    let claves = Object.keys(localStorage)
+    claves.forEach((claves)=>{
+        productos.push(localStorage.getItem(claves))
+    })
+        contenedorTarjetasFarmacia.innerHTML = '';  
 
     if (productos.length > 0) {  
         productos.forEach(farmacia => {  
             const nuevoProducto = document.createElement('div');  
             nuevoProducto.classList.add("card");  
-
+            // console.log(JSON.parse(farmacia))
+            farmacia = JSON.parse(farmacia)[0]
             nuevoProducto.innerHTML = `  
                 <div class="imgBx">  
-                    <img src="${farmacia.img}" alt="${farmacia.nombre}">  
+                    <img src="/${farmacia.imagen}" alt="${farmacia.nombre}">  
                 </div>  
                 <div class="content">  
                     <div class="details">  
@@ -82,7 +87,13 @@ function crearTarjetasFarmacia() {
 }  
 
 function cambiarCantidad(id, cambio) {  
-    const producto = productos.find(p => p.id === id);  
+    // productos=JSON.parse(productos)
+    var productos_nuevos = []
+    productos.forEach((producto)=>{
+        productos_nuevos.push(JSON.parse(producto)[0])
+    })
+    const producto = productos_nuevos.find(p => p._id == id);  
+    console.log(producto)
     if (producto) {  
         producto.cantidad += cambio;  
 
@@ -93,11 +104,11 @@ function cambiarCantidad(id, cambio) {
 
         // Si la cantidad es 0, eliminar el producto del carrito  
         if (producto.cantidad === 0) {  
-            productos = productos.filter(p => p.id !== id);  
+            productos = productos.filter(p => p._id !== id);  
         }  
 
         // Actualizar localStorage  
-        localStorage.setItem("nuevoProducto", JSON.stringify(productos));  
+        // localStorage.setItem("nuevoProducto", JSON.stringify(productos));    
 
         // Actualizar la visualización  
         crearTarjetasFarmacia(); // Esto actualizará también el total y la cantidad en la barra de navegación  
@@ -116,7 +127,9 @@ function eliminarProducto(id) {
 
 function actualizarTotal() {  
     const total = productos.reduce((acc, producto) => {  
-        const precio = parseFloat(producto.precio.replace('bs. ', '').replace(',', '.'));  
+        // console.log(JSON.parse(producto))
+        producto = JSON.parse(producto)[0]
+        const precio = parseFloat(producto.precio); 
         return acc + (precio * producto.cantidad);  
     }, 0);  
 
@@ -129,10 +142,11 @@ function actualizarCuentaCarrito() {
 }  
 
 // Llamar a la función al cargar el DOM para que se muestre el carrito en la carga de la página  
-document.addEventListener("DOMContentLoaded", crearTarjetasFarmacia);
+// document.addEventListener("DOMContentLoaded", );
 
 
-document.addEventListener('DOMContentLoaded', () => {  
+document.addEventListener('DOMContentLoaded', () => { 
+    crearTarjetasFarmacia() 
     const modal = document.getElementById("modalPago");  
     const btnPago = document.getElementById("btn-pago");  
     const cerrarModal = document.getElementById("cerrarModal");  
@@ -140,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const seccionPaypal = document.getElementById("seccionPaypal");  
     const btnPagoMovil = document.getElementById("btnPagoMovil");  
     const btnPaypal = document.getElementById("btnPaypal");  
-    const btnConfirmarPagoMovil = document.getElementById("btnConfirmarPagoMovil");  
 
     // Abrir la modal al hacer clic en el botón de pagar  
     btnPago.onclick = function() {  
@@ -160,12 +173,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };  
 
     // Selecciona el pago con PayPal  
-    btnPaypal.onclick = function() {  
+    btnPaypal.onclick = function() {   
         seccionPaypal.style.display = "block";  
         seccionPagoMovil.style.display = "none";  
     };  
 
     // Manejar el envío del formulario de Pago Móvil  
+    const btnConfirmarPagoMovil = document.getElementById("btnConfirmarPagoMovil");  
+
     btnConfirmarPagoMovil.onclick = function() {  
         const telefono = document.getElementById("telefono").value;  
         const cedula = document.getElementById("cedula").value;  

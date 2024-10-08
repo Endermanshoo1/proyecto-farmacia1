@@ -109,7 +109,7 @@ body{
 }
 .barra-lateral .nombre-pagina span{
     margin-left: 5px;
-    font-size: 25px;
+    font-size: 20px;
 }
 
 
@@ -324,8 +324,7 @@ main.min-main{
     main.min-main{
         margin-left: 0;
     }
-
-    
+ 
 }
 
 #productos-container{
@@ -353,7 +352,7 @@ main.min-main{
     margin: 17px;  
     overflow: hidden;  
     width: 218px; 
-    height: 298px; 
+    height: 315px; 
     transition: transform 0.3s;  
   }  
   .card:hover {  
@@ -381,6 +380,7 @@ main.min-main{
   .boton{
     height: 30px;
     width: 70px;
+    border: none;
   }
   
   .bx-like, 
@@ -413,26 +413,26 @@ transition: var(--tran-05);
 
 /* Estilo del modal */  
 .modal {  
-    display: none; /* Oculto por defecto */  
+    display: none;  
     position: fixed;  
-    z-index: 1; /* Encima de todo */  
+    z-index: 1;   
     left: 0;  
     top: 0;  
-    width: 100%; /* Ancho completo */  
-    height: 100%; /* Alto completo */  
-    overflow: auto; /* Permitir desplazamiento si es necesario */  
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con opacidad */  
+    width: 100%;    
+    height: 100%;    
+    overflow: auto;    
+    background-color: rgba(0, 0, 0, 0.5);   
 }  
 
 .modal-content {  
     background-color: var(--sidebar-color);  
-    margin: 4%; /* 15% desde arriba y auto desde los lados */  
-    margin-left: 530px;
+    margin: 4%;    
     padding: 20px;  
     border: 1px solid #888;  
-    width: 80%; /* Ancho */  
+    width: 90%; /* Ancho para pantallas pequeñas */  
     max-width: 400px; /* Máximo ancho */  
-    color: var(--text-color);
+    color: var(--text-color);  
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */  
 }  
 
 .close {  
@@ -450,121 +450,49 @@ transition: var(--tran-05);
 }  
 
 /* Estilo adicional para los inputs */  
+#botonesPago {  
+    width: 100%;  
+    height: 40px;  
+    display: flex;  
+    justify-content: space-between;  
+}  
 
-#botonesPago{
-    width: 100%;
-    height: 40px;
-    display: flex;
-    justify-content: space-between;
-}
+#botonesPago button {  
+    width: 170px;  
+    cursor: pointer;  
+    border: none;  
+    background: var(--primary-color);  
+    color: var(--text-color);  
+}  
 
-#botonesPago button{
-    width: 170px;
-    cursor: pointer;
-    border: none;
-    background: var(--primary-color);
-    color: var(--text-color);
-}
+/* Adaptaciones responsivas */  
+@media (max-width: 768px) {  
+    .modal-content {  
+        width: 95%;    
+        margin: 0 auto;  
+        margin-top: 100px;
+    }   
 
-#seccionPagoMovil label{
-    display: flex;
-}
-
-#btnConfirmarPagoMovil{
-    display: flex;
-    width: 100%;
-    height: 50px;
-    justify-content: center;
-    align-items: center;
-    background: var(--primary-color);
-    color: var(--text-color);
-    border: none;
-    margin-top: 20px;
-}
-
-/*
-@media (max-width: 600px) {  
-    .barra-lateral {  
-        position: fixed;  
-        left: -250px;  
-    }  
-    .max-barra-lateral {  
-        left: 0; 
-    }  
-    .menu {  
-        display: flex;  
-    }  
-    .menu ion-icon:nth-child(2) {  
-        display: none; 
-    }  
-    main {  
-        margin-left: 25px;   
-    }  
-    main.min-main {  
-        margin-left: 0; 
+    #botonesPago button {  
+        width: 48%;   
     }  
 
-    .modal {  
-        position: fixed;
-        top: 25%;
-        left: 50%;
-        transform: translate(-48%, -50%);
-        width: 90%;
-        max-width: 400px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        display: none;  
-    }  
-
-    .modal.active {  
-        display: block; 
-    }  
-
-    .modal-header {  
-        padding: 10px;  
-        border-bottom: 1px solid #e0e0e0;  
-    }  
-
-    .modal-body {  
-        padding: 20px;  
-    }  
-
-    .modal-footer {  
-        padding: 10px;  
-        border-top: 1px solid #e0e0e0;   
-        display: flex;  
-        justify-content: flex-end;   
-    }  
-
-    .modal-close {  
-        background: #d9534f;   
-        color: white;   
-        border: none;  
-        padding: 10px; 
-        border-radius: 4px;   
-        cursor: pointer;  
-        transition: 0.3s;   
-    }  
-
-    .modal-close:hover {  
-        background: #c9302c;  
+    #btnConfirmarPagoMovil {  
+        height: 45px;    
     }  
 }  
 
-  
-@media (min-width: 601px) and (max-width: 800px) {  
-    .modal {  
-        width: 80%;   
-        max-width: 600px;    
+@media (max-width: 480px) {  
+    .close {  
+        font-size: 24px;   
     }  
-}  
 
-@media (min-width: 801px) {  
-    .modal {  
-        width: 50%;   
-        max-width: 800px;  
+    #btnConfirmarPagoMovil {  
+        height: 40px;   
+    }  
+    
+    #botonesPago button {  
+        width: 45%; 
+        margin-bottom: 10px; 
     }  
 }  
-*/

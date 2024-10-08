@@ -16,7 +16,7 @@ function agregarAlCarrito(producto) {
     }  
     
     // Guardar el carrito actualizado en el localStorage  
-    localStorage.setItem('carrito', JSON.stringify(carrito));  
+    localStorage.setItem(producto._id, JSON.stringify(carrito));  
     
     // Actualizar el número de productos en el carrito  
     actualizarNumeroCarrito();  
@@ -33,15 +33,11 @@ function getNuevoProductoParaMemoria(producto) {
 
 /** Actualiza el número del carrito en el header */  
 function actualizarNumeroCarrito() {  
-    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];  
-    const totalProductos = carrito.reduce((acc, item) => acc + item.cantidad, 0);  
     
-    // Supongamos que tienes un elemento HTML donde deseas mostrar   
-    // el número total de productos en el carrito  
-    const elementoNumeroCarrito = document.getElementById('numeroCarrito');  
-    elementoNumeroCarrito.textContent = totalProductos;  
+    const elementoNumeroCarrito = document.getElementById('cuenta-carrito');  
+    elementoNumeroCarrito.textContent = localStorage.length;  
 
-    console.log('Número total en el carrito:', totalProductos);  
+    // console.log('Número total en el carrito:', totalProductos);  
 }  
 
 // Función para eliminar un producto del carrito  

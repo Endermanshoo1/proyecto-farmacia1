@@ -55,11 +55,13 @@ function crearTarjetasComestibles(comestibles){
         <div class=content>
             <div class="details">
             <h2 class="details">${comestibles.nombre}</h2>
-            <p class="details">${comestibles.precio}</p>
+            <p class="details">Bs. ${comestibles.precio}</p>
             </div>
-            <div class="botones">
-                <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
+            <div class="botones"> 
+                <button class="carrito">
+                <i class="bx bxs-cart-add"></i>
+                <span>Añadir al carrito</span> 
+                </button>
             </div>
         </div>
         `

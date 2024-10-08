@@ -56,11 +56,13 @@ function crearTarjetasBelleza(belleza){
         <div class=content>
             <div class="details">
             <h2 class="details">${belleza.nombre}</h2>
-            <p class="details">${belleza.precio}</p>
+            <p class="details">Bs. ${belleza.precio}</p>
             </div>
-            <div class="botones">
-                <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
+            <div class="botones"> 
+                <button class="carrito">
+                <i class="bx bxs-cart-add"></i>
+                <span>Añadir al carrito</span> 
+                </button>
             </div>
         </div>
         `

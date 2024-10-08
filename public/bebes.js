@@ -57,11 +57,13 @@ function crearTarjetaBebes(bebes){
         <div class=content>
             <div class="details">
             <h2 class="details">${bebes.nombre}</h2>
-            <p class="details">${bebes.precio}</p>
+            <p class="details">Bs. ${bebes.precio}</p>
             </div>
-            <div class="botones">
-                <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
+            <div class="botones"> 
+                <button class="carrito">
+                <i class="bx bxs-cart-add"></i>
+                <span>Añadir al carrito</span> 
+                </button>
             </div>
         </div>
         `

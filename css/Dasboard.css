@@ -334,14 +334,14 @@ main.min-main{
 .container-carousel {  
     position: relative;  
     max-width: 941px;  
-    height: auto; /* Cambiado a auto para que se ajuste automáticamente */  
+    height: auto;  
     overflow: hidden;  
-    margin: auto; /* Centrar el carrusel */  
+    margin: auto;  
 }  
 
 .carruseles {  
-    width: 100%; /* Cambiado de 1176px a 100% para adaptarse al contenedor */  
-    height: auto; /* Cambiado a auto para que el contenedor se ajuste a su contenido */  
+    width: 100%;    
+    height: auto;   
     display: flex;  
     transition: var(--tran-05);
 }  
@@ -349,13 +349,13 @@ main.min-main{
 .slider-section {  
     min-width: 100%;  
     box-sizing: border-box;   
-    display: flex; /* Asegurar que las imágenes se alineen horizontalmente */  
+    display: flex;   
 }  
 
 .slider-section img {  
-    width: 100%; /* Ajustar a 100% para llenar el contenedor */  
-    height: auto; /* Cambiar a auto para mantener proporciones */  
-    object-fit: cover; /* Mantener la propiedad de cubrir */  
+    width: 100%;   
+    height: auto;   
+    object-fit: cover;   
 }  
 
 .btn-left,  
@@ -408,21 +408,21 @@ main.min-main{
 
 @media (max-width: 600px) {  
     .btn-left, .btn-right {  
-        font-size: 1rem; /* Reduce el tamaño de los botones en pantallas pequeñas */  
-        padding: 3px; /* Reduce el padding */  
+        font-size: 1rem;   
+        padding: 3px;    
     }  
 }  
 
 @media (min-width: 601px) and (max-width: 941px) {  
     .btn-left, .btn-right {  
-        font-size: 1.25rem; /* Ajustar el tamaño de los botones en pantallas medianas */  
+        font-size: 1.25rem;    
         padding: 4px;  
     }  
 }  
 
 @media (min-width: 942px) {  
     .btn-left, .btn-right {  
-        font-size: 1.5rem; /* Tamaño original de botones en pantallas grandes */  
+        font-size: 1.5rem;   
     }  
 }
 
@@ -506,13 +506,22 @@ main.min-main{
   .botones button {  
     background: var(--toggle-color);  
     width: 170px        ;
-    color: white;  
+    color: var(--text-color);  
     border: none;  
     padding: 5px 10px;  
     border-radius: 5px;  
     cursor: pointer;  
     transition: var(--tran-02);
+    display: flex;
+    align-items: center;
   }  
+
+  .botones button .bxs-cart-add{
+    color: var(--text-color);
+  }
+
+
+
   .like{
     display: flex;
     justify-content: center;
@@ -564,14 +573,14 @@ main.min-main{
     background: var(--sidebar-color);  
     border-radius: 5px;  
     height: 90px;  
-    width: 100%; /* Cambiado a 100% para que ocupe todo el ancho disponible */  
-    max-width: 900px; /* Mantiene el ancho máximo */  
-    padding: 0 10px; /* Añadido padding para mejor espaciado */  
+    width: 100%; 
+    max-width: 900px;   
+    padding: 0 10px;  
 }  
 
 .contain {  
     display: flex;  
-    flex-wrap: wrap; /* Permite que los elementos se ajusten en varias líneas si es necesario */  
+    flex-wrap: wrap; 
 }  
 
 .contain .bx-car,  
@@ -581,8 +590,8 @@ main.min-main{
     color: var(--text-color);  
     display: flex;  
     align-items: center;  
-    flex: 1 1 30%; /* Permite que los iconos se ajusten y ocupen el espacio disponible */  
-    justify-content: center; /* Centra los iconos */  
+    flex: 1 1 30%;   
+    justify-content: center;  
 }  
 
 .contain-text {  
@@ -597,21 +606,22 @@ main.min-main{
 @media (max-width: 1202px) {  
     .contain-total {  
         display: flex;
-        flex-direction: column; /* Cambia a columna en pantallas pequeñas */  
-        height: auto; /* Permite que la altura se ajuste automáticamente */  
+        flex-direction: column; 
+        width: 820px;
+        height: auto; 
         margin-left: 0px;
     }  
 
     .contain .bx-car,  
     .contain .bx-purchase-tag-alt,  
     .contain .bx-capsule {  
-        font-size: 30px; /* Reduce el tamaño de los iconos */  
-        flex: 1 1 100%; /* Cada icono ocupa el 100% del ancho */  
-        margin-bottom: 10px; /* Espaciado entre iconos */  
+        font-size: 30px; 
+        flex: 1 1 100%; 
+        margin-bottom: 10px;  
     }  
 
     .contain-text {  
-        font-size: 18px; /* Reduce el tamaño de la fuente */  
+        font-size: 18px;   
     }  
 
     .contain{
@@ -630,11 +640,24 @@ main.min-main{
     #cartas-frex7{
         display: flex;
         flex-wrap: wrap;
+        width: 100%;
     }
 
-    .vermas{
-        margin-right: 135px;
+    .card{
+        width: 145px;
+        height: 310px;
     }
+
+    .card .content .details{
+        font-size: 12px;
+    }
+
+    .scroller[data-speed="fast"] {
+        margin-top: 40px;
+        --_animation-duration: 40s;
+        width: 800px;
+    }
+    
     
 }  
 
@@ -642,11 +665,11 @@ main.min-main{
     .contain .bx-car,  
     .contain .bx-purchase-tag-alt,  
     .contain .bx-capsule {  
-        font-size: 20px; /* Reduce aún más el tamaño de los iconos */  
+        font-size: 20px;  
     }  
 
     .contain-text {  
-        font-size: 10px; /* Reduce aún más el tamaño de la fuente */  
+        font-size: 10px;  
     }  
 } 
   /* scroller */
@@ -688,7 +711,6 @@ main.min-main{
   
   .scroller[data-speed="fast"] {
     margin-top: 40px;
-    margin-left: 60px;
     --_animation-duration: 40s;
   }
   
@@ -771,21 +793,82 @@ main.min-main{
         display: none;
     }
     main{
-        margin-left: 25px;
+        margin-left: 0px;
     }
     main.min-main{
         margin-left: 0;
     }
 
-    
+    .container-carousel{
+        position: relative;
+        width: 300px;
+        height: auto;
+        overflow: hidden;
+        margin: auto;
+    }
+
+    .title-cards{
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 20px;
+        color: var(--text-color);
+        margin-left: 20px;
+    }
+
+    .vermas{
+        margin-right: 150px;
+    }
+
+    .carousel-cards{
+        display: flex;
+        transition: transform 0.5s ease;
+        width: 315px;
+    }
+
+    #cartas-frex,
+    #cartas-frex2,
+    #cartas-frex3,
+    #cartas-frex4,
+    #cartas-frex5,
+    #cartas-frex6,
+    #cartas-frex7{
+        display: flex;
+        flex-wrap: wrap;
+        width: 295px;
+    }
+
+    .card {
+        width: 137px;
+        height: 300px;
+        margin: 4px;
+    }
+
+    .card .content .details{
+        font-size: 12px;
+    }
+
+    .scroller[data-speed="fast"] {
+        margin-top: 40px;
+        --_animation-duration: 40s;
+        width: 290px;
+    }
+
+    .contain-total{
+        display: flex;
+        height: auto;
+        margin-left: 0px;
+        flex-direction: column;
+        width: 300px;
+    }
 }
+
 
 /*Footer*/
  
 .container {  
-    margin-left: auto; /* Mejora la alineación responsiva */  
-    margin-right: auto; /* Mejora la alineación responsiva */  
-    max-width: 1200px; /* Para limitar el ancho máximo del contenedor */  
+    margin-left: auto;  
+    margin-right: auto;   
+    max-width: 1200px;  
 }  
 
 .row {  
@@ -799,15 +882,15 @@ ul {
 }  
 
 .footer {  
-    height: auto; /* Ajusta a contenido */  
+    height: auto;   
     margin-top: 90px;  
     background-color: var(--sidebar-color);  
-    padding: 50px 20px; /* Ajusta el padding */  
+    padding: 50px 20px;  
     
 }  
 
 .footer-col {  
-    width: 32%; /* Coloca 3 columnas en pantallas grandes */  
+    width: 32%;  
     padding: 0 15px;  
 }  
 
@@ -877,12 +960,12 @@ ul {
 
 @media (max-width: 768px) {  
     .footer-col {  
-        width: 100%; /* Cambia a una sola columna en pantallas pequeñas */  
-        margin-bottom: 20px; /* Espaciado entre columnas */  
+        width: 100%;    
+        margin-bottom: 20px;    
     }  
     
     .footer {  
-        padding: 30px 15px; /* Ajusta el padding para pantallas pequeñas */  
+        padding: 30px 15px;    
     }  
 
     .row{
@@ -892,16 +975,16 @@ ul {
 
 @media (max-width: 480px) {  
     .footer-col h4 {  
-        font-size: 16px; /* Tamaño de fuente más pequeño */  
+        font-size: 16px;    
     }  
 
     .footer-col ul li a {  
-        font-size: 14px; /* Tamaño de fuente más pequeño */  
+        font-size: 14px;   
     }  
 
     .footer-col .social-links a {  
-        height: 35px; /* Ajusta el tamaño de los iconos */  
-        width: 35px; /* Ajusta el tamaño de los iconos */  
+        height: 35px;  
+        width: 35px;    
     }  
 
     .row{

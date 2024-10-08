@@ -57,11 +57,13 @@ function crearTarjetasOferta(ofertasdelmes){
         <div class=content>
             <div class="details">
             <h2 class="details">${ofertasdelmes.nombre}</h2>
-            <p class="details">${ofertasdelmes.precio}</p>
+            <p class="details">Bs. ${ofertasdelmes.precio}</p>
             </div>
-            <div class="botones">
-                <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
+            <div class="botones"> 
+                <button class="carrito">
+                <i class="bx bxs-cart-add"></i>
+                <span>Añadir al carrito</span> 
+                </button>
             </div>
         </div>
         `

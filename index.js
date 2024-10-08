@@ -92,7 +92,7 @@ app.get('/user', (req, res) => {
 
 // Rutas para otros productos  
 app.get('/user/bebes', (req, res) => {  
-    res.sendFile(path.join(__dirname, 'view/productos/bebes/index.html'));    
+    res.sendFile(path.join(__dirname, 'view/productos/bebes/index.html'));     
 });   
 app.get('/user/belleza', (req, res) => {  
     res.sendFile(path.join(__dirname, 'view/productos/belleza/index.html'));    

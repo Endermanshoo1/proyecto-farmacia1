@@ -56,11 +56,13 @@ function crearTarjetaCuidadoPersonal(cuidadopersonal){
         <div class=content>
             <div class="details">
             <h2 class="details">${cuidadopersonal.nombre}</h2>
-            <p class="details">${cuidadopersonal.precio}</p>
+            <p class="details">Bs. ${cuidadopersonal.precio}</p>
             </div>
-            <div class="botones">
-                <span class="like"><i class='bx bx-like'></i></span>  
-                <button class="carrito"><i class="bx bxs-cart-add"></i></button>
+            <div class="botones"> 
+                <button class="carrito">
+                <i class="bx bxs-cart-add"></i>
+                <span>Añadir al carrito</span> 
+                </button>
             </div>
         </div>
         `
