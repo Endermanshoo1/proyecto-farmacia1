@@ -83,6 +83,7 @@ body{
     white-space: nowrap;
     font-size: 18px;
     text-align: left;
+    margin-left: 10px;
     opacity: 1;
     transition: opacity 0.5s ease,width 0.5s ease;
 }
@@ -395,7 +396,28 @@ main.min-main{
 
 /*formularios*/
 
-#formAgregarAdmin,
+#formAgregarAdmin{
+    margin: 30px;
+    background-color: var(--sidebar-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 50px;
+    height: 440px;
+    width: 450px;
+    text-align: center;
+    border-radius: 20px;
+}
+
+.help-text {  
+    font-size: 11px;  
+    color: #666;  
+    display: flex;
+    width: 345px;      
+    justify-content: center;
+}  
+
 #formAgregarProducto{
     margin: 30px;
     background-color: var(--sidebar-color);

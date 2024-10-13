@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');  
 const bodyParser = require('body-parser');  
 const path = require('path');   
-const jwt = require('jsonwebtoken');   
+const jwt = require('jsonwebtoken');  
 const multer = require('multer');  
 
 require('dotenv').config();  

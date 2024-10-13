@@ -712,6 +712,7 @@ main.min-main{
   .scroller[data-speed="fast"] {
     margin-top: 40px;
     --_animation-duration: 40s;
+    margin-left: 60px;
   }
   
   

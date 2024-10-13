@@ -1,39 +1,67 @@
-const Admin = require('../models/Admin'); 
+const Admin = require('../models/Admin');   
 const User = require('../models/User');  
 const bcrypt = require('bcryptjs');  
 const jwt = require('jsonwebtoken');  
+const nodemailer = require('nodemailer');
+
+// Función para generar un token JWT  
+const generateToken = (user) => {  
+    return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });  
+};  
+
+// Configuración del transportador de correo  
+const transporter = nodemailer.createTransport({  
+    service: 'gmail', // Puedes cambiarlo por otro servicio  
+    auth: {  
+        user: process.env.EMAIL_USER, // Tu correo electrónico  
+        pass: process.env.EMAIL_PASS // Tu contraseña de correo electrónico o App Password  
+    }  
+});  
+
+// Función para enviar correo de confirmación  
+const sendConfirmationEmail = async (userEmail, username) => {  
+    const mailOptions = {  
+        from: process.env.EMAIL_USER,  
+        to: userEmail,  
+        subject: 'Registro Exitoso',  
+        text: `¡Hola ${username}!\n\nGracias por registrarte. Tu registro ha sido exitoso.\n\n¡Bienvenido!`,  
+        html: `<h3>¡Hola ${username}!</h3><p>Gracias por registrarte. Tu registro ha sido exitoso.</p><p>¡Bienvenido!</p>`  
+    };  
+
+    try {  
+        await transporter.sendMail(mailOptions);  
+        console.log('Correo de confirmación enviado');  
+    } catch (err) {  
+        console.error('Error al enviar el correo:', err);  
+    }  
+};  
 
 // Función de inicio de sesión  
 const login = async (req, res) => {  
     const { email, password } = req.body;  
 
     try {  
-        // Intentar encontrar al usuario en la colección de administradores  
         let user = await Admin.findOne({ email });  
 
-        // Si no se encuentra, intentar buscar en la colección de usuarios  
         if (!user) {  
             user = await User.findOne({ email });  
         }   
-        console.log('Usuario encontrado:', user);  
 
         if (!user) {  
-            console.log('No se encontró usuario con el email:', email);  
             return res.status(401).json({ message: 'Correo o contraseña incorrectos' });   
         }  
 
-        // Comparar la contraseña  
         const isMatch = await bcrypt.compare(password, user.password);  
-        console.log(isMatch);  
         if (!isMatch) {  
-            console.log('Contraseña incorrecta para el usuario:', email);  
             return res.status(401).json({ message: 'Correo o contraseña incorrectos' });  
         }  
 
-        // Enviar respuesta con el objeto user incluyendo el rol y demás información relevante  
+        const token = generateToken(user);  
+
         res.json({   
             message: 'Inicio de sesión exitoso',  
-            user: { // Incluye el objeto user  
+            token,  
+            user: {   
                 id: user._id,  
                 username: user.username,  
                 email: user.email,  
@@ -50,25 +78,19 @@ const login = async (req, res) => {
 const register = async (req, res) => {  
     const { username, email, password } = req.body;  
 
-    console.log('Datos de registro recibidos:', { username, email, password });  
-
     try {  
-        // Verificar si ya existe un usuario con el mismo correo electrónico  
         const existingEmail = await User.findOne({ email });  
         if (existingEmail) {  
             return res.status(400).json({ message: 'El correo electrónico ya está en uso' });  
         }  
 
-        // Verificar si ya existe un usuario con el mismo nombre de usuario  
         const existingUser = await User.findOne({ username });  
         if (existingUser) {  
             return res.status(400).json({ message: 'El nombre de usuario ya está en uso' });  
         }  
 
-        // Encriptar la contraseña antes de almacenar  
         const hashedPassword = await bcrypt.hash(password, 10);  
 
-        // Crear nuevo usuario con rol predeterminado de "user"  
         const newUser = new User({  
             username,  
             email,  
@@ -76,11 +98,11 @@ const register = async (req, res) => {
             role: 'user'   
         });  
 
-        // Guardar el nuevo usuario  
         await newUser.save();  
-        console.log('Usuario registrado con éxito:', newUser);  
+        
+        // Envía el correo de confirmación  
+        await sendConfirmationEmail(newUser.email, newUser.username);  
 
-        // Respuesta exitosa, incluyendo el rol  
         res.status(201).json({   
             message: 'Usuario registrado con éxito',  
             role: newUser.role   

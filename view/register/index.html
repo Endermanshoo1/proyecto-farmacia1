@@ -13,20 +13,24 @@
 		<div class="container" id="container">
 			<div class="form-container sign-up-container">
 				<form id="register-form" action="#">
-					<h1>Crear Cuenta </h1>
+					<h1 class="crearcuenta">Crear Cuenta </h1>
 					<span>Use su correo electronico para iniciar sesion</span>
 
 					<label for="user-register" class="sr-only">Usuario</label>  
 					<input type="text" name="user" id="user-register" placeholder="Nombre de Usuario" required>
+					<small class="help-text">Ejemplo: juan123</small>
 
 					<label for="email-register" class="sr-only">Email</label>  
-					<input type="text" name="email" id="email-register" placeholder="Correo Electronico" required>    
+					<input type="text" name="email" id="email-register" placeholder="Correo Electronico" required>
+					<small class="help-text">Ejemplo: juan@example.com</small>    
 
 					<label for="password-register" class="sr-only" >Password</label>  
-					<input type="password" name="password" id="password-register" placeholder="Contraseña" required>  
+					<input type="password" name="password" id="password-register" placeholder="Contraseña" required>
+					<small class="help-text">Debe contener al menos una letra mayúscula, una minúscula y un número.</small>  
 
 					<label for="confirmPassword" class="sr-only">password</label>
 					<input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmar Contraseña" required>
+					<small class="help-text">Debe coincidir con la contraseña anterior.</small>
 
 					<button type="submit">Iniciar sesión</button> 
 					<p class="error escondido">Error al Registrarse</p> 

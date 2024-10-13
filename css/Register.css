@@ -53,6 +53,7 @@ button {
     letter-spacing: 1px;  
     text-transform: uppercase;  
     transition: transform 80ms ease-in;  
+	margin-top: 10px;
 }  
 
 button:active {  
@@ -240,9 +241,20 @@ input {
     overflow: hidden;  
 }  
 
+.help-text {  
+    font-size: 11px;  
+    color: #666;  
+    display: block;      
+}  
+
 @media (max-width: 768px) {  
 	h1{
 		font-size: 26px;
+	}
+	
+	.crearcuenta{
+		font-size: 22px;
+        width: 145px;
 	}
 	
 	input{
@@ -250,6 +262,14 @@ input {
 	}
 
 	span{
-		font-weight: 900;
+		font-size: 9px;
+		width: 130px;
+	}
+	.help-text {
+		font-size: 9px;
+        color: #666;
+        display: flex;
+        width: 145px;
+        justify-content: center;
 	}
 } 

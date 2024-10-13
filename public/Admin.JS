@@ -75,9 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </form>  
             <div id="productosContainer"></div>
         `,  
-        ReportesVentas: `  
-            <h2 class="tituloDahs">Reportes de Ventas</h2>  
-            <p class="subtituloDahs">Aquí podrás ver los reportes de ventas.</p>  
+        GestionPagos: `  
+            <h2 class="tituloDahs">Reportes de Pagos</h2>  
+            <p class="subtituloDahs">Aquí podrás ver los reportes de Pagos.</p>  
         `,  
         Inventario: `  
              <h2 class="tituloDahs">Control de Inventario</h2>  
@@ -103,9 +103,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="subtituloDahs">Aquí puedes añadir nuevos administradores.</p>  
             <form id="formAgregarAdmin">  
                 <input type="text" id="adminNombre" placeholder="Nombre de usuario" required>  
-                <input type="email" id="adminEmail" placeholder="Correo Electrónico" required>  
-                <input type="password" id="adminPassword" placeholder="Contraseña" required>  
-                <input type="password" id="verifypasword" placeholder="Confirme contraseña" required>  
+                <small class="help-text">Entre 3 y 15 caracteres. Solo letras y números. Debe comenzar con una letra.</small>
+
+                <input type="email" id="adminEmail" placeholder="Correo Electrónico" required>
+                <small class="help-text">Formato: ejemplo@dominio.com</small>  
+  
+                <input type="password" id="adminPassword" placeholder="Contraseña" required> 
+                <small class="help-text">Mínimo 8 caracteres, debe contener al menos una letra mayúscula, una letra minúscula y un número.</small>  
+ 
+                <input type="password" id="verifypasword" placeholder="Confirme contraseña" required>
+                <small class="help-text">Debe coincidir con la contraseña introducida anteriormente.</small>  
+  
                 <button class="Adminbutton" type="submit">Añadir Administrador</button>  
             </form>  
         `  
@@ -126,14 +134,38 @@ document.addEventListener('DOMContentLoaded', () => {
                     const form = document.getElementById('formAgregarAdmin');  
                     form.addEventListener('submit', async (e) => {  
                         e.preventDefault();  
+
                         const nombre = document.getElementById('adminNombre').value;  
                         const email = document.getElementById('adminEmail').value;  
                         const password = document.getElementById('adminPassword').value;  
                         const verifyPassword = document.getElementById('verifypasword').value;  
+
+                        // Expresiones regulares  
+                        const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;   
+                        const usernameRegex = /^[A-Za-z][A-Za-z0-9]{2,14}$/;   
+                        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;  
+
+                        // Validaciones  
+                        if (!usernameRegex.test(nombre)) {  
+                            alert('El nombre de usuario no es válido. Debe tener entre 3 y 15 caracteres, empezar con letra y contener solo letras y números.');  
+                            return;  
+                        }  
+
+                        if (!emailRegex.test(email)) {  
+                            alert('El correo electrónico no es válido. Formato: ejemplo@dominio.com.');  
+                            return;  
+                        }  
+
+                        if (!passwordRegex.test(password)) {  
+                            alert('La contraseña no es válida. Debe contener al menos una letra mayúscula, una minúscula, un número y tener un mínimo de 8 caracteres.');  
+                            return;  
+                        }  
+
                         if (password !== verifyPassword) {  
                             alert('Las contraseñas no coinciden.');  
                             return;  
                         }  
+
                         try {  
                             const response = await fetch('/api/admins', {  
                                 method: 'POST',  
@@ -146,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     password: password,  
                                 }),  
                             });  
+
                             if (response.ok) {  
                                 alert('Administrador agregado exitosamente');  
                                 form.reset();  
@@ -450,6 +483,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Llamar a la función para cargar productos cuando se cargue la página  
                     document.addEventListener('DOMContentLoaded', cargarProductos); 
+                }  else if(id === 'GestionPagos') {
+
                 }
 
             }, 1000);  
@@ -567,12 +602,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const editarUsuario = (event) => {  
         const row = event.target.closest('tr');  
         userIdToEdit = row.getAttribute('data-id');  
-    
-        // Rellenar los campos del formulario  
+     
         document.getElementById('nuevoNombre').value = row.children[0].textContent;  
         document.getElementById('nuevoEmail').value = row.children[1].textContent;  
     
-        // Mostrar la modal de Edición  
+         
         document.getElementById('modalEditar').style.display = 'block';  
     };  
     
@@ -594,7 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (response.ok) {  
                 alert('Usuario actualizado exitosamente');  
-                mostrarUsuarios(); // Asumiendo que esta función actualiza la lista de usuarios  
+                mostrarUsuarios(); 
             } else {  
                 alert('Error al actualizar el usuario.');  
             }  
@@ -624,7 +658,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (response.ok) {  
                 alert('Usuario eliminado exitosamente');  
-                mostrarUsuarios(); // Asumiendo que esta función actualiza la lista de usuarios  
+                mostrarUsuarios();  
             } else {  
                 alert('Error al eliminar el usuario.');  
             }  
