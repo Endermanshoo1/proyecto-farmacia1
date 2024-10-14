@@ -425,14 +425,15 @@ transition: var(--tran-05);
 }  
 
 .modal-content {  
-    background-color: var(--sidebar-color);  
-    margin: 4%;    
-    padding: 20px;  
-    border: 1px solid #888;  
-    width: 90%; /* Ancho para pantallas pequeñas */  
-    max-width: 400px; /* Máximo ancho */  
-    color: var(--text-color);  
-    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */  
+    background-color: var(--sidebar-color);
+    padding: 20px;
+    margin-top: 200px;
+    margin-left: 590px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 400px;
+    color: var(--text-color);
+    box-sizing: border-box; 
 }  
 
 .close {  
