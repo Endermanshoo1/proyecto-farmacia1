@@ -41,21 +41,28 @@ cloud.addEventListener("click", () => {
 
 const contenedorTarjetasFarmacia = document.getElementById("productos-container");  
 const cuentaCarrito = document.getElementById("cuenta-carrito");  
-let productos =  [];  
+let productos = [];  
+
+function cargarProductosDesdeLocalStorage() {  
+    let claves = Object.keys(localStorage);  
+    productos = []; // Aseguramos que el array de productos esté limpio  
+    
+    claves.forEach((clave) => {  
+        const producto = JSON.parse(localStorage.getItem(clave));  
+        if (producto) {  
+            productos.push(producto[0]); // Aseguramos que es un array y tomamos el primer objeto  
+        }  
+    });  
+}  
 
 function crearTarjetasFarmacia() {  
-    let claves = Object.keys(localStorage)
-    claves.forEach((claves)=>{
-        productos.push(localStorage.getItem(claves))
-    })
-        contenedorTarjetasFarmacia.innerHTML = '';  
+    cargarProductosDesdeLocalStorage(); // Cargamos productos desde localStorage  
+    contenedorTarjetasFarmacia.innerHTML = '';  
 
     if (productos.length > 0) {  
         productos.forEach(farmacia => {  
             const nuevoProducto = document.createElement('div');  
             nuevoProducto.classList.add("card");  
-            // console.log(JSON.parse(farmacia))
-            farmacia = JSON.parse(farmacia)[0]
             nuevoProducto.innerHTML = `  
                 <div class="imgBx">  
                     <img src="/${farmacia.imagen}" alt="${farmacia.nombre}">  
@@ -66,11 +73,10 @@ function crearTarjetasFarmacia() {
                         <p>${farmacia.precio}</p>  
                     </div>  
                     <div class="cantidad">  
-                        <button class="boton" onclick="cambiarCantidad(${farmacia.id}, -1)">-</button>  
+                        <button class="boton" onclick="cambiarCantidad('${farmacia._id}', -1)">-</button>  
                         <span>${farmacia.cantidad}</span>  
-                        <button class="boton" onclick="cambiarCantidad(${farmacia.id}, 1)">+</button>  
+                        <button class="boton" onclick="cambiarCantidad('${farmacia._id}', 1)">+</button>  
                     </div>  
-                
                 </div>  
             `;  
 
@@ -80,20 +86,15 @@ function crearTarjetasFarmacia() {
         actualizarTotal(); // Se asegura que el total se calcule  
     } else {  
         contenedorTarjetasFarmacia.innerHTML = '<p class="vacio">No hay productos en el carrito.</p>';  
-        document.getElementById("total").innerText = 'Total: bs. 0.00'; // Asegúrate de mostrar 0 al estar vacío  
+        document.getElementById("total").innerText = 'Total: bs. 0.00';  
     }  
 
     actualizarCuentaCarrito();  
 }  
 
 function cambiarCantidad(id, cambio) {  
-    // productos=JSON.parse(productos)
-    var productos_nuevos = []
-    productos.forEach((producto)=>{
-        productos_nuevos.push(JSON.parse(producto)[0])
-    })
-    const producto = productos_nuevos.find(p => p._id == id);  
-    console.log(producto)
+    const producto = productos.find(p => p._id === id);  
+
     if (producto) {  
         producto.cantidad += cambio;  
 
@@ -104,11 +105,12 @@ function cambiarCantidad(id, cambio) {
 
         // Si la cantidad es 0, eliminar el producto del carrito  
         if (producto.cantidad === 0) {  
-            productos = productos.filter(p => p._id !== id);  
+            eliminarProducto(id); // Utilizamos la función eliminar directamente  
+            return; // No necesitamos continuar al final  
         }  
 
         // Actualizar localStorage  
-        // localStorage.setItem("nuevoProducto", JSON.stringify(productos));    
+        localStorage.setItem(id, JSON.stringify([producto]));    
 
         // Actualizar la visualización  
         crearTarjetasFarmacia(); // Esto actualizará también el total y la cantidad en la barra de navegación  
@@ -116,24 +118,23 @@ function cambiarCantidad(id, cambio) {
 }  
 
 function eliminarProducto(id) {  
-    // Elimina el producto del array  
-    productos = productos.filter(p => p.id !== id);  
-    localStorage.setItem("nuevoProducto", JSON.stringify(productos)); // Actualizar localStorage  
-
-    // Refresh the display  
+    productos = productos.filter(p => p._id !== id);  
+    localStorage.removeItem(id); // Elimina del localStorage  
     crearTarjetasFarmacia(); // Esto se encargará de refrescar la vista del carrito  
-    actualizarTotal(); // Asegúrate de que se llama para actualizar el total a 0 si no hay productos  
+    actualizarTotal(); // Actualiza el total  
 }  
 
 function actualizarTotal() {  
     const total = productos.reduce((acc, producto) => {  
-        // console.log(JSON.parse(producto))
-        producto = JSON.parse(producto)[0]
-        const precio = parseFloat(producto.precio); 
+        const precio = parseFloat(producto.precio);   
         return acc + (precio * producto.cantidad);  
     }, 0);  
 
     document.getElementById("total").innerText = `Total: bs. ${total.toFixed(2)}`;  
+}  
+
+function actualizarCuentaCarrito() {  
+    cuentaCarrito.innerText = `Cantidad de productos: ${productos.length}`; // Actualiza la cuenta total de productos en el carrito  
 }  
 
 function actualizarCuentaCarrito() {  
