@@ -57,21 +57,30 @@ const login = async (req, res) => {
         }  
 
         const token = generateToken(user);  
-
-        res.json({   
+        
+        // Establecer la cookie `userSession` con los datos del usuario y una expiración de 10 minutos (600000 milisegundos)  
+        res.cookie('userSession', JSON.stringify({  
+            id: user._id,  
+            username: user.username,  
+            email: user.email,  
+            role: user.role  
+        }), { httpOnly: true, maxAge: 600000 }); // Aquí se establece la expiración de la cookie a 10 minutos  
+    
+        res.json({  
             message: 'Inicio de sesión exitoso',  
             token,  
-            user: {   
+            user: {  
                 id: user._id,  
                 username: user.username,  
                 email: user.email,  
-                role: user.role   
-            }   
-        });  
+                role: user.role  
+            }  
+        });   
     } catch (err) {  
         console.error('Error durante el inicio de sesión:', err);  
         res.status(500).json({ message: 'Error durante el inicio de sesión' });  
     }  
+
 };   
     
 // Función de registro  
@@ -114,4 +123,11 @@ const register = async (req, res) => {
     }  
 };  
 
-module.exports = { login, register };  
+//funcion de logout
+const logout = (req, res) => {  
+    // Eliminar la cookie de sesión  
+    res.clearCookie('userSession'); // Borrar la cookie userSession  
+    res.json({ message: 'Sesión cerrada con éxito' }); // Respuesta de cierre de sesión  
+};
+
+module.exports = { login, register, logout };  

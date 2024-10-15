@@ -1,28 +1,30 @@
-const jwt = require('jsonwebtoken');  
+function verifyRole(role) {  
+    return function (req, res, next) {  
+        let user;  
 
-const autentificationMiddleware = (roleRequired) => {  
-    return (req, res, next) => {  
-        const token = req.headers['authorization']?.split(' ')[1];  
-
-        if (!token) {  
-            return res.sendStatus(403);  
+        // Verifica si la cookie existe  
+        if (!req.cookies.userSession) {  
+            console.log('Cookie userSession no existe.');  
+            return res.redirect('/acceso-denegado');  
         }  
 
-        jwt.verify(token, process.env.JWT_SECRET, (err, user) => {  
-            if (err) {  
-                return res.sendStatus(403);  
-            }  
-            req.userId = user.id;   
-            req.role = user.role; 
-
-             
-            if (roleRequired && req.role !== roleRequired) {  
-                return res.sendStatus(403);  
-            }  
-
+        try {  
+            user = JSON.parse(req.cookies.userSession);  
+        } catch (error) {  
+            console.log('Error al parsear la cookie:', error);  
+            return res.redirect('/acceso-denegado');  
+        }  
+        
+        console.log('Cookie userSession:', user);  
+        
+        // Cambia `user.tipo` por `user.role` para la comparación  
+        if (user && user.role === role) {  
             next();  
-        });  
-    };  
-};  
+        } else {  
+            console.log('Acceso denegado. Rol requerido:', role, 'Rol del usuario:', user ? user.role : 'No definido');  
+            res.redirect('/acceso-denegado');  
+        }  
+    }  
+}  
 
-module.exports = autentificationMiddleware;
+module.exports = verifyRole;  

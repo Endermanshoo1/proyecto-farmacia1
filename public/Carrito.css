@@ -427,7 +427,7 @@ transition: var(--tran-05);
 .modal-content {  
     background-color: var(--sidebar-color);
     padding: 20px;
-    margin-top: 200px;
+    margin-top: 30px;
     margin-left: 590px;
     border: 1px solid #888;
     width: 90%;
@@ -435,6 +435,28 @@ transition: var(--tran-05);
     color: var(--text-color);
     box-sizing: border-box; 
 }  
+
+#btnConfirmarPagoMovil{
+    display: flex;
+    width: 100%;
+    height: 50px;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color);
+    background: var(--primary-color);
+    border: none;
+    cursor: pointer;
+}
+
+#seccionPagoMovil input{
+    background-color: var(--toggle-color);
+    border: none;
+    padding: 12px 15px;
+    margin: 8px 0px;
+    width: 100%;
+    color: var(--text-color);
+}
 
 .close {  
     color: var(--text-color);  
@@ -456,6 +478,7 @@ transition: var(--tran-05);
     height: 40px;  
     display: flex;  
     justify-content: space-between;  
+    margin-bottom: 15px;
 }  
 
 #botonesPago button {  

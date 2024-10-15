@@ -49,10 +49,14 @@ const adminController = require('./controllers/adminController');
 const authController = require('./controllers/autenticationController');  
 const autentificationAdmin = require('./controllers/autentificationAdmin');    
 const productoController = require('./controllers/productosControllers');   
-const carritoController = require('./controllers/carritoController'); 
+const carritoController = require('./controllers/carritoController');
+const PagoController = require('./controllers/pagosController'); 
+const verifyRole = require('./middlewares/autentificationMiddleware')
+
 // Rutas de autenticación  
 app.post('/api/auth/login', authController.login);  
-app.post('/api/auth/register', authController.register);  
+app.post('/api/auth/register', authController.register); 
+app.post('/api/logout', authController.logout) 
 app.post('/api/admins', adminController.addAdmin);   
 
 // Rutas de usuario  
@@ -82,11 +86,19 @@ app.get('/api/carrito/:id', carritoController.obtenerItemPorId);
 app.put('/api/carrito/:id', carritoController.actualizarItem);    
 app.delete('/api/carrito/:id', carritoController.eliminarDelCarrito); 
 
+// Rutas de pagos  
+app.post('/api/pagos', PagoController.crearPago);  
+app.get('/api/pagos', PagoController.obtenerPagos);  
+app.get('/api/pagos/:id', PagoController.obtenerPagoPorId); 
+app.put('/api/pagos/:id/aprobar', PagoController.aprobarPago);  
+app.put('/api/pagos/:id/cancelar', PagoController.cancelarPago);  
+app.put('/api/pagos/:id/rechazar', PagoController.rechazarPago); 
+
 // Rutas de frontend  
 app.get('/', (req, res) => {   
     res.sendFile(__dirname + '/view/register/index.html');    
 });  
-app.get('/user', (req, res) => {  
+app.get('/user', verifyRole('user'), (req, res) => {   
     res.sendFile(path.join(__dirname, 'view/dahsboard/index.html'));    
 });   
 
@@ -94,25 +106,25 @@ app.get('/user', (req, res) => {
 app.get('/user/bebes', (req, res) => {  
     res.sendFile(path.join(__dirname, 'view/productos/bebes/index.html'));     
 });   
-app.get('/user/belleza', (req, res) => {  
+app.get('/user/belleza',verifyRole('user'), (req, res) => {  
     res.sendFile(path.join(__dirname, 'view/productos/belleza/index.html'));    
 });   
-app.get('/user/comestibles', (req, res) => {  
+app.get('/user/comestibles',verifyRole('user'), (req, res) => {  
     res.sendFile(path.join(__dirname, 'view/productos/comestibles/index.html'));    
 });   
-app.get('/user/cuidado-personal', (req, res) => {  
+app.get('/user/cuidado-personal',verifyRole('user'), (req, res) => {  
     res.sendFile(path.join(__dirname, 'view/productos/cuidadopersonal/index.html'));    
 });   
-app.get('/user/farmacia', (req, res) => {  
+app.get('/user/farmacia',verifyRole('user'), (req, res) => {  
     res.sendFile(path.join(__dirname, 'view/productos/farmacia/index.html'));    
 });   
-app.get('/user/hogar', (req, res) => {  
+app.get('/user/hogar',verifyRole('user'), (req, res) => {  
     res.sendFile(path.join(__dirname, 'view/productos/hogar/index.html'));    
 });   
-app.get('/user/Ofertas', (req, res) => {  
+app.get('/user/Ofertas',verifyRole('user'), (req, res) => {  
     res.sendFile(path.join(__dirname, 'view/productos/ofertas/index.html'));    
 });
-app.get('/admin', (req, res) => {  
+app.get('/admin', verifyRole('admin'), (req, res) => {  
     res.sendFile(__dirname + '/view/admin/index.html');   
 });  
 app.get('/carrito', (req, res) => {  

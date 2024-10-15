@@ -27,9 +27,23 @@ menu.addEventListener("click",()=>{
 });
 
 document.addEventListener("DOMContentLoaded", () => {  
-    document.getElementById("cerrarsesion").addEventListener("click", () => {  
-        document.cookie = 'jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';  
-        document.location.href = "/";  
+    document.getElementById("cerrarsesion").addEventListener("click", async () => {  
+        try {  
+            // Hacer una solicitud a la ruta de logout en el servidor  
+            const response = await fetch('/api/logout', {  
+                method: 'POST', 
+                credentials: 'include' 
+            });  
+
+            if (response.ok) {  
+                // Redirigir al usuario a la página principal o a la página de inicio de sesión  
+                document.location.href = "/";  
+            } else {  
+                console.error('Error al cerrar sesión');  
+            }  
+        } catch (error) {  
+            console.error('Error en la solicitud:', error);  
+        }  
     });  
 });
 

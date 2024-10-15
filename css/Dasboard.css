@@ -479,7 +479,7 @@ main.min-main{
     margin: 7px;  
     overflow: hidden;  
     width: 188px; 
-    height: 298px; 
+    height: 305px; 
     transition: transform 0.3s;
      
   }  
@@ -802,7 +802,7 @@ main.min-main{
 
     .container-carousel{
         position: relative;
-        width: 300px;
+        width: 340px;
         height: auto;
         overflow: hidden;
         margin: auto;
@@ -817,13 +817,13 @@ main.min-main{
     }
 
     .vermas{
-        margin-right: 150px;
+        margin-right: 180px;
     }
 
     .carousel-cards{
         display: flex;
         transition: transform 0.5s ease;
-        width: 315px;
+        width: 340px;
     }
 
     #cartas-frex,
@@ -835,7 +835,7 @@ main.min-main{
     #cartas-frex7{
         display: flex;
         flex-wrap: wrap;
-        width: 295px;
+        width: 320px;
     }
 
     .card {
@@ -851,7 +851,8 @@ main.min-main{
     .scroller[data-speed="fast"] {
         margin-top: 40px;
         --_animation-duration: 40s;
-        width: 290px;
+        width: 330px;
+        margin-left: 0px;
     }
 
     .contain-total{
@@ -859,7 +860,7 @@ main.min-main{
         height: auto;
         margin-left: 0px;
         flex-direction: column;
-        width: 300px;
+        width: 340px;
     }
 }
 

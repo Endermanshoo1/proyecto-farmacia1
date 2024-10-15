@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito de Compras</title>
     <link rel="stylesheet" href="/public//Carrito.css">
+    <link rel="shortcut icon" href="/public/img/logo mini white.png" type="image/x-icon">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- Incluye Leaflet CSS y JS -->  
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />  
@@ -111,45 +112,61 @@
             <span>Finalizar Compra</span>  
         </button>  
         
-       <!-- Modal -->  
-       <div id="modalPago" class="modal">  
-        <div class="modal-content">  
-            <span class="close" id="cerrarModal">&times;</span>  
-            <h2>Pasarela de Pago</h2>  
+            <!-- Modal -->  
+            <div id="modalPago" class="modal">  
+                <div class="modal-content">  
+                    <span class="close" id="cerrarModal">&times;</span>  
+                    <h2>Pasarela de Pago</h2>  
+                    
+                    <!-- Botones para seleccionar el modo de pago -->  
+                    <div id="botonesPago">  
+                        <button id="btnPagoMovil">Pago Móvil</button>  
+                        <button id="btnDivisas">Divisas</button>  
+                    </div>  
+                    
+                    <!-- Sección para Pago Móvil -->  
+                    <div id="seccionPagoMovil" style="display: none;">   
+                        <p>Teléfono:</p>  
+                        <input type="text" id="telefono" disabled> 
+
+                        <p>Cédula de identidad:</p>  
+                        <input type="text" id="cedula" disabled> 
+
+                        <p>Banco:</p>  
+                        <input type="text" id="banco" disabled> 
+
+                        <label for="referencia">  
+                            <p>Referencia Bancaria</p>  
+                        </label>  
+
+                        <input type="text" id="referencia" placeholder="Referencia Bancaria (Número de Referencia Completo)" maxlength="20" required>  
+                        
+                        <div id="mostrarmonto"></div>  
+                        <button id="btnConfirmarPagoMovil">Confirmar Pago Móvil</button>  
+                    </div>  
             
-            <!-- Botones para seleccionar el modo de pago -->  
-            <div id="botonesPago">  
-                <button id="btnPagoMovil">Pago Móvil</button>  
-                <button id="btnPaypal">PayPal</button>  
-            </div>  
-    
-            <!-- Sección para Pago Móvil -->  
-            <div id="seccionPagoMovil" style="display: none;">   
-                <p>Telefono</p>
-                <span>0414-2558608</span>
-                
-                <p>Cedula de identidad</p>
-                <span>V-29661874</span> 
-                
-                <p>Banco</p>
-                <span>Banesco</span>  
-                
-                <label for="referencia">Referencia Bancaria:</label>  
-                <input type="text" id="referencia" name="referencia" required>  
-                
-                <div id="mostrarmonto"></div>  
-    
-                <button id="btnConfirmarPagoMovil">Confirmar Pago Móvil</button>  
-            </div>  
-    
-            <!-- Sección para PayPal -->  
-            <div id="seccionPaypal" style="display: none;">   
-                <p>Redirigiendo a PayPal... (simulado)</p>  
-                <button id="btnIrAPaypal">Ir a PayPal</button>  
-            </div>  
-    
-        </div>  
-    </div>    
+                    <!-- Sección para Divisas -->  
+                    <div id="seccionDivisas" style="display: none;">  
+                        <p>Seleccione el método de pago:</p>  
+                        
+                        <button id="btnEfectivoBs">Efectivo (Bolívares)</button>  
+                        <button id="btnEfectivoDivisas">Efectivo (Divisas)</button>  
+                        
+                        <div id="divEfectivoBs" style="display: none;">  
+                            <p>A continuación se mostrará el monto total:</p>  
+                            <div id="mostrarmontoDivisas"></div>  
+                            <button id="btnConfirmarBs">Confirmar Pago en Bolívares</button>  
+                        </div>  
+            
+                        <div id="divEfectivoDivisas" style="display: none;">  
+                            <p>Monto a cancelar en divisas:</p>  
+                            <input type="number" id="montoDivisas" placeholder="Ingrese el monto en divisas" required>  
+                            <button id="btnConfirmarDivisas">Confirmar Pago en Divisas</button>  
+                        </div>  
+                    </div>  
+                </div>    
+            </div> 
+        </div>    
     </main>
 
     <script src="/public/Carrito.js"></script>

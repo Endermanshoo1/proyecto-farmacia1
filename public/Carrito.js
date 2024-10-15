@@ -41,22 +41,23 @@ cloud.addEventListener("click", () => {
 
 const contenedorTarjetasFarmacia = document.getElementById("productos-container");  
 const cuentaCarrito = document.getElementById("cuenta-carrito");  
+const totalElement = document.getElementById("total");  
 let productos = [];  
 
 function cargarProductosDesdeLocalStorage() {  
     let claves = Object.keys(localStorage);  
-    productos = []; // Aseguramos que el array de productos esté limpio  
+    productos = [];  
     
     claves.forEach((clave) => {  
         const producto = JSON.parse(localStorage.getItem(clave));  
         if (producto) {  
-            productos.push(producto[0]); // Aseguramos que es un array y tomamos el primer objeto  
+            productos.push(producto[0]);  
         }  
     });  
 }  
 
 function crearTarjetasFarmacia() {  
-    cargarProductosDesdeLocalStorage(); // Cargamos productos desde localStorage  
+    cargarProductosDesdeLocalStorage();  
     contenedorTarjetasFarmacia.innerHTML = '';  
 
     if (productos.length > 0) {  
@@ -83,78 +84,62 @@ function crearTarjetasFarmacia() {
             contenedorTarjetasFarmacia.appendChild(nuevoProducto);  
         });  
 
-        actualizarTotal(); // Se asegura que el total se calcule  
+        actualizarTotal();  
     } else {  
         contenedorTarjetasFarmacia.innerHTML = '<p class="vacio">No hay productos en el carrito.</p>';  
-        document.getElementById("total").innerText = 'Total: bs. 0.00';  
+        totalElement.innerText = 'Total: bs. 0.00';  
     }  
-
     actualizarCuentaCarrito();  
 }  
 
 function cambiarCantidad(id, cambio) {  
     const producto = productos.find(p => p._id === id);  
-
     if (producto) {  
         producto.cantidad += cambio;  
-
-        // No permitir cantidades negativas  
         if (producto.cantidad < 0) {  
             producto.cantidad = 0;  
         }  
-
-        // Si la cantidad es 0, eliminar el producto del carrito  
         if (producto.cantidad === 0) {  
-            eliminarProducto(id); // Utilizamos la función eliminar directamente  
-            return; // No necesitamos continuar al final  
+            eliminarProducto(id);  
+            return;  
         }  
-
-        // Actualizar localStorage  
         localStorage.setItem(id, JSON.stringify([producto]));    
-
-        // Actualizar la visualización  
-        crearTarjetasFarmacia(); // Esto actualizará también el total y la cantidad en la barra de navegación  
+        crearTarjetasFarmacia();  
     }  
 }  
 
 function eliminarProducto(id) {  
     productos = productos.filter(p => p._id !== id);  
-    localStorage.removeItem(id); // Elimina del localStorage  
-    crearTarjetasFarmacia(); // Esto se encargará de refrescar la vista del carrito  
-    actualizarTotal(); // Actualiza el total  
+    localStorage.removeItem(id);  
+    crearTarjetasFarmacia();  
+    actualizarTotal();  
 }  
 
 function actualizarTotal() {  
     const total = productos.reduce((acc, producto) => {  
         const precio = parseFloat(producto.precio);   
-        return acc + (precio * producto.cantidad);  
+        return acc + (precio * producto.cantidad);   
     }, 0);  
-
-    document.getElementById("total").innerText = `Total: bs. ${total.toFixed(2)}`;  
-}  
-
-function actualizarCuentaCarrito() {  
-    cuentaCarrito.innerText = `Cantidad de productos: ${productos.length}`; // Actualiza la cuenta total de productos en el carrito  
+    totalElement.innerText = `Total: bs. ${total.toFixed(2)}`;   
+    return total; // Devuelve el total para usarlo en PayPal  
 }  
 
 function actualizarCuentaCarrito() {  
     const cantidadTotal = productos.reduce((acc, producto) => acc + producto.cantidad, 0);  
-    cuentaCarrito.innerText = cantidadTotal > 0 ? cantidadTotal : ''; // Muestra la cantidad o vacío si es 0  
+    cuentaCarrito.innerText = cantidadTotal > 0 ? cantidadTotal : '';  
 }  
 
-// Llamar a la función al cargar el DOM para que se muestre el carrito en la carga de la página  
-// document.addEventListener("DOMContentLoaded", );
-
-
-document.addEventListener('DOMContentLoaded', () => { 
-    crearTarjetasFarmacia() 
-    const modal = document.getElementById("modalPago");  
+document.addEventListener('DOMContentLoaded', () => {  
+    crearTarjetasFarmacia();   
+    const modal = document.getElementById("modalPago");    
     const btnPago = document.getElementById("btn-pago");  
     const cerrarModal = document.getElementById("cerrarModal");  
     const seccionPagoMovil = document.getElementById("seccionPagoMovil");  
-    const seccionPaypal = document.getElementById("seccionPaypal");  
+    const seccionDivisas = document.getElementById("seccionDivisas");  
     const btnPagoMovil = document.getElementById("btnPagoMovil");  
-    const btnPaypal = document.getElementById("btnPaypal");  
+    const btnDivisas = document.getElementById("btnDivisas");  
+    const btnConfirmarPagoMovil = document.getElementById("btnConfirmarPagoMovil");  
+    const inputReferencia = document.getElementById("referencia"); 
 
     // Abrir la modal al hacer clic en el botón de pagar  
     btnPago.onclick = function() {  
@@ -164,59 +149,165 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cerrar la modal  
     cerrarModal.onclick = function() {  
         modal.style.display = "none";  
-        resetModal(); // Resetear el modal al cerrarlo  
+        resetModal();  
     };  
 
-    // Selecciona el pago móvil  
     btnPagoMovil.onclick = function() {  
         seccionPagoMovil.style.display = "block";  
-        seccionPaypal.style.display = "none";  
+        seccionDivisas.style.display = "none";  
+        mostrarDatosBancarios();  
+        mostrarMontoTotal();  
     };  
 
-    // Selecciona el pago con PayPal  
-    btnPaypal.onclick = function() {   
-        seccionPaypal.style.display = "block";  
+    btnDivisas.onclick = function() {  
+        seccionDivisas.style.display = "block";  
         seccionPagoMovil.style.display = "none";  
+        mostrarMontoTotalDivisas(); // Mostrar el monto total en la sección de divisas  
     };  
 
-    // Manejar el envío del formulario de Pago Móvil  
-    const btnConfirmarPagoMovil = document.getElementById("btnConfirmarPagoMovil");  
+    // Función para obtener el valor de una cookie  
+function getCookie(name) {  
+    const value = `; ${document.cookie}`;  
+    const parts = value.split(`; ${name}=`);  
+    if (parts.length === 2) {  
+        const cookieValue = parts.pop().split(';').shift();  
+        console.log(`Cookie encontrada: ${cookieValue}`); // Diagnóstico  
+        return cookieValue;  
+    }  
+    console.log(`Cookie no encontrada: ${name}`); // Diagnóstico  
+    return null; // Asegúrate de retornar null si no se encuentra  
+}  
 
-    btnConfirmarPagoMovil.onclick = function() {  
-        const telefono = document.getElementById("telefono").value;  
-        const cedula = document.getElementById("cedula").value;  
-        const banco = document.getElementById("banco").value;  
-        const referencia = document.getElementById("referencia").value;  
-        const monto = document.getElementById("monto").value;  
+// Evento para realizar el pago móvil  
+document.getElementById("btnConfirmarPagoMovil").onclick = async function() {  
+    const telefono = document.getElementById("telefono").value;  
+    const cedula = document.getElementById("cedula").value;  
+    const banco = document.getElementById("banco").value;  
+    const referencia = document.getElementById("referencia").value;  
+    const montoText = document.getElementById("mostrarmonto").innerText.replace("Monto a cancelar: bs. ", "");  
+    const monto = parseFloat(montoText.replace(',', '.'));  
 
-        alert(`Pago Móvil procesado correctamente.\n  
-               Teléfono: ${telefono}\n  
-               Cédula: ${cedula}\n  
-               Banco: ${banco}\n  
-               Referencia: ${referencia}\n  
-               Monto: ${monto}`);  
+    // Obtener el correo electrónico del usuario desde la cookie  
+    const email = getCookie('userSession');  
 
-        // Cierra la modal y resetea el formulario  
+    if (!email) {  
+        alert('No se encontró el correo electrónico en la cookie.');  
+        return;  
+    }  
+
+    // Verifica que todos los campos esenciales estén presentes  
+    if (!monto || isNaN(monto) || !telefono || !cedula || !banco || !referencia) {  
+        alert('Faltan datos requeridos.');  
+        return;  
+    }  
+
+    // Preparar el cuerpo de la solicitud  
+    const tipoPago = 'pago_movil';   
+    const pagoData = {  
+        email,  
+        monto,  
+        tipoPago,  
+        referencia  
+    };  
+
+    console.log("Datos del pago a enviar:", pagoData);  
+
+    try {  
+        const response = await fetch('/api/pagos', {  
+            method: 'POST',  
+            headers: {  
+                'Content-Type': 'application/json'  
+            },  
+            body: JSON.stringify(pagoData)  
+        });  
+
+        if (!response.ok) {  
+            throw new Error('Error al procesar el pago: ' + response.statusText);  
+        }  
+
+        const result = await response.json();  
+        alert(`Pago Móvil procesado correctamente: ${result.message}`);  
+
+        // Aquí se asume que `modal` y `resetModal` están definidos en tu código  
         modal.style.display = "none";  
-        resetModal(); // Resetear el modal  
+        resetModal();  
+    } catch (error) {  
+        alert('Error: ' + error.message);  
+    }  
+};  
+
+// Manejar la elección de efectivo en Bolívares  
+document.getElementById("btnEfectivoBs").onclick = function() {  
+    document.getElementById("divEfectivoBs").style.display = "block";  
+    document.getElementById("divEfectivoDivisas").style.display = "none";  
+    mostrarMontoTotalDivisas();  
+};  
+
+// Manejar la elección de efectivo en Divisas  
+document.getElementById("btnEfectivoDivisas").onclick = function() {  
+    document.getElementById("divEfectivoDivisas").style.display = "block";  
+    document.getElementById("divEfectivoBs").style.display = "none";  
+};  
+
+    document.getElementById("btnConfirmarBs").onclick = function() {  
+        alert(`Pago en Efectivo (Bolívares) procesado correctamente.\n ${document.getElementById("mostrarmontoDivisas").innerText}`);  
+        modal.style.display = "none";  
+        resetModal();  
     };  
 
-    // Función para resetear el modal al cerrarlo  
+    document.getElementById("btnConfirmarDivisas").onclick = function() {  
+        const montoDivisas = document.getElementById("montoDivisas").value;  
+
+        if (!montoDivisas) {  
+            alert("Por favor, ingrese un monto en divisas.");  
+            return;  
+        }  
+
+        alert(`Pago en Efectivo (Divisas) procesado correctamente.\n Monto en divisas: ${montoDivisas}`);  
+        modal.style.display = "none";  
+        resetModal();  
+    };  
+
+    function mostrarDatosBancarios() {  
+        document.getElementById("telefono").value = "0414-2558608";  
+        document.getElementById("cedula").value = "V-29661874";  
+        document.getElementById("banco").value = "Banesco";  
+    }  
+
+    function mostrarMontoTotal() {  
+        let total = 0;  
+        if (typeof actualizarTotal === 'function') {  
+            total = actualizarTotal();  
+        }  
+        const mostrarmonto = document.getElementById("mostrarmonto");  
+        mostrarmonto.innerHTML = `<p>Monto a cancelar: bs. ${total.toFixed(2)}</p>`;  
+    }  
+
+    function mostrarMontoTotalDivisas() {  
+        let total = 0;  
+        if (typeof actualizarTotal === 'function') {  
+            total = actualizarTotal();  
+        }  
+        const mostrarmontoDivisas = document.getElementById("mostrarmontoDivisas");  
+        mostrarmontoDivisas.innerHTML = `<p>Monto a cancelar en divisas: $${(total / 5).toFixed(2)}</p>`; // Ajusta el tipo de cambio según sea necesario  
+    }  
+
     function resetModal() {  
         seccionPagoMovil.style.display = "none";  
-        seccionPaypal.style.display = "none";  
+        seccionDivisas.style.display = "none";  
         document.getElementById("telefono").value = '';  
         document.getElementById("cedula").value = '';  
         document.getElementById("banco").value = '';  
         document.getElementById("referencia").value = '';  
-        document.getElementById("monto").value = '';  
+        document.getElementById("montoDivisas").value = '';  
+        document.getElementById("mostrarmonto").innerHTML = '';  
+        document.getElementById("mostrarmontoDivisas").innerHTML = '';  
     }  
 
-    // Cerrar la modal si se hace clic fuera de ella  
     window.onclick = function(event) {  
         if (event.target === modal) {  
             modal.style.display = "none";  
-            resetModal(); // Resetear el modal al cerrarlo  
+            resetModal();  
         }  
     };  
 });
