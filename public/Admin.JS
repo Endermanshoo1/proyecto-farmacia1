@@ -90,9 +90,21 @@ document.addEventListener('DOMContentLoaded', () => {
             <div id="productosContainer"></div>
         `,  
         GestionPagos: `  
-            <h2 class="tituloDahs">Reportes de Pagos</h2>  
-            <p class="subtituloDahs">Aquí podrás ver los reportes de Pagos.</p>  
-        `,  
+             <h2 class="tituloDahs">Reportes de Pagos</h2>  
+                <p class="subtituloDahs">Aquí podrás ver los reportes de Pagos.</p>  
+                <table id="tablaPagos" class="tabla">  
+                    <thead>  
+                        <tr>  
+                            <th>Email</th>  
+                            <th>Tipo de Pago</th>  
+                            <th>Referencia</th>  
+                            <th>Estatus</th>  
+                            <th>Acciones</th>  
+                        </tr>  
+                    </thead>  
+                    <tbody id="pagosBody"></tbody>  
+                </table>  
+            `,  
         Inventario: `  
              <h2 class="tituloDahs">Control de Inventario</h2>  
             <p class="subtituloDahs">Aquí puedes gestionar el inventario de productos.</p>  
@@ -130,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
                 <button class="Adminbutton" type="submit">Añadir Administrador</button>  
             </form>  
-        `  
+        `
     };  
 
     const links = document.querySelectorAll('.navegacion ul li a');  
@@ -498,7 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Llamar a la función para cargar productos cuando se cargue la página  
                     document.addEventListener('DOMContentLoaded', cargarProductos); 
                 }  else if(id === 'GestionPagos') {
-
+                    obtenerPagos(); 
                 }
 
             }, 1000);  
@@ -717,3 +729,69 @@ document.addEventListener('DOMContentLoaded', () => {
         element.style.opacity = 1;  
     }  
 }); 
+
+async function obtenerPagos() {  
+    try {  
+        const response = await fetch('/api/pagos'); // Asegúrate de que esta URL sea correcta.  
+        const pagos = await response.json();  
+        mostrarPagos(pagos);  
+    } catch (error) {  
+        console.error('Error al obtener los pagos:', error);  
+    }  
+}  
+
+function mostrarPagos(pagos) {  
+    const pagosBody = document.getElementById('pagosBody');  
+    pagosBody.innerHTML = ''; // Limpiar la tabla antes de llenarla.  
+
+    pagos.forEach(pago => {  
+        const row = document.createElement('tr');  
+        
+        const estatusColor = {  
+            'pendiente': 'orange',  
+            'aprobado': 'green',  
+            'rechazado': 'red'  
+        };  
+
+        row.innerHTML = `  
+            <td>${pago.email}</td>  
+            <td>${pago.tipo_pago}</td>  
+            <td>${pago.referencia}</td>  
+            <td><span class="estatus" style="background-color: ${estatusColor[pago.estatus]}"></span> ${pago.estatus}</td>  
+            <td>  
+                <button class="botonAccion" data-id="${pago.id}" data-accion="aprobar">Aprobar</button>  
+                <button class="botonAccion" data-id="${pago.id}" data-accion="rechazar">Rechazar</button>  
+            </td>  
+        `;  
+        
+        pagosBody.appendChild(row);  
+    });  
+
+    // Agregar event listeners a los botones de acción  
+    document.querySelectorAll('.botonAccion').forEach(button => {  
+        button.addEventListener('click', manejarAccionPago);  
+    });  
+}  
+
+async function manejarAccionPago(event) {  
+    const idPago = event.target.dataset.id;  
+    const accion = event.target.dataset.accion;  
+    
+    try {  
+        const response = await fetch(`/api/pagos/${idPago}`, {  
+            method: 'PATCH', // Usamos PATCH para modificar el estado  
+            headers: {  
+                'Content-Type': 'application/json',  
+            },  
+            body: JSON.stringify({ estatus: accion === 'aprobar' ? 'aprobado' : 'rechazado' })  
+        });  
+
+        if (response.ok) {  
+            obtenerPagos(); // Vuelve a obtener la lista de pagos  
+        } else {  
+            console.error('Error al actualizar el pago:', await response.text());  
+        }  
+    } catch (error) {  
+        console.error('Error al manejar la acción del pago:', error);  
+    }  
+}  

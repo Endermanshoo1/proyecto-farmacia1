@@ -726,3 +726,29 @@ label{
         font-size: 10px; /* Ajustar tamaño de fuente */  
     }  
 }  
+
+@media (max-width: 600px){
+    .barra-lateral{
+        position: fixed;
+        left: -250px;
+    }
+    .max-barra-lateral{
+        left: 0;
+    }
+    .menu{
+        display: flex;
+    }
+    .menu ion-icon:nth-child(2){
+        display: none;
+    }
+    main{
+        margin-left: 0px;
+    }
+    main.min-main{
+        margin-left: 0;
+    }
+
+    #productoscontainer{
+        
+    }
+}

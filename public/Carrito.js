@@ -163,24 +163,11 @@ document.addEventListener('DOMContentLoaded', () => {
         seccionDivisas.style.display = "block";  
         seccionPagoMovil.style.display = "none";  
         mostrarMontoTotalDivisas(); // Mostrar el monto total en la sección de divisas  
-    };  
-
-    // Función para obtener el tipo de cambio  
-    async function obtenerTipoCambio() {  
-        try {  
-            const response = await fetch('https://ve.dolarapi.com/v1/dolares/oficial'); // Cambia esto por la URL de la API real  
-            if (!response.ok) throw new Error('Error al obtener el tipo de cambio');  
-            const data = await response.json();  
-            return data.tipo_cambio; // Asegúrate de que este campo exista en la respuesta  
-        } catch (error) {  
-            console.error(error);  
-            return null;  
-        }  
-    }  
+    };    
 
     async function obtenerTasaCambio() {  
         try {  
-            const response = await axios.get('https://ve.dolarapi.com/v1/dolares/oficial');  
+            const response = await fetch.get('https://ve.dolarapi.com/v1/dolares/oficial');  
             const tasaPromedio = response.data.promedio;  
             document.getElementById("tasaCambio").innerText = `La tasa actual del dólar es: Bs. ${tasaPromedio}`;  
         } catch (error) {  
@@ -263,16 +250,7 @@ document.getElementById("btnConfirmarPagoMovil").onclick = async function() {
     }  
 };  
 
-// Manejar la elección de efectivo en Bolívares  
-document.getElementById("btnEfectivoBs").onclick = function() {  
-    // Mostrar el div de Efectivo en Bolívares  
-    document.getElementById("divEfectivoBs").style.display = "block";  
-    document.getElementById("divEfectivoDivisas").style.display = "none";  
-    
-    // Llamar a la función para actualizar y mostrar el total  
-    const total = actualizarTotal(); // Se obtiene el total  
-    document.getElementById("total2").innerText = `Total: bs. ${total.toFixed(2)}`;  
-};  
+
 
 // Manejar la elección de efectivo en Bolívares  
 document.getElementById("btnEfectivoBs").onclick = function() {  
@@ -286,24 +264,25 @@ document.getElementById("btnEfectivoBs").onclick = function() {
 };  
 
 document.getElementById("btnConfirmarBs").onclick = async function() {  
-    const montoText = document.getElementById("total2").innerText.replace("Total: bs. ", "");  
+    const montoText = document.getElementById("mostrarmonto").innerText.replace("Monto a cancelar: bs. ", "");  
     const total = parseFloat(montoText.replace(',', '.')); // Obtener el monto total (Bolívares)  
 
-    // Obtener el correo electrónico del usuario desde la cookie  
-    const email = getCookie('userData');  
+    console.log("Monto total a enviar:", total);  
 
+    const email = getCookie('userData'); // Asumimos que esta función está definida y obtiene el email de las cookies  
+    console.log("Correo electrónico obtenido:", email);   
+
+    // Validación de email y monto  
     if (!email) {  
         alert('No se encontró el correo electrónico en la cookie.');  
         return;  
-    }  
+    }   
 
-    // Verifica que el monto sea válido  
     if (!total || isNaN(total)) {  
         alert('El monto a pagar no es válido.');  
         return;  
     }  
 
-    // Preparar el cuerpo de la solicitud  
     const tipoPago = 'efectivo';   
     const pagoData = {  
         email,  
@@ -322,25 +301,26 @@ document.getElementById("btnConfirmarBs").onclick = async function() {
             body: JSON.stringify(pagoData)  
         });  
 
+        console.log("Respuesta del servidor:", response);  
+
         if (!response.ok) {  
+            const errorText = await response.text();  
+            console.error('Error al procesar el pago:', errorText);   
             throw new Error('Error al procesar el pago: ' + response.statusText);  
         }  
 
         const result = await response.json();  
+        console.log("Resultado devuelto por el servidor:", result);  
         alert(`Pago en Efectivo procesado correctamente: ${result.message}`);  
 
-        // Aquí se asume que `modal` y `resetModal` están definidos en tu código  
         modal.style.display = "none";  
         resetModal();  
     } catch (error) {  
         alert('Error: ' + error.message);  
     }   
-}  
-
-document.getElementById("btnConfirmarBs").onclick = function() {  
-    const total = actualizarTotal();   
-    enviarPagoEfectivo(total);  
 };  
+
+
 
 // Manejar la elección de efectivo en Divisas  
 document.getElementById("btnEfectivoDivisas").onclick = async function() {  
