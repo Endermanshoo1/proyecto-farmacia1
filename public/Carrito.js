@@ -165,17 +165,44 @@ document.addEventListener('DOMContentLoaded', () => {
         mostrarMontoTotalDivisas(); // Mostrar el monto total en la sección de divisas  
     };  
 
+    // Función para obtener el tipo de cambio  
+    async function obtenerTipoCambio() {  
+        try {  
+            const response = await fetch('https://ve.dolarapi.com/v1/dolares/oficial'); // Cambia esto por la URL de la API real  
+            if (!response.ok) throw new Error('Error al obtener el tipo de cambio');  
+            const data = await response.json();  
+            return data.tipo_cambio; // Asegúrate de que este campo exista en la respuesta  
+        } catch (error) {  
+            console.error(error);  
+            return null;  
+        }  
+    }  
+
+    async function obtenerTasaCambio() {  
+        try {  
+            const response = await axios.get('https://ve.dolarapi.com/v1/dolares/oficial');  
+            const tasaPromedio = response.data.promedio;  
+            document.getElementById("tasaCambio").innerText = `La tasa actual del dólar es: Bs. ${tasaPromedio}`;  
+        } catch (error) {  
+            console.error(error);  
+            document.getElementById("tasaCambio").innerText = 'Hubo un error al obtener la tasa.';  
+        }  
+    }  
+
     // Función para obtener el valor de una cookie  
-function getCookie(name) {  
-    const value = `; ${document.cookie}`;  
+    function getCookie(name) {  
+    const value = `; ${document.cookie}`;
+    console.log(document.cookie)
+    console.log(value)  
     const parts = value.split(`; ${name}=`);  
+    console.log(parts)
     if (parts.length === 2) {  
         const cookieValue = parts.pop().split(';').shift();  
-        console.log(`Cookie encontrada: ${cookieValue}`); // Diagnóstico  
+        console.log(`Cookie encontrada: ${cookieValue}`);  
         return cookieValue;  
     }  
-    console.log(`Cookie no encontrada: ${name}`); // Diagnóstico  
-    return null; // Asegúrate de retornar null si no se encuentra  
+    console.log(`Cookie no encontrada: ${name}`);   
+    return null;   
 }  
 
 // Evento para realizar el pago móvil  
@@ -188,7 +215,7 @@ document.getElementById("btnConfirmarPagoMovil").onclick = async function() {
     const monto = parseFloat(montoText.replace(',', '.'));  
 
     // Obtener el correo electrónico del usuario desde la cookie  
-    const email = getCookie('userSession');  
+    const email = getCookie('userData');  
 
     if (!email) {  
         alert('No se encontró el correo electrónico en la cookie.');  
@@ -238,76 +265,182 @@ document.getElementById("btnConfirmarPagoMovil").onclick = async function() {
 
 // Manejar la elección de efectivo en Bolívares  
 document.getElementById("btnEfectivoBs").onclick = function() {  
+    // Mostrar el div de Efectivo en Bolívares  
     document.getElementById("divEfectivoBs").style.display = "block";  
     document.getElementById("divEfectivoDivisas").style.display = "none";  
-    mostrarMontoTotalDivisas();  
+    
+    // Llamar a la función para actualizar y mostrar el total  
+    const total = actualizarTotal(); // Se obtiene el total  
+    document.getElementById("total2").innerText = `Total: bs. ${total.toFixed(2)}`;  
+};  
+
+// Manejar la elección de efectivo en Bolívares  
+document.getElementById("btnEfectivoBs").onclick = function() {  
+    // Mostrar el div de Efectivo en Bolívares  
+    document.getElementById("divEfectivoBs").style.display = "block";  
+    document.getElementById("divEfectivoDivisas").style.display = "none";  
+    
+    // Llamar a la función para actualizar y mostrar el total  
+    const total = actualizarTotal(); // Se obtiene el total  
+    document.getElementById("total2").innerText = `Total: bs. ${total.toFixed(2)}`;  
+};  
+
+document.getElementById("btnConfirmarBs").onclick = async function() {  
+    const montoText = document.getElementById("total2").innerText.replace("Total: bs. ", "");  
+    const total = parseFloat(montoText.replace(',', '.')); // Obtener el monto total (Bolívares)  
+
+    // Obtener el correo electrónico del usuario desde la cookie  
+    const email = getCookie('userData');  
+
+    if (!email) {  
+        alert('No se encontró el correo electrónico en la cookie.');  
+        return;  
+    }  
+
+    // Verifica que el monto sea válido  
+    if (!total || isNaN(total)) {  
+        alert('El monto a pagar no es válido.');  
+        return;  
+    }  
+
+    // Preparar el cuerpo de la solicitud  
+    const tipoPago = 'efectivo';   
+    const pagoData = {  
+        email,  
+        monto: total,  
+        tipoPago  
+    };  
+
+    console.log("Datos del pago a enviar:", pagoData);  
+
+    try {  
+        const response = await fetch('/api/pagos', {  
+            method: 'POST',  
+            headers: {  
+                'Content-Type': 'application/json'  
+            },  
+            body: JSON.stringify(pagoData)  
+        });  
+
+        if (!response.ok) {  
+            throw new Error('Error al procesar el pago: ' + response.statusText);  
+        }  
+
+        const result = await response.json();  
+        alert(`Pago en Efectivo procesado correctamente: ${result.message}`);  
+
+        // Aquí se asume que `modal` y `resetModal` están definidos en tu código  
+        modal.style.display = "none";  
+        resetModal();  
+    } catch (error) {  
+        alert('Error: ' + error.message);  
+    }   
+}  
+
+document.getElementById("btnConfirmarBs").onclick = function() {  
+    const total = actualizarTotal();   
+    enviarPagoEfectivo(total);  
 };  
 
 // Manejar la elección de efectivo en Divisas  
-document.getElementById("btnEfectivoDivisas").onclick = function() {  
+document.getElementById("btnEfectivoDivisas").onclick = async function() {  
     document.getElementById("divEfectivoDivisas").style.display = "block";  
     document.getElementById("divEfectivoBs").style.display = "none";  
+
+    // Obtener y mostrar la tasa de cambio  
+    await obtenerTasaCambio();  
+
+    const tipoCambio = await obtenerTipoCambio();  
+    if (tipoCambio) {  
+        const montoText = document.getElementById("mostrarmonto").innerText.replace("Monto a cancelar: bs. ", "");  
+        const montoBolivares = parseFloat(montoText.replace(',', '.'));  
+        if (!isNaN(montoBolivares)) {   
+            const montoDivisas = (montoBolivares / tipoCambio).toFixed(2);  
+            document.getElementById("mostrarmontoDivisas").innerHTML = `<p>Monto a cancelar en divisas: $${montoDivisas}</p>`;  
+        } else {  
+            alert('El monto en Bolívares no es válido.');  
+        }  
+    } else {  
+        alert('No se pudo obtener el tipo de cambio.');  
+    }  
 };  
 
-    document.getElementById("btnConfirmarBs").onclick = function() {  
-        alert(`Pago en Efectivo (Bolívares) procesado correctamente.\n ${document.getElementById("mostrarmontoDivisas").innerText}`);  
+// Función para mostrar el monto total en divisas  
+async function mostrarMontoTotalDivisas() {  
+    const mostrarmontoDivisas = document.getElementById("mostrarmontoDivisas");  
+    const montoText = document.getElementById("mostrarmonto").innerText.replace("Monto a cancelar: bs. ", "");  
+    const montoBolivares = parseFloat(montoText.replace(',', '.'));  
+    
+    const tipoCambio = await obtenerTipoCambio(); // Consigue el tipo de cambio  
+    if (tipoCambio && !isNaN(montoBolivares)) {  
+        const montoDivisas = (montoBolivares / tipoCambio).toFixed(2);  
+        mostrarmontoDivisas.innerHTML = `<p>Monto a cancelar en divisas: $${montoDivisas}</p>`;  
+    } else {  
+        mostrarmontoDivisas.innerHTML = `<p>No se pudo calcular el monto en divisas.</p>`;  
+    }  
+}  
+
+// Actualiza el monto total al momento de mostrar la sección de divisas  
+document.getElementById("btnEfectivoDivisas").onclick = async function() {  
+    document.getElementById("divEfectivoDivisas").style.display = "block";  
+    document.getElementById("divEfectivoBs").style.display = "none";  
+
+    // Obtener y mostrar la tasa de cambio  
+    await obtenerTasaCambio();  
+    await mostrarMontoTotalDivisas();  
+};  
+
+document.getElementById("btnConfirmarBs").onclick = function() {  
+    const total = actualizarTotal();  
+    alert(`Pago en Efectivo (Bolívares) procesado correctamente.\nTotal: bs. ${total.toFixed(2)}`);  
+    modal.style.display = "none";  
+    resetModal();  
+};    
+
+document.getElementById("btnConfirmarDivisas").onclick = function() {  
+    const montoDivisas = document.getElementById("montoDivisas").value;  
+
+    if (!montoDivisas) {  
+        alert("Por favor, ingrese un monto en divisas.");  
+        return;  
+    }  
+
+    alert(`Pago en Efectivo (Divisas) procesado correctamente.\nMonto en divisas: $${montoDivisas}`);  
+    modal.style.display = "none";  
+    resetModal();  
+};  
+
+function mostrarDatosBancarios() {  
+    document.getElementById("telefono").value = "0414-2558608";  
+    document.getElementById("cedula").value = "V-29661874";  
+    document.getElementById("banco").value = "Banesco";  
+}  
+
+function mostrarMontoTotal() {  
+    let total = 0;  
+    if (typeof actualizarTotal === 'function') {  
+        total = actualizarTotal();  
+    }  
+    const mostrarmonto = document.getElementById("mostrarmonto");  
+    mostrarmonto.innerHTML = `<p>Monto a cancelar: bs. ${total.toFixed(2)}</p>`;  
+}  
+
+function resetModal() {  
+    document.getElementById("seccionPagoMovil").style.display = "none";  
+    document.getElementById("seccionDivisas").style.display = "none";  
+    document.getElementById("telefono").value = '';  
+    document.getElementById("cedula").value = '';  
+    document.getElementById("banco").value = '';  
+    document.getElementById("referencia").value = '';  
+    document.getElementById("montoDivisas").value = '';  
+    document.getElementById("mostrarmonto").innerHTML = '';  
+    document.getElementById("mostrarmontoDivisas").innerHTML = '';  
+}  
+
+window.onclick = function(event) {  
+    if (event.target === modal) {  
         modal.style.display = "none";  
         resetModal();  
-    };  
-
-    document.getElementById("btnConfirmarDivisas").onclick = function() {  
-        const montoDivisas = document.getElementById("montoDivisas").value;  
-
-        if (!montoDivisas) {  
-            alert("Por favor, ingrese un monto en divisas.");  
-            return;  
-        }  
-
-        alert(`Pago en Efectivo (Divisas) procesado correctamente.\n Monto en divisas: ${montoDivisas}`);  
-        modal.style.display = "none";  
-        resetModal();  
-    };  
-
-    function mostrarDatosBancarios() {  
-        document.getElementById("telefono").value = "0414-2558608";  
-        document.getElementById("cedula").value = "V-29661874";  
-        document.getElementById("banco").value = "Banesco";  
     }  
-
-    function mostrarMontoTotal() {  
-        let total = 0;  
-        if (typeof actualizarTotal === 'function') {  
-            total = actualizarTotal();  
-        }  
-        const mostrarmonto = document.getElementById("mostrarmonto");  
-        mostrarmonto.innerHTML = `<p>Monto a cancelar: bs. ${total.toFixed(2)}</p>`;  
-    }  
-
-    function mostrarMontoTotalDivisas() {  
-        let total = 0;  
-        if (typeof actualizarTotal === 'function') {  
-            total = actualizarTotal();  
-        }  
-        const mostrarmontoDivisas = document.getElementById("mostrarmontoDivisas");  
-        mostrarmontoDivisas.innerHTML = `<p>Monto a cancelar en divisas: $${(total / 5).toFixed(2)}</p>`; // Ajusta el tipo de cambio según sea necesario  
-    }  
-
-    function resetModal() {  
-        seccionPagoMovil.style.display = "none";  
-        seccionDivisas.style.display = "none";  
-        document.getElementById("telefono").value = '';  
-        document.getElementById("cedula").value = '';  
-        document.getElementById("banco").value = '';  
-        document.getElementById("referencia").value = '';  
-        document.getElementById("montoDivisas").value = '';  
-        document.getElementById("mostrarmonto").innerHTML = '';  
-        document.getElementById("mostrarmontoDivisas").innerHTML = '';  
-    }  
-
-    window.onclick = function(event) {  
-        if (event.target === modal) {  
-            modal.style.display = "none";  
-            resetModal();  
-        }  
-    };  
+}; 
 });

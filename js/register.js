@@ -156,11 +156,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }   
     
             const data = await response.json();  
-    
-            // Guardar el token JWT en una cookie (opcional)  
+     
             // Asegúrate de que el backend esté configurado para enviar el token en una cookie segura  
-            if (data.token) {  
-                // Asegúrate de que esto coincida con la política del servidor, ajusta 'Secure' y 'HttpOnly' según sea necesario.  
+            if (data.token) {   
                 document.cookie = `token=${data.token}; Secure; HttpOnly; path=/;`;  
             } else {  
                 console.error('Token no recibido');  

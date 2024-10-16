@@ -64,7 +64,12 @@ const login = async (req, res) => {
             username: user.username,  
             email: user.email,  
             role: user.role  
-        }), { httpOnly: true, maxAge: 600000 }); // Aquí se establece la expiración de la cookie a 10 minutos  
+        }), { httpOnly: true, maxAge: 600000 });
+        
+        res.cookie('userData', JSON.stringify({
+            email : user.email,
+            user: user.username,
+        }), {httpOnly: false, maxAge: 600000})
     
         res.json({  
             message: 'Inicio de sesión exitoso',  
