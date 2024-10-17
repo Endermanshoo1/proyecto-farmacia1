@@ -55,7 +55,7 @@ const addAdmin = async (req, res) => {
 // Función para obtener un administrador por ID  
 const getAdmin = async (req, res) => {  
     try {  
-        const admin = await Admin.findById(req.userId); // Supón que req.userId está definido  
+        const admin = await Admin.findById(req.userId); 
         if (!admin) {  
             return res.status(404).json({ message: 'Administrador no encontrado' });  
         }  
@@ -68,7 +68,7 @@ const getAdmin = async (req, res) => {
 
 // Función para actualizar un administrador  
 const updateAdmin = async (req, res) => {  
-    const { username, email, password } = req.body; // Puedes desestructurar los campos que desees actualizar  
+    const { username, email, password } = req.body;  
 
     try {  
         // Validaciones de entrada  
@@ -87,7 +87,7 @@ const updateAdmin = async (req, res) => {
         // Encriptar la nueva contraseña antes de almacenar  
         let updatedData = { username, email };  
         if (password) {  
-            updatedData.password = await bcrypt.hash(password, 10); // Encriptar solo si se proporciona un nuevo password  
+            updatedData.password = await bcrypt.hash(password, 10); 
         }  
 
         const updatedAdmin = await Admin.findByIdAndUpdate(req.userId, updatedData, { new: true, runValidators: true });  

@@ -51,6 +51,7 @@ const autentificationAdmin = require('./controllers/autentificationAdmin');
 const productoController = require('./controllers/productosControllers');   
 const carritoController = require('./controllers/carritoController');
 const PagoController = require('./controllers/pagosController'); 
+const crearFactura = require('./controllers/facturasController');
 const verifyRole = require('./middlewares/autentificationMiddleware')
 
 // Rutas de autenticación  
@@ -89,10 +90,17 @@ app.delete('/api/carrito/:id', carritoController.eliminarDelCarrito);
 // Rutas de pagos  
 app.post('/api/pagos', PagoController.crearPago);  
 app.get('/api/pagos', PagoController.obtenerPagos);  
+app.get('/api/pagos/email', PagoController.obtenerPagosPorEmail);
 app.get('/api/pagos/:id', PagoController.obtenerPagoPorId); 
 app.put('/api/pagos/:id/aprobar', PagoController.aprobarPago);  
 app.put('/api/pagos/:id/cancelar', PagoController.cancelarPago);  
 app.put('/api/pagos/:id/rechazar', PagoController.rechazarPago); 
+
+// Rutas de facturas
+app.post('/api/facturas', crearFactura.crearFactura);  
+app.get('/api/facturas', crearFactura.obtenerFacturas);  
+app.get('/api/facturas/email', crearFactura.obtenerFacturasPorEmail);  
+app.get('/api/facturas/:id', crearFactura.obtenerFacturaPorId); 
 
 // Rutas de frontend  
 app.get('/', (req, res) => {   

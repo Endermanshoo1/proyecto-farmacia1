@@ -482,7 +482,7 @@ transition: var(--tran-05);
 }  
 
 #botonesPago button {  
-    width: 170px;  
+    width: 358px;  
     cursor: pointer;  
     border: none;  
     background: var(--primary-color);  

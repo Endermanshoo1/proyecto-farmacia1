@@ -206,18 +206,19 @@ function getEmailFromCookie() {
 }  
 
 
-document.getElementById("btnConfirmarPagoMovil").onclick = async function() {  
+// Asignar evento al botón de confirmar pago móvil  
+document.getElementById("btnConfirmarPagoMovil").onclick = async function () {  
     const telefono = document.getElementById("telefono").value;  
     const cedula = document.getElementById("cedula").value;  
     const banco = document.getElementById("banco").value;  
     const referencia = document.getElementById("referencia").value;  
     const montoTextElement = document.getElementById("mostrarmonto");  
-    
+
     if (!montoTextElement) {  
         console.error('Elemento "mostrarmonto" no encontrado.');  
         return;  
     }  
-    
+
     const montoText = montoTextElement.innerText.replace("Monto a cancelar: bs. ", "");  
     const monto = parseFloat(montoText.replace(',', '.'));  
 
@@ -230,7 +231,7 @@ document.getElementById("btnConfirmarPagoMovil").onclick = async function() {
     for (let i = 0; i < localStorage.length; i++) {  
         const clave = localStorage.key(i);  
         const producto = JSON.parse(localStorage.getItem(clave));  
-        
+
         if (Array.isArray(producto) && producto.length > 0) {  
             productosParaComprar.push(...producto); // Agregar los productos al carrito  
         }  
@@ -254,8 +255,8 @@ document.getElementById("btnConfirmarPagoMovil").onclick = async function() {
     for (const producto of productosParaComprar) {  
         const response = await fetch(`/api/productos/${producto._id}`);  
         const productoDb = await response.json();  
-        
-        if (productoDb.stock < producto.cantidad) {   
+
+        if (productoDb.stock < producto.cantidad) {  
             stockInsuficiente = true;  
             stockMensajes += `No hay suficiente stock para ${producto.nombre}. Solo hay ${productoDb.stock} disponibles.\n`;  
         }  
@@ -292,6 +293,21 @@ document.getElementById("btnConfirmarPagoMovil").onclick = async function() {
         }  
 
         const result = await response.json();  
+
+        // Crear la factura después de procesar el pago  
+        await crearFactura({  
+            email,  
+            monto,  
+            tipoPago,  
+            referencia,  
+            productos: productosParaComprar.map(p => ({  
+                nombre: p.nombre,  
+                cantidad: p.cantidad,  
+                precio: p.precio,  
+                total: p.precio * p.cantidad  
+            }))  
+        });  
+
         alert(`Pago Móvil procesado correctamente`);  
         await actualizarStockProductos(productosParaComprar);  
         localStorage.clear();  
@@ -301,8 +317,8 @@ document.getElementById("btnConfirmarPagoMovil").onclick = async function() {
 
     } catch (error) {  
         alert('Error: ' + error.message);  
-    }
-};  
+    }  
+};   
 
 async function actualizarStockProductos(productos) {  
     for (const producto of productos) {  

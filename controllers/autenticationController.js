@@ -57,19 +57,18 @@ const login = async (req, res) => {
         }  
 
         const token = generateToken(user);  
-        
-        // Establecer la cookie `userSession` con los datos del usuario y una expiración de 10 minutos (600000 milisegundos)  
+          
         res.cookie('userSession', JSON.stringify({  
             id: user._id,  
             username: user.username,  
             email: user.email,  
             role: user.role  
-        }), { httpOnly: true, maxAge: 600000 });
+        }), { httpOnly: true, maxAge: 1200000 });
         
         res.cookie('userData', JSON.stringify({
             email : user.email,
             user: user.username,
-        }), {httpOnly: false, maxAge: 600000})
+        }), {httpOnly: false, maxAge: 1200000})
     
         res.json({  
             message: 'Inicio de sesión exitoso',  

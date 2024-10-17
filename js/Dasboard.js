@@ -366,3 +366,77 @@ function crearTarjetaHogar(hogar) {
 }  
   
 crearTarjetaHogar(hogar); 
+
+
+function openModal() {  
+    const userDataCookie = getCookie('userData');  
+    const userData = JSON.parse(userDataCookie);  
+
+    document.getElementById('username').value = userData.user;  
+    document.getElementById('useremail').value = userData.email;  
+
+    fetch('/api/pagos/email')  
+        .then(response => response.json())  
+        .then(data => {  
+            const paymentsContainer = document.getElementById('paymentsContainer');  
+            paymentsContainer.innerHTML = ''; // Limpiar el contenedor  
+            
+            if (data && data.length > 0) {  
+                data.forEach(pago => {  
+                    const card = document.createElement('div');  
+                    card.classList.add('payment-card');  
+                    card.classList.add(pago.estado); // agregar la clase según el estado  
+
+                    // Formatear la fecha  
+                    const fecha = new Date(pago.fechaCreacion); // Cambia 'fecha' por 'fechaCreacion'  
+                    
+                    // Opciones de formato  
+                    const options = { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: false };  
+                    const fechaFormateada = fecha.toLocaleString('es-ES', options);  
+
+                    // Agregar contenido a la carta  
+                    card.innerHTML = `  
+                        <h4>Pago realizado</h4>   
+                        <p><strong>Fecha de pago:</strong> ${fechaFormateada}</p>  
+                        <p><strong>Monto:</strong> Bs. ${pago.monto}</p>  
+                        <p><strong>Estado:</strong> ${pago.estado.charAt(0).toUpperCase() + pago.estado.slice(1)}</p>  
+                    `;  
+
+                    paymentsContainer.appendChild(card); // Agregar la carta al contenedor  
+                });  
+            } else {  
+                paymentsContainer.innerHTML = '<div>No se encontraron pagos.</div>';  
+            }   
+        })  
+        .catch(error => {  
+            console.error('Error al obtener los pagos:', error);  
+            const paymentsContainer = document.getElementById('paymentsContainer');  
+            paymentsContainer.innerHTML = '<div>Error al obtener los pagos.</div>';  
+        });  
+
+    document.getElementById('modal').style.display = 'block';  
+}  
+
+function closeModal() {  
+    document.getElementById('modal').style.display = 'none';  
+}  
+
+function getCookie(name) {  
+    let cookieArr = document.cookie.split(";");  
+
+    for(let i = 0; i < cookieArr.length; i++) {  
+        let cookiePair = cookieArr[i].split("=");  
+        if(name === cookiePair[0].trim()) {  
+            return decodeURIComponent(cookiePair[1]);  
+        }  
+    }  
+
+    return null;  
+}  
+
+// Cerrar modal al hacer clic fuera del contenido  
+window.onclick = function(event) {  
+    if (event.target === document.getElementById('modal')) {  
+        closeModal();  
+    }  
+}  

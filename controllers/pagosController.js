@@ -97,3 +97,26 @@ exports.obtenerPagoPorId = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener el pago.', details: error.message });  
     }  
 }; 
+
+exports.obtenerPagosPorEmail = async (req, res) => {  
+    const userDataCookie = req.cookies.userData;  
+
+    if (!userDataCookie) {  
+        return res.status(400).json({ error: 'No se encontraron datos de usuario.' });  
+    }  
+
+    let email;  
+    try {  
+        const userData = JSON.parse(userDataCookie);  
+        email = userData.email;  
+    } catch (error) {  
+        return res.status(400).json({ error: 'Error al procesar la cookie de usuario.' });  
+    }  
+
+    try {  
+        const pagos = await Pago.find({ email: email });  // Buscar pagos por el email del usuario  
+        res.status(200).json(pagos);  
+    } catch (error) {  
+        res.status(500).json({ error: 'Error al obtener los pagos.' });  
+    }  
+};

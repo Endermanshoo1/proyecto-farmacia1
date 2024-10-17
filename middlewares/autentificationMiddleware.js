@@ -16,8 +16,7 @@ function verifyRole(role) {
         }  
         
         console.log('Cookie userSession:', user);  
-        
-        // Cambia `user.tipo` por `user.role` para la comparación  
+         
         if (user && user.role === role) {  
             next();  
         } else {  
