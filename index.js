@@ -130,6 +130,9 @@ app.get('/admin', verifyRole('admin'), (req, res) => {
 app.get('/carrito', (req, res) => {  
     res.sendFile(__dirname + '/view/carrito/index.html');   
 });  
+app.get('/acceso-denegado', (req, res) => {  
+    res.sendFile(__dirname + '/view/404/index.html');   
+});
 
 // Rutas de css y js   
 app.use('/js', express.static(path.join(__dirname, 'js')));  

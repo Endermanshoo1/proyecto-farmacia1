@@ -732,7 +732,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function obtenerPagos() {  
     try {  
-        const response = await fetch('/api/pagos'); // Asegúrate de que esta URL sea correcta.  
+        const response = await fetch('/api/pagos');  
         const pagos = await response.json();  
         mostrarPagos(pagos);  
     } catch (error) {  
@@ -741,8 +741,9 @@ async function obtenerPagos() {
 }  
 
 function mostrarPagos(pagos) {  
+    console.log(pagos); 
     const pagosBody = document.getElementById('pagosBody');  
-    pagosBody.innerHTML = ''; // Limpiar la tabla antes de llenarla.  
+    pagosBody.innerHTML = ''; 
 
     pagos.forEach(pago => {  
         const row = document.createElement('tr');  
@@ -755,13 +756,13 @@ function mostrarPagos(pagos) {
 
         row.innerHTML = `  
             <td>${pago.email}</td>  
-            <td>${pago.tipo_pago}</td>  
+            <td>${pago.tipoPago}</td>  
             <td>${pago.referencia}</td>  
-            <td><span class="estatus" style="background-color: ${estatusColor[pago.estatus]}"></span> ${pago.estatus}</td>  
+            <td><span class="estatus" style="background-color: ${estatusColor[pago.estado]}"></span> ${pago.estado}</td>  
             <td>  
-                <button class="botonAccion" data-id="${pago.id}" data-accion="aprobar">Aprobar</button>  
-                <button class="botonAccion" data-id="${pago.id}" data-accion="rechazar">Rechazar</button>  
-            </td>  
+                <button class="botonAccion" data-id="${pago._id}" data-accion="aprobar">Aprobar</button>  
+                <button class="botonAccion" data-id="${pago._id}" data-accion="rechazar">Rechazar</button>  
+            </td>   
         `;  
         
         pagosBody.appendChild(row);  
@@ -776,22 +777,42 @@ function mostrarPagos(pagos) {
 async function manejarAccionPago(event) {  
     const idPago = event.target.dataset.id;  
     const accion = event.target.dataset.accion;  
-    
-    try {  
-        const response = await fetch(`/api/pagos/${idPago}`, {  
-            method: 'PATCH', // Usamos PATCH para modificar el estado  
+    console.log(`ID del pago: ${idPago}`); // Verifica este valor  
+    console.log(`Acción seleccionada: ${accion}`);  
+
+    if (!idPago) {  
+        console.error('El ID del pago es undefined. Verifica la configuración del botón.');  
+        alert('ID del pago no encontrado.');   
+        return;   
+    }
+    // Deshabilitar el botón que ha sido clicado para prevenir múltiples clics  
+    event.target.disabled = true;  
+
+    try {   
+        const url = `/api/pagos/${idPago}/${accion}`;   
+        console.log(`URL de la petición: ${url}`);  
+        
+        const response = await fetch(url, {  
+            method: 'PUT',  
             headers: {  
                 'Content-Type': 'application/json',  
             },  
-            body: JSON.stringify({ estatus: accion === 'aprobar' ? 'aprobado' : 'rechazado' })  
+            body: JSON.stringify({}) 
         });  
 
         if (response.ok) {  
-            obtenerPagos(); // Vuelve a obtener la lista de pagos  
+            console.log(`Respuesta exitosa para ${accion} del pago ${idPago}`);  
+            obtenerPagos();   
         } else {  
-            console.error('Error al actualizar el pago:', await response.text());  
+            const errorMensaje = await response.text();  
+            console.error(`Error al actualizar el pago: ${errorMensaje}`);  
+            alert(`Error al actualizar el pago: ${errorMensaje}`); 
         }  
     } catch (error) {  
         console.error('Error al manejar la acción del pago:', error);  
+        alert('Error en la acción. Inténtalo de nuevo.');    
+    } finally {  
+        // Habilitar el botón que ha sido clicado de nuevo en caso de error  
+        event.target.disabled = false;  
     }  
 }  

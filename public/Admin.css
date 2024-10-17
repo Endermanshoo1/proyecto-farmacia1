@@ -330,6 +330,14 @@ main{
 main.min-main{
     margin-left: 80px;
 }
+
+.estatus{  
+    display: inline-block;  
+    width: 10px;  /* Puedes cambiar el tamaño según sea necesario */  
+    height: 10px;  
+    border-radius: 50%; /* Esto hace que se vea redondo */  
+    margin-right: 5px; /* Espaciado entre el círculo y el texto */  
+}
 /*------------------> Responsive*/
 @media (max-height: 660px){
     .barra-lateral .nombre-pagina{
@@ -392,6 +400,22 @@ main.min-main{
     background: var(--sidebar-color);
     border-radius: 20px;
     margin-top: 10px;
+}
+
+#tablaPagos{
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--sidebar-color);
+    border-radius: 20px;
+}
+
+.botonAccion{
+    width: 75px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    background: var(--text-color);
+    color: var(--sidebar-color);
 }
 
 /*formularios*/
@@ -649,7 +673,7 @@ label{
     color: var(--sidebar-color);
 }
 
-@media (max-width: 1024px) {  
+@media (max-width: 1115px) {  
     #formAgregarAdmin,  
     #formAgregarProducto {  
         width: 90%; /* Aumentar el ancho en tabletas */  
@@ -665,13 +689,35 @@ label{
     }  
 
     .Cambios {  
-        width: 90%; /* Ajustar ancho para botones de cambios */  
+        width: 100%; /* Ajustar ancho para botones de cambios */  
     }  
 
     .editarCantidad {  
-        width: 100%; /* Botón editable al 100% */  
+        height: 45px;
+        width: 75px;
+    }
     }  
-}  
+
+    .editarUsuario, .eliminarUsuario {
+        width: 100px;
+        margin-bottom: 10px;
+        height: 30px;
+        border: none;
+        cursor: pointer;
+        background: var(--text-color);
+        color: var(--sidebar-color);
+    }
+
+    .modal-content {
+    background-color: var(--sidebar-color);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid var(--text-color);
+    width: 60%;
+    border: none;
+    margin-left: 345px;
+}
+  
 
 @media (max-width: 768px) {  
     .tituloDahs {  
@@ -685,27 +731,68 @@ label{
 
     #formAgregarAdmin,  
     #formAgregarProducto {  
-        height: auto; 
-        width: 284px;
-        margin-left: 80px; 
+        height: auto;
+        width: 356px;
+        margin-left: 100px;
     }  
 
+    #productosContainer{
+        margin-left: 90px;
+    }
+
+    #usuariosContainer{
+        margin-left: 88px;
+        width: 410px;
+        height: auto;
+    }
+
+    #tablaPagos{
+        margin-left: 88px;
+        width: 410px;
+        height: auto;
+    }
+
     th, td {  
-        padding: 10px; /* Reducir padding en tabla */  
-        font-size: 14px; /* Reducir tamaño de texto en tabla */  
+        padding: 10px;  
+        font-size: 14px;  
     }  
+
+    #tablaInventario{
+        margin-left: 70px;
+    }
+
+    .editarUsuario, .eliminarUsuario {
+        width: 100px;
+        margin-bottom: 10px;
+        height: 30px;
+        border: none;
+        cursor: pointer;
+        background: var(--text-color);
+        color: var(--sidebar-color);
+    }
 
     #confirmarEliminar,  
     #cancelarEliminar,  
     #confirmarEliminarProducto,  
     #cancelarEliminarProducto {  
-        width: 90%; /* Ajustar botones al 90% */  
-        margin-left: 0; /* Eliminar margen izquierdo */  
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 10px;  
     }  
+
+    .close{
+        color: var(--text-color);
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-left: 9px;
+    }
+
+    
 }  
 
-@media (max-width: 480px) {  
-
+@media (max-width: 600px){
     .tituloDahs {  
         font-size: 24px;  
         margin-left: 28px;  
@@ -725,9 +812,7 @@ label{
         padding: 10px; /* Ajustar padding */  
         font-size: 10px; /* Ajustar tamaño de fuente */  
     }  
-}  
 
-@media (max-width: 600px){
     .barra-lateral{
         position: fixed;
         left: -250px;
@@ -749,6 +834,6 @@ label{
     }
 
     #productoscontainer{
-        
+        margin-left: 90px;
     }
 }

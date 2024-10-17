@@ -147,10 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };  
 
     // Cerrar la modal  
-    cerrarModal.onclick = function() {  
+    cerrarModal.onclick = function() {   
         modal.style.display = "none";  
         resetModal();  
-    };  
+    };   
 
     btnPagoMovil.onclick = function() {  
         seccionPagoMovil.style.display = "block";  
@@ -176,33 +176,65 @@ document.addEventListener('DOMContentLoaded', () => {
         }  
     }  
 
-    // Función para obtener el valor de una cookie  
-    function getCookie(name) {  
-    const value = `; ${document.cookie}`;
-    console.log(document.cookie)
-    console.log(value)  
+   // Función para obtener el valor de una cookie  
+function getCookie(name) {  
+    const value = `; ${document.cookie}`;  
     const parts = value.split(`; ${name}=`);  
-    console.log(parts)
     if (parts.length === 2) {  
         const cookieValue = parts.pop().split(';').shift();  
-        console.log(`Cookie encontrada: ${cookieValue}`);  
         return cookieValue;  
     }  
-    console.log(`Cookie no encontrada: ${name}`);   
     return null;   
 }  
 
-// Evento para realizar el pago móvil  
+// Función para obtener el correo electrónico del usuario desde la cookie  
+function getEmailFromCookie() {  
+    const userDataCookie = getCookie('userData');  
+    
+    if (!userDataCookie) {  
+        return null;  
+    }  
+    
+    try {  
+        const decodedCookie = decodeURIComponent(userDataCookie);  
+        const userData = JSON.parse(decodedCookie);  
+        return userData.email;  
+    } catch (error) {  
+        console.error('Error al parsear la cookie de usuario:', error);  
+        return null;  
+    }  
+}  
+
+
 document.getElementById("btnConfirmarPagoMovil").onclick = async function() {  
     const telefono = document.getElementById("telefono").value;  
     const cedula = document.getElementById("cedula").value;  
     const banco = document.getElementById("banco").value;  
     const referencia = document.getElementById("referencia").value;  
-    const montoText = document.getElementById("mostrarmonto").innerText.replace("Monto a cancelar: bs. ", "");  
+    const montoTextElement = document.getElementById("mostrarmonto");  
+    
+    if (!montoTextElement) {  
+        console.error('Elemento "mostrarmonto" no encontrado.');  
+        return;  
+    }  
+    
+    const montoText = montoTextElement.innerText.replace("Monto a cancelar: bs. ", "");  
     const monto = parseFloat(montoText.replace(',', '.'));  
 
     // Obtener el correo electrónico del usuario desde la cookie  
-    const email = getCookie('userData');  
+    const email = getEmailFromCookie();  
+
+    const productosParaComprar = []; // Inicializamos el arreglo de productos  
+
+    // Recoger todos los productos del carrito desde localStorage  
+    for (let i = 0; i < localStorage.length; i++) {  
+        const clave = localStorage.key(i);  
+        const producto = JSON.parse(localStorage.getItem(clave));  
+        
+        if (Array.isArray(producto) && producto.length > 0) {  
+            productosParaComprar.push(...producto); // Agregar los productos al carrito  
+        }  
+    }  
 
     if (!email) {  
         alert('No se encontró el correo electrónico en la cookie.');  
@@ -215,13 +247,33 @@ document.getElementById("btnConfirmarPagoMovil").onclick = async function() {
         return;  
     }  
 
+    // Verificar si hay stock suficiente para cada producto  
+    let stockInsuficiente = false;  
+    let stockMensajes = '';  
+
+    for (const producto of productosParaComprar) {  
+        const response = await fetch(`/api/productos/${producto._id}`);  
+        const productoDb = await response.json();  
+        
+        if (productoDb.stock < producto.cantidad) {   
+            stockInsuficiente = true;  
+            stockMensajes += `No hay suficiente stock para ${producto.nombre}. Solo hay ${productoDb.stock} disponibles.\n`;  
+        }  
+    }  
+
+    if (stockInsuficiente) {  
+        alert(stockMensajes);  
+        return;  
+    }  
+
     // Preparar el cuerpo de la solicitud  
-    const tipoPago = 'pago_movil';   
+    const tipoPago = 'pago_movil';  
     const pagoData = {  
         email,  
         monto,  
         tipoPago,  
-        referencia  
+        referencia,  
+        productos: productosParaComprar // Envía la lista de productos en la solicitud  
     };  
 
     console.log("Datos del pago a enviar:", pagoData);  
@@ -240,17 +292,35 @@ document.getElementById("btnConfirmarPagoMovil").onclick = async function() {
         }  
 
         const result = await response.json();  
-        alert(`Pago Móvil procesado correctamente: ${result.message}`);  
+        alert(`Pago Móvil procesado correctamente`);  
+        await actualizarStockProductos(productosParaComprar);  
+        localStorage.clear();  
 
-        // Aquí se asume que `modal` y `resetModal` están definidos en tu código  
-        modal.style.display = "none";  
-        resetModal();  
+        // Redireccionar a la página de inicio  
+        window.location.href = '/user';  
+
     } catch (error) {  
         alert('Error: ' + error.message);  
-    }  
+    }
 };  
 
+async function actualizarStockProductos(productos) {  
+    for (const producto of productos) {  
+        const response = await fetch(`/api/productos/${producto._id}`);  
+        const productoDb = await response.json();  
+        
+        const nuevaCantidad = productoDb.stock - producto.cantidad; // Ajustado para restar la cantidad pagada del stock actual  
 
+        // Haz otra solicitud para actualizar el stock en el servidor  
+        await fetch(`/api/productos/${producto._id}`, {  
+            method: 'PUT',  
+            headers: {  
+                'Content-Type': 'application/json'  
+            },  
+            body: JSON.stringify({ stock: nuevaCantidad }) // Cambié 'cantidad' a 'stock' para actualizar correctamente  
+        });  
+    }  
+} 
 
 // Manejar la elección de efectivo en Bolívares  
 document.getElementById("btnEfectivoBs").onclick = function() {  

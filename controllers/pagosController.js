@@ -4,7 +4,7 @@ const Usuario = require('../models/User');
 
 exports.crearPago = async (req, res) => {  
     const { monto, tipoPago, referencia } = req.body;  
-    const userDataCookie = req.cookies.userData; 
+    const userDataCookie = req.cookies.userData;   
 
     // Verifica que todos los campos requeridos están presentes  
     if (!userDataCookie || !monto || !tipoPago) {  
@@ -14,17 +14,13 @@ exports.crearPago = async (req, res) => {
     let email;  
     try {  
         const userData = JSON.parse(userDataCookie);   
-        email = userData.email;
+        email = userData.email;  
     } catch (error) {  
         return res.status(400).json({ error: 'Error al procesar la cookie de usuario.' });  
     }  
 
     try {  
-        // Busca el usuario por correo  
-        const usuario = await Usuario.findOne({ email });  
-        if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado.' });  
-        
-        const nuevoPago = new Pago({ usuarioId: usuario._id, monto, tipoPago, referencia });  
+        const nuevoPago = new Pago({ email, monto, tipoPago, referencia });  
         await nuevoPago.save();  
         res.status(201).json(nuevoPago);  
     } catch (error) {  
@@ -34,12 +30,12 @@ exports.crearPago = async (req, res) => {
 
 exports.obtenerPagos = async (req, res) => {  
     try {  
-        const pagos = await Pago.find().populate('usuarioId', 'email');  
+        const pagos = await Pago.find();  
         res.status(200).json(pagos);  
     } catch (error) {  
         res.status(500).json({ error: 'Error al obtener los pagos.' });  
     }  
-}; 
+};   
 
 exports.aprobarPago = async (req, res) => {  
     const { id } = req.params;  

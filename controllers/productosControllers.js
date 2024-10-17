@@ -2,7 +2,7 @@ const Producto = require('../models/Producto');
 
 // Crear un nuevo producto   
 exports.crearProducto = async (req, res) => {  
-    const { nombre, precio, categoria, stock } = req.body; // Ahora incluye stock  
+    const { nombre, precio, categoria, stock } = req.body;  
     const imagen = req.file;   
 
     try {  
@@ -28,7 +28,7 @@ exports.crearProducto = async (req, res) => {
 // Obtener solo los primeros 4 productos  
 exports.obtenerPrimerosProductos = async (req, res) => {  
     try {  
-        const productos = await Producto.find().limit(4); // Limiting to 4 products  
+        const productos = await Producto.find().limit(4);  
         res.status(200).json(productos);  
     } catch (error) {  
         console.error('Error al obtener los productos:', error);  

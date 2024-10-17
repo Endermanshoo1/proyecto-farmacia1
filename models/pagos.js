@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');  
 
 const pagoSchema = new mongoose.Schema({  
-    usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },  
+    email: { type: String, required: true },  
     monto: { type: Number, required: true },  
     tipoPago: { type: String, enum: ['pago_movil', 'divisas', 'efectivo_bs', 'efectivo_divisas'], required: true },  
     referencia: { type: String },  
