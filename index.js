@@ -52,7 +52,8 @@ const productoController = require('./controllers/productosControllers');
 const carritoController = require('./controllers/carritoController');
 const PagoController = require('./controllers/pagosController'); 
 const crearFactura = require('./controllers/facturasController');
-const verifyRole = require('./middlewares/autentificationMiddleware')
+const verifyRole = require('./middlewares/autentificationMiddleware');
+const { Stream } = require('stream');
 
 // Rutas de autenticación  
 app.post('/api/auth/login', authController.login);  
@@ -150,5 +151,3 @@ app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/css', express.static(path.join(__dirname, 'css/Dashboard.css')));   
 app.use('/js', express.static(path.join(__dirname, 'js/Dashboard.js')));   
 app.use('/js', express.static(path.join(__dirname, 'js/cartService.js')));
-
-//estructura de la factura

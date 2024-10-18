@@ -677,7 +677,7 @@ main.min-main{
         --_animation-duration: 40s;
         width: 800px;
     }
-    
+
     
 }  
 
@@ -820,6 +820,18 @@ main.min-main{
         margin-left: 0;
     }
 
+    
+    .modal-content {
+        background-color: var(--sidebar-color);
+        padding: 20px;
+        border: 1px solid #888;
+        border-radius: 20px;
+        width: 92%;
+        margin-left: 16px;
+        margin-top: 140px;
+    }
+    
+
     .container-carousel{
         position: relative;
         width: 340px;
@@ -882,6 +894,8 @@ main.min-main{
         flex-direction: column;
         width: 340px;
     }
+
+    
 }
 
 

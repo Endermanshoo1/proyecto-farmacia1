@@ -369,76 +369,187 @@ crearTarjetaHogar(hogar);
 
 
 function openModal() {  
-    const userDataCookie = getCookie('userData');  
-    const userData = JSON.parse(userDataCookie);  
+            const userDataCookie = getCookie('userData');  
+            const userData = JSON.parse(userDataCookie);   
 
-    // Mostrar datos del usuario  
-    document.getElementById('username').value = userData.user;  
-    document.getElementById('useremail').value = userData.email;  
+            // Mostrar datos del usuario  
+            document.getElementById('username').value = userData.user;  
+            document.getElementById('useremail').value = userData.email;  
 
-    // Llamamos a la API para obtener las facturas usando el email del usuario  
-    fetch(`/api/facturas/email?email=${encodeURIComponent(userData.email)}`)  
-        .then(response => response.json())  
-        .then(data => {  
-            const paymentsContainer = document.getElementById('paymentsContainer');  
-            paymentsContainer.innerHTML = ''; // Limpiar el contenedor  
-            
-            if (data && data.length > 0) {  
-                data.forEach(factura => {  
-                    const card = document.createElement('div');  
-                    card.classList.add('payment-card');  // Mantener la clase para los estilos  
-                    card.classList.add(factura.estado); // agregar la clase según el estado  
-
-                    // Formatear la fecha  
-                    const fecha = new Date(factura.fechaCreacion); // Cambia 'fecha' por 'fechaCreacion'  
+            // Llamamos a la API para obtener las facturas usando el email del usuario  
+            fetch(`/api/facturas/email?email=${encodeURIComponent(userData.email)}`)  
+                .then(response => response.json())  
+                .then(data => {  
+                    const paymentsContainer = document.getElementById('paymentsContainer');  
+                    paymentsContainer.innerHTML = ''; // Limpiar el contenedor  
                     
-                    // Opciones de formato  
-                    const options = { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: false };  
-                    const fechaFormateada = fecha.toLocaleString('es-ES', options);  
+                    if (data && data.length > 0) {  
+                        data.forEach(factura => {  
+                            const card = document.createElement('div');  
+                            card.classList.add('payment-card');    
+                            card.classList.add(factura.estado);  
 
-                    // Agregar contenido a la carta  
-                    card.innerHTML = `  
-                        <h4>Factura</h4>   
-                        <p><strong>Fecha de emisión:</strong> ${fechaFormateada}</p>  
-                        <p><strong>Monto:</strong> Bs. ${factura.monto}</p>  
-                        <p><strong>Estado:</strong> ${factura.estado.charAt(0).toUpperCase() + factura.estado.slice(1)}</p>  
-                    `;  
+                            // Formatear la fecha  
+                            const fecha = new Date(factura.fechaCreacion);   
+                            
+                            // Opciones de formato  
+                            const options = { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: false };  
+                            const fechaFormateada = fecha.toLocaleString('es-ES', options);  
 
-                    paymentsContainer.appendChild(card); // Agregar la carta al contenedor  
+                            // Agregar contenido a la carta  
+                            card.innerHTML = `  
+                                <h4>Factura</h4>   
+                                <p><strong>Fecha de emisión:</strong> ${fechaFormateada}</p>  
+                                <p><strong>Monto:</strong> Bs. ${factura.monto}</p>  
+                                <p><strong>Estado:</strong> ${factura.estado.charAt(0).toUpperCase() + factura.estado.slice(1)}</p>  
+                                <button id="generatePDFButton" onclick="generatePDF()">Generar Factura</button>   
+                            `;  
+
+                            paymentsContainer.appendChild(card); // Agregar la carta al contenedor  
+                        });  
+                    } else {     
+                        paymentsContainer.innerHTML = '<div>No se encontraron facturas.</div>';  
+                    }   
+                })  
+                .catch(error => {  
+                    console.error('Error al obtener las facturas:', error);  
+                    const paymentsContainer = document.getElementById('paymentsContainer');  
+                    paymentsContainer.innerHTML = '<div>Error al obtener las facturas.</div>';  
                 });  
-            } else {  
-                paymentsContainer.innerHTML = '<div>No se encontraron facturas.</div>';  
-            }   
-        })  
-        .catch(error => {  
-            console.error('Error al obtener las facturas:', error);  
-            const paymentsContainer = document.getElementById('paymentsContainer');  
-            paymentsContainer.innerHTML = '<div>Error al obtener las facturas.</div>';  
-        });  
 
-    document.getElementById('modal').style.display = 'block';  
-}  
-
-function closeModal() {  
-    document.getElementById('modal').style.display = 'none';  
-}  
-
-function getCookie(name) {  
-    let cookieArr = document.cookie.split(";");  
-
-    for(let i = 0; i < cookieArr.length; i++) {  
-        let cookiePair = cookieArr[i].split("=");  
-        if(name === cookiePair[0].trim()) {  
-            return decodeURIComponent(cookiePair[1]);  
+            document.getElementById('modal').style.display = 'block';  
         }  
-    }  
 
-    return null;  
-}  
+        function closeModal() {  
+            document.getElementById('modal').style.display = 'none';  
+        }  
 
-// Cerrar modal al hacer clic fuera del contenido  
-window.onclick = function(event) {  
-    if (event.target === document.getElementById('modal')) {  
-        closeModal();  
-    }  
-}   
+        function getCookie(name) {  
+            let cookieArr = document.cookie.split(";");  
+            for(let i = 0; i < cookieArr.length; i++) {  
+                let cookiePair = cookieArr[i].split("=");  
+                if(name === cookiePair[0].trim()) {  
+                    return decodeURIComponent(cookiePair[1]);  
+                }  
+            }  
+            return null;  
+        }  
+
+        window.onclick = function(event) {  
+            if (event.target === document.getElementById('modal')) {  
+                closeModal();  
+            }  
+
+        
+        }  
+        function generatePDF() {  
+            const userDataCookie = getCookie('userData');  
+            const userData = JSON.parse(userDataCookie);  
+        
+            if (!userData || !userData.email) {  
+                alert('No se pudo obtener la información del usuario.');  
+                return;  
+            }  
+        
+            fetch(`/api/facturas/email?email=${encodeURIComponent(userData.email)}`)  
+                .then(response => response.json())  
+                .then(data => {  
+                    if (data && data.length > 0) {  
+                        const { jsPDF } = window.jspdf;  
+                        const doc = new jsPDF();  
+        
+                        // Encabezados  
+                        doc.setFontSize(20);  
+                        doc.text('Factura', 105, 20, { align: 'center' });  
+        
+                        // Información en cuadro  
+                        const infoBoxY = 30; // Posición Y para el cuadro  
+                        const boxWidth = 190; // Ancho del cuadro  
+                        const boxHeight = 80; // Altura del cuadro ajustada  
+        
+                        // Dibuja el cuadro de fondo gris  
+                        doc.setFillColor(230, 230, 230); // Color gris claro  
+                        doc.rect(10, infoBoxY, boxWidth, boxHeight, 'F'); // Dibuja el relleno  
+        
+                        // Establece el color gris oscuro para el texto  
+                        doc.setTextColor(80, 80, 80); // Color de texto gris oscuro  
+                        doc.setFontSize(12);  
+        
+                        const infoTextY = infoBoxY + 10;  
+                        const lineHeight = 8; // Altura de línea ajustada para separación  
+                        doc.text(`Fecha de emisión: ${new Date(data[0].fechaCreacion).toLocaleDateString('es-ES')}`, 15, infoTextY);  
+                        doc.line(10, infoTextY + lineHeight, 200, infoTextY + lineHeight); // Línea de separación  
+                        doc.text(`Email: ${data[0].email}`, 15, infoTextY + lineHeight * 2 + 2);  
+                        doc.line(10, infoTextY + lineHeight * 3 + 2, 200, infoTextY + lineHeight * 3 + 2);  
+                        doc.text(`Tipo de Pago: ${data[0].tipoPago}`, 15, infoTextY + lineHeight * 4 + 2);  
+                        doc.line(10, infoTextY + lineHeight * 5 + 2, 200, infoTextY + lineHeight * 5 + 2);  
+                        doc.text(`Referencia: ${data[0].referencia}`, 15, infoTextY + lineHeight * 6 + 2);  
+                        doc.line(10, infoTextY + lineHeight * 7 + 2, 200, infoTextY + lineHeight * 7 + 2);  
+                        doc.text(`Estado: ${data[0].estado.charAt(0).toUpperCase() + data[0].estado.slice(1)}`, 15, infoTextY + lineHeight * 8 + 2);  
+        
+                        // Espacio antes de los detalles del producto (20 px de margen)  
+                        const verticalOffset = infoBoxY + boxHeight + 20; // Posición Y con margen  
+                        doc.setFontSize(14);  
+                        doc.text('Detalles de los Productos', 10, verticalOffset);  
+                        const productDetailsY = verticalOffset + 10; // Posición Y para la tabla  
+        
+                        // Dibuja la tabla  
+                        const tableStartY = productDetailsY;  
+                        const tableWidth = 190;  
+                        const cellHeight = 10;  
+        
+                        // Encabezado de la tabla  
+                        doc.setFillColor(230, 230, 230); // Fondo gris claro  
+                        doc.rect(10, tableStartY, tableWidth, cellHeight, 'F'); // Dibuja el fondo  
+        
+                        // Títulos de la tabla  
+                        doc.setTextColor(80, 80, 80);  
+                        doc.text('Producto', 15, tableStartY + 7);  
+                        doc.text('Cantidad', 100, tableStartY + 7); // Ajustado para más espacio  
+                        doc.text('Precio', 150, tableStartY + 7); // Ajustado para más espacio  
+        
+                        // Dibuja las líneas divisorias del encabezado  
+                        doc.setDrawColor(80, 80, 80); // Color de las líneas  
+                        doc.line(10, tableStartY + cellHeight, 200, tableStartY + cellHeight); // Línea inferior  
+        
+                        let productRowOffset = tableStartY + cellHeight;  
+        
+                        // Detalles de cada producto  
+                        doc.setTextColor(80, 80, 80); // Color de texto gris oscuro  
+                        data[0].productos.forEach(producto => {  
+                            // Dibuja el fondo de cada fila  
+                            doc.setFillColor(255, 255, 255); // Fondo blanco  
+                            doc.rect(10, productRowOffset, tableWidth, cellHeight, 'F'); // Dibuja el fondo de la fila  
+        
+                            // Dibuja el contenido  
+                            doc.text(producto.nombre, 15, productRowOffset + 7);  
+                            doc.text(`${producto.cantidad}`, 100, productRowOffset + 7); // Espacio aumentado entre el nombre del producto y la cantidad  
+                            doc.text(`Bs. ${producto.precio}`, 150, productRowOffset + 7);  
+        
+                            // Dibuja las líneas divisorias de la fila  
+                            doc.setDrawColor(80, 80, 80); // Color de las líneas  
+                            doc.line(10, productRowOffset, 200, productRowOffset); // Línea superior  
+                            productRowOffset += cellHeight;  
+                        });  
+        
+                        // Línea divisoria después de todas las filas  
+                        doc.line(10, productRowOffset, 200, productRowOffset);  
+        
+                        // Resumen del total  
+                        productRowOffset += 10; // Espacio adicional  
+                        const total = data[0].monto;  
+                        doc.setFontSize(14);  
+                        doc.setTextColor(0, 0, 0); // Texto en negro para el total  
+                        doc.text(`Total: Bs. ${total}`, 10, productRowOffset);  
+        
+                        // Guardar el PDF  
+                        doc.save('factura.pdf');  
+                    } else {  
+                        alert('No se encontraron facturas.');  
+                    }  
+                })  
+                .catch(error => {  
+                    alert('Error en la solicitud: ' + error.message);  
+                    console.error('Error al obtener las facturas para el PDF:', error);  
+                });  
+        }  
