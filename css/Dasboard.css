@@ -870,6 +870,8 @@ main.min-main{
         width: 320px;
     }
 
+    
+
     .card {
         width: 137px;
         height: 300px;
@@ -1096,6 +1098,21 @@ ul {
     transition: margin 0.3s ease;   
     width: 200px;   
 }  
+
+.payment-card button{
+
+    background: var(--toggle-color);
+    width: 170px;
+    color: var(--text-color);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: var(--tran-02);
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
 
 .payment-card:hover {  
     cursor: pointer;   

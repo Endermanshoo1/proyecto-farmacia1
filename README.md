@@ -27,3 +27,6 @@ las credenciales ed prueba para administradores son las siguientes
 
 - usuario: Usuarioprueba@gmail.com
 - contraseña: Usuarioprueba123
+
+## Link de Render
+https://proyecto-farmacia.onrender.com
