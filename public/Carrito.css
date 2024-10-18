@@ -472,6 +472,10 @@ transition: var(--tran-05);
     cursor: pointer;  
 }  
 
+#btnDivisas{
+    display: none;
+}
+
 /* Estilo adicional para los inputs */  
 #botonesPago {  
     width: 100%;  

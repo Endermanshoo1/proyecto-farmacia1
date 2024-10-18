@@ -95,12 +95,14 @@ app.get('/api/pagos/:id', PagoController.obtenerPagoPorId);
 app.put('/api/pagos/:id/aprobar', PagoController.aprobarPago);  
 app.put('/api/pagos/:id/cancelar', PagoController.cancelarPago);  
 app.put('/api/pagos/:id/rechazar', PagoController.rechazarPago); 
-
+ 
 // Rutas de facturas
 app.post('/api/facturas', crearFactura.crearFactura);  
 app.get('/api/facturas', crearFactura.obtenerFacturas);  
 app.get('/api/facturas/email', crearFactura.obtenerFacturasPorEmail);  
 app.get('/api/facturas/:id', crearFactura.obtenerFacturaPorId); 
+app.put('/api/facturas/:id/aprobar', crearFactura.aprobarFactura);  
+app.put('/api/facturas/:id/rechazar', crearFactura.rechazarFactura);   
 
 // Rutas de frontend  
 app.get('/', (req, res) => {   
@@ -148,3 +150,5 @@ app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/css', express.static(path.join(__dirname, 'css/Dashboard.css')));   
 app.use('/js', express.static(path.join(__dirname, 'js/Dashboard.js')));   
 app.use('/js', express.static(path.join(__dirname, 'js/cartService.js')));
+
+//estructura de la factura

@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <th>Acciones</th>  
                         </tr>  
                     </thead>  
-                    <tbody id="pagosBody"></tbody>  
+                    <tbody id="facturasBody"></tbody>  
                 </table>  
             `,  
         Inventario: `  
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <th>Acciones</th>  
                     </tr>  
                 </thead>  
-                <tbody id="productosBody"></tbody>  
+                <tbody id="facturasBody"></tbody>  
             </table>    
         `,  
         GestionClientes: `  
@@ -510,7 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Llamar a la función para cargar productos cuando se cargue la página  
                     document.addEventListener('DOMContentLoaded', cargarProductos); 
                 }  else if(id === 'GestionPagos') {
-                    obtenerPagos(); 
+                    obtenerFacturas(); 
                 }
 
             }, 1000);  
@@ -730,66 +730,77 @@ document.addEventListener('DOMContentLoaded', () => {
     }  
 }); 
 
-async function obtenerPagos() {  
+adocument.addEventListener("DOMContentLoaded", () => {  
+    obtenerFacturas();  
+});  
+
+async function obtenerFacturas() {  
     try {  
-        const response = await fetch('/api/pagos');  
-        const pagos = await response.json();  
-        mostrarPagos(pagos);  
+        const response = await fetch('/api/facturas');  
+        if (!response.ok) throw new Error('Error en la red'); // Verifica si la respuesta es correcta  
+        const facturas = await response.json();  
+        mostrarFacturas(facturas);  
     } catch (error) {  
-        console.error('Error al obtener los pagos:', error);  
+        console.error('Error al obtener las facturas:', error);  
     }  
 }  
 
-function mostrarPagos(pagos) {  
-    console.log(pagos); 
-    const pagosBody = document.getElementById('pagosBody');  
-    pagosBody.innerHTML = ''; 
+function mostrarFacturas(facturas) {  
+    console.log(facturas);  
+    const facturasBody = document.getElementById('facturasBody');  
+    if (!facturasBody) {  
+        console.error('Elemento facturasBody no encontrado');  
+        return;  
+    }  
+    facturasBody.innerHTML = '';  
 
-    pagos.forEach(pago => {  
+    facturas.forEach(factura => {  
         const row = document.createElement('tr');  
-        
+
         const estatusColor = {  
             'pendiente': 'orange',  
             'aprobado': 'green',  
             'rechazado': 'red'  
         };  
 
+        // Chequear el estado de la factura antes de asignar el color  
+        const color = estatusColor[factura.estado] || 'red';  
+
         row.innerHTML = `  
-            <td>${pago.email}</td>  
-            <td>${pago.tipoPago}</td>  
-            <td>${pago.referencia}</td>  
-            <td><span class="estatus" style="background-color: ${estatusColor[pago.estado]}"></span> ${pago.estado}</td>  
+            <td>${factura.email}</td>  
+            <td>${factura.tipoPago}</td>  
+            <td>${factura.referencia}</td>  
+            <td><span class="estatus" style="background-color: ${color}"></span> ${factura.estado}</td>  
             <td>  
-                <button class="botonAccion" data-id="${pago._id}" data-accion="aprobar">Aprobar</button>  
-                <button class="botonAccion" data-id="${pago._id}" data-accion="rechazar">Rechazar</button>  
-            </td>   
+                <button class="botonAccion" data-id="${factura._id}" data-accion="aprobar">Aprobar</button>  
+                <button class="botonAccion" data-id="${factura._id}" data-accion="rechazar">Rechazar</button>  
+            </td>  
         `;  
-        
-        pagosBody.appendChild(row);  
+
+        facturasBody.appendChild(row);  
     });  
 
-    // Agregar event listeners a los botones de acción  
     document.querySelectorAll('.botonAccion').forEach(button => {  
-        button.addEventListener('click', manejarAccionPago);  
+        button.addEventListener('click', manejarAccionFactura);  
     });  
 }  
-
-async function manejarAccionPago(event) {  
-    const idPago = event.target.dataset.id;  
+async function manejarAccionFactura(event) {  
+    const idFactura = event.target.dataset.id;  
     const accion = event.target.dataset.accion;  
-    console.log(`ID del pago: ${idPago}`); // Verifica este valor  
+    console.log(`ID de la factura: ${idFactura}`); // Log para verificar el ID  
     console.log(`Acción seleccionada: ${accion}`);  
 
-    if (!idPago) {  
-        console.error('El ID del pago es undefined. Verifica la configuración del botón.');  
-        alert('ID del pago no encontrado.');   
+    if (!idFactura) {  
+        console.error('El ID de la factura es undefined. Verifica la configuración del botón.');  
+        alert('ID de factura no encontrado.');   
         return;   
-    }
+    }  
+    
     // Deshabilitar el botón que ha sido clicado para prevenir múltiples clics  
     event.target.disabled = true;  
 
     try {   
-        const url = `/api/pagos/${idPago}/${accion}`;   
+        const url = `/api/facturas/${idFactura}/${accion}`;   
         console.log(`URL de la petición: ${url}`);  
         
         const response = await fetch(url, {  
@@ -797,19 +808,19 @@ async function manejarAccionPago(event) {
             headers: {  
                 'Content-Type': 'application/json',  
             },  
-            body: JSON.stringify({}) 
+            body: JSON.stringify({}) // Puedes enviar información adicional si es necesario  
         });  
 
         if (response.ok) {  
-            console.log(`Respuesta exitosa para ${accion} del pago ${idPago}`);  
-            obtenerPagos();   
+            console.log(`Respuesta exitosa para ${accion} de la factura ${idFactura}`);  
+            obtenerFacturas(); // Llama a la función que obtenga nuevamente las facturas  
         } else {  
             const errorMensaje = await response.text();  
-            console.error(`Error al actualizar el pago: ${errorMensaje}`);  
-            alert(`Error al actualizar el pago: ${errorMensaje}`); 
+            console.error(`Error al actualizar la factura: ${errorMensaje}`);  
+            alert(`Error al actualizar la factura: ${errorMensaje}`);   
         }  
     } catch (error) {  
-        console.error('Error al manejar la acción del pago:', error);  
+        console.error('Error al manejar la acción de la factura:', error);  
         alert('Error en la acción. Inténtalo de nuevo.');    
     } finally {  
         // Habilitar el botón que ha sido clicado de nuevo en caso de error  

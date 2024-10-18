@@ -45,4 +45,38 @@ exports.obtenerFacturaPorId = async (req, res) => {
     } catch (error) {  
         res.status(500).json({ error: 'Error al obtener la factura por ID.', details: error.message });  
     }  
+};
+
+exports.aprobarFactura = async (req, res) => {  
+    const { id } = req.params;  
+
+    try {  
+        const factura = await Factura.findById(id);  
+        if (!factura) return res.status(404).json({ error: 'Factura no encontrada.' });  
+
+        // Actualizar el estado de la factura a 'aprobado'  
+        factura.estado = 'aprobado'; // Cambiado aquí  
+        await factura.save();  
+
+        res.json(factura);  
+    } catch (error) {  
+        res.status(500).json({ error: 'Error al aprobar la factura.', details: error.message });  
+    }  
+};  
+
+exports.rechazarFactura = async (req, res) => {  
+    const { id } = req.params;  
+
+    try {  
+        const factura = await Factura.findById(id);  
+        if (!factura) return res.status(404).json({ error: 'Factura no encontrada.' });  
+
+        // Actualizar el estado de la factura a 'rechazada'  
+        factura.estado = 'rechazada'; // permaneció igual  
+        await factura.save();  
+
+        res.json(factura);  
+    } catch (error) {  
+        res.status(500).json({ error: 'Error al rechazar la factura.', details: error.message });  
+    }  
 };  

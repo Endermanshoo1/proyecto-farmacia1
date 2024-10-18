@@ -372,23 +372,25 @@ function openModal() {
     const userDataCookie = getCookie('userData');  
     const userData = JSON.parse(userDataCookie);  
 
+    // Mostrar datos del usuario  
     document.getElementById('username').value = userData.user;  
     document.getElementById('useremail').value = userData.email;  
 
-    fetch('/api/pagos/email')  
+    // Llamamos a la API para obtener las facturas usando el email del usuario  
+    fetch(`/api/facturas/email?email=${encodeURIComponent(userData.email)}`)  
         .then(response => response.json())  
         .then(data => {  
             const paymentsContainer = document.getElementById('paymentsContainer');  
             paymentsContainer.innerHTML = ''; // Limpiar el contenedor  
             
             if (data && data.length > 0) {  
-                data.forEach(pago => {  
+                data.forEach(factura => {  
                     const card = document.createElement('div');  
-                    card.classList.add('payment-card');  
-                    card.classList.add(pago.estado); // agregar la clase según el estado  
+                    card.classList.add('payment-card');  // Mantener la clase para los estilos  
+                    card.classList.add(factura.estado); // agregar la clase según el estado  
 
                     // Formatear la fecha  
-                    const fecha = new Date(pago.fechaCreacion); // Cambia 'fecha' por 'fechaCreacion'  
+                    const fecha = new Date(factura.fechaCreacion); // Cambia 'fecha' por 'fechaCreacion'  
                     
                     // Opciones de formato  
                     const options = { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: false };  
@@ -396,22 +398,22 @@ function openModal() {
 
                     // Agregar contenido a la carta  
                     card.innerHTML = `  
-                        <h4>Pago realizado</h4>   
-                        <p><strong>Fecha de pago:</strong> ${fechaFormateada}</p>  
-                        <p><strong>Monto:</strong> Bs. ${pago.monto}</p>  
-                        <p><strong>Estado:</strong> ${pago.estado.charAt(0).toUpperCase() + pago.estado.slice(1)}</p>  
+                        <h4>Factura</h4>   
+                        <p><strong>Fecha de emisión:</strong> ${fechaFormateada}</p>  
+                        <p><strong>Monto:</strong> Bs. ${factura.monto}</p>  
+                        <p><strong>Estado:</strong> ${factura.estado.charAt(0).toUpperCase() + factura.estado.slice(1)}</p>  
                     `;  
 
                     paymentsContainer.appendChild(card); // Agregar la carta al contenedor  
                 });  
             } else {  
-                paymentsContainer.innerHTML = '<div>No se encontraron pagos.</div>';  
+                paymentsContainer.innerHTML = '<div>No se encontraron facturas.</div>';  
             }   
         })  
         .catch(error => {  
-            console.error('Error al obtener los pagos:', error);  
+            console.error('Error al obtener las facturas:', error);  
             const paymentsContainer = document.getElementById('paymentsContainer');  
-            paymentsContainer.innerHTML = '<div>Error al obtener los pagos.</div>';  
+            paymentsContainer.innerHTML = '<div>Error al obtener las facturas.</div>';  
         });  
 
     document.getElementById('modal').style.display = 'block';  
@@ -439,4 +441,4 @@ window.onclick = function(event) {
     if (event.target === document.getElementById('modal')) {  
         closeModal();  
     }  
-}  
+}   

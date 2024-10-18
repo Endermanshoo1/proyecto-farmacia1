@@ -177,7 +177,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }  
 
    // Función para obtener el valor de una cookie  
-function getCookie(name) {  
+  // Función para obtener el valor de una cookie  
+  function getCookie(name) {  
     const value = `; ${document.cookie}`;  
     const parts = value.split(`; ${name}=`);  
     if (parts.length === 2) {  
@@ -202,6 +203,28 @@ function getEmailFromCookie() {
     } catch (error) {  
         console.error('Error al parsear la cookie de usuario:', error);  
         return null;  
+    }  
+}  
+
+async function crearFactura(facturaData) {  
+    try {  
+        const response = await fetch('/api/facturas', {  
+            method: 'POST',  
+            headers: {  
+                'Content-Type': 'application/json'  
+            },  
+            body: JSON.stringify(facturaData) // Envío de los datos de la factura  
+        });  
+
+        if (!response.ok) {  
+            throw new Error('Error al crear la factura: ' + response.statusText);  
+        }  
+
+        const result = await response.json();  
+        console.log('Factura creada con éxito:', result);  
+    } catch (error) {  
+        console.error('Error en crearFactura:', error);  
+        throw error; // Re-lanzar el error para que sea capturado en la función que la llamó  
     }  
 }  
 
@@ -318,26 +341,28 @@ document.getElementById("btnConfirmarPagoMovil").onclick = async function () {
     } catch (error) {  
         alert('Error: ' + error.message);  
     }  
-};   
+};    
+
 
 async function actualizarStockProductos(productos) {  
-    for (const producto of productos) {  
-        const response = await fetch(`/api/productos/${producto._id}`);  
-        const productoDb = await response.json();  
-        
-        const nuevaCantidad = productoDb.stock - producto.cantidad; // Ajustado para restar la cantidad pagada del stock actual  
+    const productosParaComprar = []; // Inicializamos un array para productos a comprar  
 
-        // Haz otra solicitud para actualizar el stock en el servidor  
-        await fetch(`/api/productos/${producto._id}`, {  
-            method: 'PUT',  
-            headers: {  
-                'Content-Type': 'application/json'  
-            },  
-            body: JSON.stringify({ stock: nuevaCantidad }) // Cambié 'cantidad' a 'stock' para actualizar correctamente  
-        });  
+    for (const clave of Object.keys(localStorage)) { // Iteramos sobre las claves de localStorage  
+        const productoList = JSON.parse(localStorage.getItem(clave)); // Obtenemos el producto desde localStorage  
+        if (productoList) {  
+            productoList.forEach(producto => {  
+                console.log("Producto encontrado:", producto); // Log para cada producto encontrado  
+                if (producto && producto.cantidad > 0) {  
+                    productosParaComprar.push(producto); // Agregar el producto al carrito  
+                    console.log("Producto agregado al carrito:", producto); // Confirmar adición  
+                }  
+            });  
+        }  
     }  
-} 
 
+    console.log("Productos a comprar después de recolectar:", productosParaComprar);  
+    return productosParaComprar; // Así puedes retornar la lista si es necesario  
+}  
 // Manejar la elección de efectivo en Bolívares  
 document.getElementById("btnEfectivoBs").onclick = function() {  
     // Mostrar el div de Efectivo en Bolívares  
@@ -386,24 +411,23 @@ document.getElementById("btnConfirmarBs").onclick = async function() {
             },  
             body: JSON.stringify(pagoData)  
         });  
-
-        console.log("Respuesta del servidor:", response);  
-
+    
+        const result = await response.json(); // Intentamos parsear la respuesta  
+        
         if (!response.ok) {  
-            const errorText = await response.text();  
-            console.error('Error al procesar el pago:', errorText);   
-            throw new Error('Error al procesar el pago: ' + response.statusText);  
+            console.error('Error en respuesta:', result); // Loguear contenido del error  
+            throw new Error('Error al procesar el pago: ' + (result.message || response.statusText));  
         }  
-
-        const result = await response.json();  
-        console.log("Resultado devuelto por el servidor:", result);  
-        alert(`Pago en Efectivo procesado correctamente: ${result.message}`);  
-
-        modal.style.display = "none";  
-        resetModal();  
+    
+        alert(`Pago Móvil procesado correctamente: ${result.message}`);  
+        await actualizarStockProductos(productosParaComprar);  
+        localStorage.clear();  
+        window.location.href = '/user';  
+    
     } catch (error) {  
         alert('Error: ' + error.message);  
-    }   
+        console.error('Error detallado:', error); // Mejor manejo de errores  
+    }    
 };  
 
 
